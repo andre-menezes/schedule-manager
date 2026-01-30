@@ -1,5 +1,7 @@
 import fastify from 'fastify';
 import fastifyJwt from '@fastify/jwt';
+import fastifySwagger from '@fastify/swagger';
+import fastifySwaggerUi from '@fastify/swagger-ui';
 import { LoginUser } from './application/use-cases/login-user.js';
 import { RegisterUser } from './application/use-cases/register-user.js';
 import { BunHashService } from './infrastructure/auth/bun-hash-service.js';
@@ -14,6 +16,39 @@ const JWT_SECRET = process.env['JWT_SECRET'] ?? 'dev-secret-change-in-production
 
 async function bootstrap(): Promise<void> {
   const app = fastify({ logger: true });
+
+  // Register Swagger
+  await app.register(fastifySwagger, {
+    openapi: {
+      info: {
+        title: 'Scheduler API',
+        description: 'API para sistema de agendamento de consultas',
+        version: '1.0.0',
+      },
+      servers: [{ url: `http://localhost:${PORT}` }],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+      tags: [
+        { name: 'Auth', description: 'Autenticação e registro de usuários' },
+        { name: 'Health', description: 'Health check' },
+      ],
+    },
+  });
+
+  await app.register(fastifySwaggerUi, {
+    routePrefix: '/docs',
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: false,
+    },
+  });
 
   // Register JWT plugin
   await app.register(fastifyJwt, {
@@ -42,7 +77,25 @@ async function bootstrap(): Promise<void> {
   );
 
   // Health check
-  app.get('/health', async () => ({ status: 'ok' }));
+  app.get(
+    '/health',
+    {
+      schema: {
+        tags: ['Health'],
+        summary: 'Health check',
+        description: 'Verifica se a API está funcionando',
+        response: {
+          200: {
+            type: 'object',
+            properties: {
+              status: { type: 'string', example: 'ok' },
+            },
+          },
+        },
+      },
+    },
+    async () => ({ status: 'ok' })
+  );
 
   // Start server
   try {
