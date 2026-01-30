@@ -15,7 +15,15 @@ const PORT = Number(process.env['PORT'] ?? 3000);
 const JWT_SECRET = process.env['JWT_SECRET'] ?? 'dev-secret-change-in-production';
 
 async function bootstrap(): Promise<void> {
-  const app = fastify({ logger: true });
+  const app = fastify({
+    logger: true,
+    ajv: {
+      customOptions: {
+        strict: 'log',
+        keywords: ['example'],
+      },
+    },
+  });
 
   // Register Swagger
   await app.register(fastifySwagger, {
