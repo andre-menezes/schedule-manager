@@ -1,4 +1,5 @@
 import fastify from 'fastify';
+import fastifyCors from '@fastify/cors';
 import fastifyJwt from '@fastify/jwt';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
@@ -23,6 +24,11 @@ async function bootstrap(): Promise<void> {
         keywords: ['example'],
       },
     },
+  });
+
+  // Register CORS
+  await app.register(fastifyCors, {
+    origin: true,
   });
 
   // Register Swagger
