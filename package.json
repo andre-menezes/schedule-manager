@@ -1,0 +1,28 @@
+{
+  "name": "scheduler",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "bun --filter '*' typecheck",
+    "test": "bun --filter '*' test",
+    "build": "bun --filter '*' build",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.4.0",
+    "@commitlint/config-conventional": "^20.4.0",
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^17.2.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.0",
+    "typescript-eslint": "^8.54.0"
+  }
+}
