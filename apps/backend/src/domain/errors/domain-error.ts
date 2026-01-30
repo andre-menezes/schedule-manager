@@ -25,3 +25,33 @@ export class UserNotFoundError extends DomainError {
     super('User not found', 'USER_NOT_FOUND');
   }
 }
+
+export class PatientNotFoundError extends DomainError {
+  constructor() {
+    super('Patient not found', 'PATIENT_NOT_FOUND');
+  }
+}
+
+export class AppointmentNotFoundError extends DomainError {
+  constructor() {
+    super('Appointment not found', 'APPOINTMENT_NOT_FOUND');
+  }
+}
+
+export class AppointmentConflictError extends DomainError {
+  constructor() {
+    super('Time slot conflicts with an existing appointment', 'APPOINTMENT_CONFLICT');
+  }
+}
+
+export class InvalidAppointmentTimeError extends DomainError {
+  constructor() {
+    super('Start time must be before end time', 'INVALID_APPOINTMENT_TIME');
+  }
+}
+
+export class AppointmentNotEditableError extends DomainError {
+  constructor() {
+    super('Completed appointments cannot be edited', 'APPOINTMENT_NOT_EDITABLE');
+  }
+}
