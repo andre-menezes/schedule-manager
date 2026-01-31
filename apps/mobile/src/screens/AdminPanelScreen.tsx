@@ -22,7 +22,7 @@ export function AdminPanelScreen() {
     try {
       const data = await listUsers();
       setUsers(data);
-    } catch (error) {
+    } catch {
       Alert.alert('Erro', 'Não foi possível carregar os usuários');
     }
   }, []);
