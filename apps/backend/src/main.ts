@@ -9,6 +9,7 @@ import { GetAppointment } from './application/use-cases/get-appointment.js';
 import { GetPatient } from './application/use-cases/get-patient.js';
 import { ListAppointments } from './application/use-cases/list-appointments.js';
 import { ListPatients } from './application/use-cases/list-patients.js';
+import { ListUsers } from './application/use-cases/list-users.js';
 import { LoginUser } from './application/use-cases/login-user.js';
 import { RegisterUser } from './application/use-cases/register-user.js';
 import { UpdateAppointment } from './application/use-cases/update-appointment.js';
@@ -23,9 +24,11 @@ import { PrismaUserRepository } from './infrastructure/database/prisma-user-repo
 import { AppointmentController } from './presentation/controllers/appointment-controller.js';
 import { AuthController } from './presentation/controllers/auth-controller.js';
 import { PatientController } from './presentation/controllers/patient-controller.js';
+import { UserController } from './presentation/controllers/user-controller.js';
 import { appointmentRoutes } from './presentation/routes/appointment-routes.js';
 import { authRoutes } from './presentation/routes/auth-routes.js';
 import { patientRoutes } from './presentation/routes/patient-routes.js';
+import { userRoutes } from './presentation/routes/user-routes.js';
 
 const PORT = Number(process.env['PORT'] ?? 3000);
 const JWT_SECRET = process.env['JWT_SECRET'] ?? 'dev-secret-change-in-production';
@@ -97,6 +100,7 @@ async function bootstrap(): Promise<void> {
   // Initialize use cases
   const registerUser = new RegisterUser(userRepository, hashService, tokenService);
   const loginUser = new LoginUser(userRepository, hashService, tokenService);
+  const listUsers = new ListUsers(userRepository);
   const createPatient = new CreatePatient(patientRepository);
   const listPatients = new ListPatients(patientRepository);
   const getPatient = new GetPatient(patientRepository);
@@ -109,6 +113,7 @@ async function bootstrap(): Promise<void> {
 
   // Initialize controllers
   const authController = new AuthController(registerUser, loginUser);
+  const userController = new UserController(listUsers);
   const patientController = new PatientController(
     createPatient,
     listPatients,
@@ -123,12 +128,20 @@ async function bootstrap(): Promise<void> {
     updateAppointmentStatus
   );
 
-  // Register routes with /api/v1 prefix
+  // Register public routes (no auth required)
   app.register(
     async (instance) => {
       authRoutes(instance, authController);
+    },
+    { prefix: '/api/v1' }
+  );
+
+  // Register protected routes (auth required)
+  app.register(
+    async (instance) => {
       patientRoutes(instance, patientController);
       appointmentRoutes(instance, appointmentController);
+      userRoutes(instance, userController);
     },
     { prefix: '/api/v1' }
   );

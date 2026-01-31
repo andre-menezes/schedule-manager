@@ -55,3 +55,9 @@ export class AppointmentNotEditableError extends DomainError {
     super('Completed appointments cannot be edited', 'APPOINTMENT_NOT_EDITABLE');
   }
 }
+
+export class AccessDeniedError extends DomainError {
+  constructor() {
+    super('Access denied', 'ACCESS_DENIED');
+  }
+}

@@ -1,6 +1,2 @@
 // Global test setup
-jest.mock('expo-secure-store', () => ({
-  getItemAsync: jest.fn(),
-  setItemAsync: jest.fn(),
-  deleteItemAsync: jest.fn(),
-}));
+// Mocks are configured via jest.config.js moduleNameMapper

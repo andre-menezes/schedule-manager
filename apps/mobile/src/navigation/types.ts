@@ -7,6 +7,9 @@ export type AuthStackParamList = {
 
 export type AppStackParamList = {
   Home: undefined;
+  Welcome: undefined;
+  // Hidden admin route - using non-obvious name
+  SysConf: undefined;
   PatientList: undefined;
   PatientDetail: { patientId: string };
   PatientForm: { patientId?: string };
