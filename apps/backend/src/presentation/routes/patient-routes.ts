@@ -17,6 +17,8 @@ const patientListOutputSchema = {
   properties: {
     id: { type: 'string', format: 'uuid', example: '550e8400-e29b-41d4-a716-446655440000' },
     name: { type: 'string', example: 'Maria Santos' },
+    phone: { type: 'string', nullable: true, example: '11999998888' },
+    notes: { type: 'string', nullable: true, example: 'Paciente com alergia a dipirona' },
   },
 };
 
@@ -144,6 +146,33 @@ const updatePatientSchema = {
   },
 };
 
+const deletePatientSchema = {
+  tags: ['Patients'],
+  summary: 'Excluir paciente',
+  description: 'Exclui um paciente e todos os seus dados relacionados',
+  security: securitySchema,
+  params: {
+    type: 'object',
+    properties: {
+      id: { type: 'string', format: 'uuid' },
+    },
+  },
+  response: {
+    204: {
+      description: 'Paciente excluído com sucesso',
+      type: 'null',
+    },
+    401: {
+      description: 'Não autenticado',
+      ...errorSchema,
+    },
+    404: {
+      description: 'Paciente não encontrado',
+      ...errorSchema,
+    },
+  },
+};
+
 export function patientRoutes(
   app: FastifyInstance,
   controller: PatientController
@@ -164,5 +193,9 @@ export function patientRoutes(
 
   app.put('/patients/:id', { schema: updatePatientSchema }, (request, reply) =>
     controller.update(request, reply)
+  );
+
+  app.delete('/patients/:id', { schema: deletePatientSchema }, (request, reply) =>
+    controller.delete(request, reply)
   );
 }
