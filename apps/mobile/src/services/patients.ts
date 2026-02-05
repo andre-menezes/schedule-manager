@@ -10,6 +10,8 @@ export interface Patient {
 export interface PatientListItem {
   id: string;
   name: string;
+  phone: string | null;
+  notes: string | null;
 }
 
 export interface CreatePatientInput {
@@ -34,7 +36,9 @@ export async function getPatient(id: string): Promise<Patient> {
   return response.data;
 }
 
-export async function createPatient(input: CreatePatientInput): Promise<Patient> {
+export async function createPatient(
+  input: CreatePatientInput
+): Promise<Patient> {
   const response = await api.post<Patient>('/patients', input);
   return response.data;
 }
@@ -45,4 +49,8 @@ export async function updatePatient(
 ): Promise<Patient> {
   const response = await api.put<Patient>(`/patients/${id}`, input);
   return response.data;
+}
+
+export async function deletePatient(id: string): Promise<void> {
+  await api.delete(`/patients/${id}`);
 }

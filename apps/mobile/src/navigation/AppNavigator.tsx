@@ -1,6 +1,11 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { HomeScreen, WelcomeScreen, AdminPanelScreen } from '../screens';
+import {
+  HomeScreen,
+  WelcomeScreen,
+  AdminPanelScreen,
+  PatientFormScreen,
+} from '../screens';
 import { useAuthStore } from '../stores/auth-store';
 import type { AppStackParamList } from './types';
 
@@ -31,6 +36,7 @@ export function AppNavigator() {
           headerTitleStyle: { fontWeight: 'bold' },
         }}
       />
+      <Stack.Screen name="PatientForm" component={PatientFormScreen} />
     </Stack.Navigator>
   );
 }
