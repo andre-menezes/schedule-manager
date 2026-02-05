@@ -17,11 +17,11 @@ export default tseslint.config(
   },
   {
     ignores: [
-      'node_modules/**',
-      'dist/**',
-      'build/**',
-      '.husky/**',
-      'coverage/**',
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/.husky/**',
+      '**/coverage/**',
     ],
   }
 );

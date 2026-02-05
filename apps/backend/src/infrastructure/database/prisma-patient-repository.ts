@@ -49,4 +49,10 @@ export class PrismaPatientRepository implements PatientRepository {
       },
     });
   }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.patient.delete({
+      where: { id },
+    });
+  }
 }

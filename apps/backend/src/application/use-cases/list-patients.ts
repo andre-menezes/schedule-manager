@@ -10,6 +10,8 @@ export class ListPatients {
     return patients.map((patient) => ({
       id: patient.id,
       name: patient.name,
+      phone: patient.phone,
+      notes: patient.notes,
     }));
   }
 }

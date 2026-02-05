@@ -26,4 +26,10 @@ export class PrismaUserRepository implements UserRepository {
       where: { id },
     });
   }
+
+  async findAll(): Promise<User[]> {
+    return this.prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 }

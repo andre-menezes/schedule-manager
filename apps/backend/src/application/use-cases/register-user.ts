@@ -28,6 +28,13 @@ export class RegisterUser {
 
     const token = this.tokenService.generate({ userId: user.id });
 
-    return { token };
+    return {
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+    };
   }
 }

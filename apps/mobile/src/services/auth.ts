@@ -11,8 +11,15 @@ export interface LoginInput {
   password: string;
 }
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export interface AuthResponse {
   token: string;
+  user: User;
 }
 
 export async function register(input: RegisterInput): Promise<AuthResponse> {
@@ -29,4 +36,9 @@ export async function login(input: LoginInput): Promise<AuthResponse> {
 
 export async function logout(): Promise<void> {
   await removeAuthToken();
+}
+
+export async function listUsers(): Promise<User[]> {
+  const response = await api.get<User[]>('/s/members');
+  return response.data;
 }

@@ -1,6 +1,15 @@
 import type { FastifyInstance } from 'fastify';
 import type { AuthController } from '../controllers/auth-controller.js';
 
+const userOutputSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'string', format: 'uuid', example: '550e8400-e29b-41d4-a716-446655440000' },
+    name: { type: 'string', example: 'João Silva' },
+    email: { type: 'string', format: 'email', example: 'joao@example.com' },
+  },
+};
+
 const registerSchema = {
   tags: ['Auth'],
   summary: 'Registrar novo usuário',
@@ -20,6 +29,7 @@ const registerSchema = {
       type: 'object',
       properties: {
         token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+        user: userOutputSchema,
       },
     },
     400: {
@@ -59,6 +69,7 @@ const loginSchema = {
       type: 'object',
       properties: {
         token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+        user: userOutputSchema,
       },
     },
     401: {

@@ -5,6 +5,7 @@ import {
   updatePatientSchema,
 } from '../../application/dtos/patient-dtos.js';
 import type { CreatePatient } from '../../application/use-cases/create-patient.js';
+import type { DeletePatient } from '../../application/use-cases/delete-patient.js';
 import type { GetPatient } from '../../application/use-cases/get-patient.js';
 import type { ListPatients } from '../../application/use-cases/list-patients.js';
 import type { UpdatePatient } from '../../application/use-cases/update-patient.js';
@@ -14,7 +15,7 @@ import {
 } from '../../domain/errors/domain-error.js';
 
 interface AuthenticatedRequest extends FastifyRequest {
-  user: { id: string };
+  user: { userId: string };
 }
 
 interface PatientParams {
@@ -26,14 +27,15 @@ export class PatientController {
     private readonly createPatient: CreatePatient,
     private readonly listPatients: ListPatients,
     private readonly getPatient: GetPatient,
-    private readonly updatePatient: UpdatePatient
+    private readonly updatePatient: UpdatePatient,
+    private readonly deletePatient: DeletePatient
   ) {}
 
   async create(request: FastifyRequest, reply: FastifyReply): Promise<void> {
     try {
       const { user } = request as AuthenticatedRequest;
       const input = createPatientSchema.parse(request.body);
-      const result = await this.createPatient.execute(user.id, input);
+      const result = await this.createPatient.execute(user.userId, input);
       reply.status(201).send(result);
     } catch (error) {
       this.handleError(error, reply);
@@ -43,7 +45,7 @@ export class PatientController {
   async list(request: FastifyRequest, reply: FastifyReply): Promise<void> {
     try {
       const { user } = request as AuthenticatedRequest;
-      const result = await this.listPatients.execute(user.id);
+      const result = await this.listPatients.execute(user.userId);
       reply.status(200).send(result);
     } catch (error) {
       this.handleError(error, reply);
@@ -54,7 +56,7 @@ export class PatientController {
     try {
       const { user } = request as AuthenticatedRequest;
       const { id } = request.params as PatientParams;
-      const result = await this.getPatient.execute(user.id, id);
+      const result = await this.getPatient.execute(user.userId, id);
       reply.status(200).send(result);
     } catch (error) {
       this.handleError(error, reply);
@@ -66,8 +68,19 @@ export class PatientController {
       const { user } = request as AuthenticatedRequest;
       const { id } = request.params as PatientParams;
       const input = updatePatientSchema.parse(request.body);
-      const result = await this.updatePatient.execute(user.id, id, input);
+      const result = await this.updatePatient.execute(user.userId, id, input);
       reply.status(200).send(result);
+    } catch (error) {
+      this.handleError(error, reply);
+    }
+  }
+
+  async delete(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+    try {
+      const { user } = request as AuthenticatedRequest;
+      const { id } = request.params as PatientParams;
+      await this.deletePatient.execute(user.userId, id);
+      reply.status(204).send();
     } catch (error) {
       this.handleError(error, reply);
     }

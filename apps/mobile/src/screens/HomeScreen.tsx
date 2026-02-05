@@ -5,7 +5,6 @@ export function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Agenda do Dia</Text>
-      <Text style={styles.subtitle}>Tela principal - Fase 3.2</Text>
     </View>
   );
 }

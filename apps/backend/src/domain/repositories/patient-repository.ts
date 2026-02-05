@@ -10,4 +10,5 @@ export interface PatientRepository {
   findByIdAndUserId(id: string, userId: string): Promise<Patient | null>;
   findAllByUserId(userId: string): Promise<Patient[]>;
   update(id: string, data: UpdatePatientInput): Promise<Patient>;
+  delete(id: string): Promise<void>;
 }

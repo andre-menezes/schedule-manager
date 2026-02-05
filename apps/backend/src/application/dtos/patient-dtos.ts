@@ -25,4 +25,6 @@ export interface PatientOutput {
 export interface PatientListOutput {
   id: string;
   name: string;
+  phone: string | null;
+  notes: string | null;
 }

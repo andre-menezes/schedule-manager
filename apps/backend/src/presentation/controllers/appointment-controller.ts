@@ -22,7 +22,7 @@ import {
 } from '../../domain/errors/domain-error.js';
 
 interface AuthenticatedRequest extends FastifyRequest {
-  user: { id: string };
+  user: { userId: string };
 }
 
 interface AppointmentParams {
@@ -42,7 +42,7 @@ export class AppointmentController {
     try {
       const { user } = request as AuthenticatedRequest;
       const input = createAppointmentSchema.parse(request.body);
-      const result = await this.createAppointment.execute(user.id, input);
+      const result = await this.createAppointment.execute(user.userId, input);
       reply.status(201).send(result);
     } catch (error) {
       this.handleError(error, reply);
@@ -53,7 +53,7 @@ export class AppointmentController {
     try {
       const { user } = request as AuthenticatedRequest;
       const { date } = listAppointmentsQuerySchema.parse(request.query);
-      const result = await this.listAppointments.execute(user.id, date);
+      const result = await this.listAppointments.execute(user.userId, date);
       reply.status(200).send(result);
     } catch (error) {
       this.handleError(error, reply);
@@ -64,7 +64,7 @@ export class AppointmentController {
     try {
       const { user } = request as AuthenticatedRequest;
       const { id } = request.params as AppointmentParams;
-      const result = await this.getAppointment.execute(user.id, id);
+      const result = await this.getAppointment.execute(user.userId, id);
       reply.status(200).send(result);
     } catch (error) {
       this.handleError(error, reply);
@@ -76,7 +76,7 @@ export class AppointmentController {
       const { user } = request as AuthenticatedRequest;
       const { id } = request.params as AppointmentParams;
       const input = updateAppointmentSchema.parse(request.body);
-      const result = await this.updateAppointment.execute(user.id, id, input);
+      const result = await this.updateAppointment.execute(user.userId, id, input);
       reply.status(200).send(result);
     } catch (error) {
       this.handleError(error, reply);
@@ -89,7 +89,7 @@ export class AppointmentController {
       const { id } = request.params as AppointmentParams;
       const { status } = updateAppointmentStatusSchema.parse(request.body);
       const result = await this.updateAppointmentStatus.execute(
-        user.id,
+        user.userId,
         id,
         status as AppointmentStatus
       );
