@@ -1,4 +1,4 @@
-import { Prisma, type PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 import type {
   AuditLogInput,
   AuditService,
@@ -14,9 +14,8 @@ export class PrismaAuditService implements AuditService {
         action: input.action,
         entityType: input.entityType,
         entityId: input.entityId,
-        details: input.details
-          ? (input.details as Prisma.InputJsonValue)
-          : Prisma.DbNull,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        details: input.details as any,
       },
     });
   }
