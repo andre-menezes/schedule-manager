@@ -6,3 +6,5 @@ export { Header } from './Header';
 export { TaskCard } from './TaskCard';
 export { PatientCard } from './PatientCard';
 export { ConfirmDialog } from './ConfirmDialog';
+export { Toast } from './Toast';
+export type { ToastType } from './Toast';

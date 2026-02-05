@@ -22,6 +22,7 @@ import type { AppStackParamList } from '../navigation/types';
 import * as patientService from '../services/patients';
 import { isApiError } from '../services/api';
 import { ConfirmDialog } from '../components';
+import { useToast } from '../contexts';
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -38,6 +39,7 @@ interface PatientFormData {
 export function PatientFormScreen() {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<PatientFormRouteProp>();
+  const { showToast } = useToast();
   const patientId = route.params?.patientId;
   const isEditMode = !!patientId;
 
@@ -126,12 +128,14 @@ export function PatientFormScreen() {
           phone: phoneDigits || null,
           notes: formData.notes.trim() || null,
         });
+        showToast('Alterações salvas com sucesso!', 'success');
       } else {
         await patientService.createPatient({
           name: formData.name.trim(),
           phone: phoneDigits || undefined,
           notes: formData.notes.trim() || undefined,
         });
+        showToast('Paciente cadastrado com sucesso!', 'success');
       }
       navigation.goBack();
     } catch (error) {
@@ -160,6 +164,7 @@ export function PatientFormScreen() {
     setIsDeleting(true);
     try {
       await patientService.deletePatient(patientId);
+      showToast('Paciente excluído com sucesso!', 'success');
       navigation.goBack();
     } catch (error) {
       console.error('Delete error:', error);
