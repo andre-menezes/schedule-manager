@@ -10,19 +10,15 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { useAuthStore } from '../stores/auth-store';
+import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useAuthStore } from '../stores/auth-store';
+import type { AuthStackParamList } from '../navigation/types';
 
-type AuthStackParamList = {
-  Login: undefined;
-  Register: undefined;
-};
+type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
 
-interface Props {
-  navigation: NativeStackNavigationProp<AuthStackParamList, 'Login'>;
-}
-
-export function LoginScreen({ navigation }: Props) {
+export function LoginScreen() {
+  const navigation = useNavigation<NavigationProp>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, isLoading, error, clearError } = useAuthStore();

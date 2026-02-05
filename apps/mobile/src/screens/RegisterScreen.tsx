@@ -11,19 +11,15 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
-import { useAuthStore } from '../stores/auth-store';
+import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useAuthStore } from '../stores/auth-store';
+import type { AuthStackParamList } from '../navigation/types';
 
-type AuthStackParamList = {
-  Login: undefined;
-  Register: undefined;
-};
+type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Register'>;
 
-interface Props {
-  navigation: NativeStackNavigationProp<AuthStackParamList, 'Register'>;
-}
-
-export function RegisterScreen({ navigation }: Props) {
+export function RegisterScreen() {
+  const navigation = useNavigation<NavigationProp>();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
