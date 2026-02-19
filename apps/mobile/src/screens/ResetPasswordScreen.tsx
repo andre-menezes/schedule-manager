@@ -8,13 +8,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  Alert,
   ScrollView,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 import { resetPassword } from '../services/auth';
+import { useToast } from '../contexts/ToastContext';
 import type { AuthStackParamList } from '../navigation/types';
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'ResetPassword'>;
@@ -29,46 +29,43 @@ export function ResetPasswordScreen() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleSubmit = async () => {
     if (!code.trim()) {
-      Alert.alert('Erro', 'Digite o código recebido');
+      showToast('Digite o código recebido', 'error');
       return;
     }
 
     if (code.trim().length !== 6) {
-      Alert.alert('Erro', 'O código deve ter 6 dígitos');
+      showToast('O código deve ter 6 dígitos', 'error');
       return;
     }
 
     if (!newPassword.trim()) {
-      Alert.alert('Erro', 'Digite a nova senha');
+      showToast('Digite a nova senha', 'error');
       return;
     }
 
     if (newPassword.length < 6) {
-      Alert.alert('Erro', 'A senha deve ter pelo menos 6 caracteres');
+      showToast('A senha deve ter pelo menos 6 caracteres', 'error');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      Alert.alert('Erro', 'As senhas não conferem');
+      showToast('As senhas não conferem', 'error');
       return;
     }
 
     setIsLoading(true);
     try {
       await resetPassword(email, code.trim(), newPassword);
-      Alert.alert('Sucesso', 'Senha redefinida com sucesso!', [
-        {
-          text: 'OK',
-          onPress: () => navigation.navigate('Login'),
-        },
-      ]);
+      showToast('Senha redefinida com sucesso!', 'success');
+      navigation.navigate('Login');
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'Erro ao redefinir senha';
-      Alert.alert('Erro', errorMessage);
+      showToast(errorMessage, 'error');
     } finally {
       setIsLoading(false);
     }

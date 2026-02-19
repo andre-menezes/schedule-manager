@@ -8,11 +8,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAuthStore } from '../stores/auth-store';
+import { useToast } from '../contexts/ToastContext';
 import type { AuthStackParamList } from '../navigation/types';
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
@@ -22,10 +22,11 @@ export function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, isLoading, error, clearError } = useAuthStore();
+  const { showToast } = useToast();
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      Alert.alert('Erro', 'Preencha todos os campos');
+      showToast('Preencha todos os campos', 'error');
       return;
     }
 

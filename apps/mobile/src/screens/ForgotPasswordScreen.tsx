@@ -8,11 +8,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { requestPasswordReset } from '../services/auth';
+import { useToast } from '../contexts/ToastContext';
 import type { AuthStackParamList } from '../navigation/types';
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'ForgotPassword'>;
@@ -21,27 +21,29 @@ export function ForgotPasswordScreen() {
   const navigation = useNavigation<NavigationProp>();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleSubmit = async () => {
     if (!email.trim()) {
-      Alert.alert('Erro', 'Digite seu e-mail');
+      showToast('Digite seu e-mail', 'error');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
-      Alert.alert('Erro', 'Digite um e-mail válido');
+      showToast('Digite um e-mail válido', 'error');
       return;
     }
 
     setIsLoading(true);
     try {
       await requestPasswordReset(email.trim());
+      showToast('Código enviado para seu e-mail', 'success');
       navigation.navigate('ResetPassword', { email: email.trim() });
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'Erro ao enviar código';
-      Alert.alert('Erro', errorMessage);
+      showToast(errorMessage, 'error');
     } finally {
       setIsLoading(false);
     }
