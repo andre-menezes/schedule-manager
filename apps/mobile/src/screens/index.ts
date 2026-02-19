@@ -6,3 +6,5 @@ export { HomeScreen } from './HomeScreen';
 export { WelcomeScreen } from './WelcomeScreen';
 export { AdminPanelScreen } from './AdminPanelScreen';
 export { PatientFormScreen } from './PatientFormScreen';
+export { AppointmentDetailScreen } from './AppointmentDetailScreen';
+export { AppointmentFormScreen } from './AppointmentFormScreen';
