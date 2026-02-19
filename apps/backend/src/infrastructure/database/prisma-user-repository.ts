@@ -32,4 +32,11 @@ export class PrismaUserRepository implements UserRepository {
       orderBy: { createdAt: 'desc' },
     });
   }
+
+  async updatePassword(id: string, passwordHash: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { id },
+      data: { passwordHash },
+    });
+  }
 }

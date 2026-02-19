@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import type { AuthController } from '../controllers/auth-controller.js';
+import type { PasswordResetController } from '../controllers/password-reset-controller.js';
 
 const userOutputSchema = {
   type: 'object',
@@ -83,9 +84,72 @@ const loginSchema = {
   },
 };
 
+const forgotPasswordSchema = {
+  tags: ['Auth'],
+  summary: 'Solicitar recuperação de senha',
+  description: 'Envia um código de recuperação para o e-mail informado',
+  body: {
+    type: 'object',
+    required: ['email'],
+    properties: {
+      email: { type: 'string', format: 'email', example: 'joao@example.com' },
+    },
+  },
+  response: {
+    200: {
+      description: 'Solicitação processada',
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'If this email exists, a reset code will be sent' },
+      },
+    },
+    400: {
+      description: 'Dados inválidos',
+      type: 'object',
+      properties: {
+        error: { type: 'string', example: 'VALIDATION_ERROR' },
+        message: { type: 'string', example: 'Invalid email format' },
+      },
+    },
+  },
+};
+
+const resetPasswordSchema = {
+  tags: ['Auth'],
+  summary: 'Redefinir senha',
+  description: 'Redefine a senha usando o código de recuperação',
+  body: {
+    type: 'object',
+    required: ['email', 'code', 'newPassword'],
+    properties: {
+      email: { type: 'string', format: 'email', example: 'joao@example.com' },
+      code: { type: 'string', minLength: 6, maxLength: 6, example: '123456' },
+      newPassword: { type: 'string', minLength: 6, example: 'novaSenha123' },
+    },
+  },
+  response: {
+    200: {
+      description: 'Senha redefinida com sucesso',
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Password reset successfully' },
+      },
+    },
+    400: {
+      description: 'Código inválido ou expirado',
+      type: 'object',
+      properties: {
+        error: { type: 'string', example: 'INVALID_RESET_TOKEN' },
+        message: { type: 'string', example: 'Invalid reset token' },
+      },
+    },
+  },
+};
+
 export function authRoutes(
   app: FastifyInstance,
-  controller: AuthController
+  controller: AuthController,
+  passwordResetController: PasswordResetController
 ): void {
   app.post('/auth/register', { schema: registerSchema }, (request, reply) =>
     controller.register(request, reply)
@@ -93,5 +157,13 @@ export function authRoutes(
 
   app.post('/auth/login', { schema: loginSchema }, (request, reply) =>
     controller.login(request, reply)
+  );
+
+  app.post('/auth/forgot-password', { schema: forgotPasswordSchema }, (request, reply) =>
+    passwordResetController.forgotPassword(request, reply)
+  );
+
+  app.post('/auth/reset-password', { schema: resetPasswordSchema }, (request, reply) =>
+    passwordResetController.resetPasswordHandler(request, reply)
   );
 }

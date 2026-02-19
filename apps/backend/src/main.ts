@@ -16,15 +16,20 @@ import { RegisterUser } from './application/use-cases/register-user.js';
 import { UpdateAppointment } from './application/use-cases/update-appointment.js';
 import { UpdateAppointmentStatus } from './application/use-cases/update-appointment-status.js';
 import { UpdatePatient } from './application/use-cases/update-patient.js';
+import { RequestPasswordReset } from './application/use-cases/request-password-reset.js';
+import { ResetPassword } from './application/use-cases/reset-password.js';
 import { BunHashService } from './infrastructure/auth/bun-hash-service.js';
 import { JwtTokenService } from './infrastructure/auth/jwt-token-service.js';
 import { prisma } from './infrastructure/database/prisma-client.js';
 import { PrismaAppointmentRepository } from './infrastructure/database/prisma-appointment-repository.js';
 import { PrismaPatientRepository } from './infrastructure/database/prisma-patient-repository.js';
 import { PrismaUserRepository } from './infrastructure/database/prisma-user-repository.js';
+import { PrismaPasswordResetRepository } from './infrastructure/database/prisma-password-reset-repository.js';
 import { PrismaAuditService } from './infrastructure/database/prisma-audit-service.js';
+import { ResendEmailService } from './infrastructure/email/resend-email-service.js';
 import { AppointmentController } from './presentation/controllers/appointment-controller.js';
 import { AuthController } from './presentation/controllers/auth-controller.js';
+import { PasswordResetController } from './presentation/controllers/password-reset-controller.js';
 import { PatientController } from './presentation/controllers/patient-controller.js';
 import { UserController } from './presentation/controllers/user-controller.js';
 import { appointmentRoutes } from './presentation/routes/appointment-routes.js';
@@ -34,6 +39,8 @@ import { userRoutes } from './presentation/routes/user-routes.js';
 
 const PORT = Number(process.env['PORT'] ?? 3000);
 const JWT_SECRET = process.env['JWT_SECRET'] ?? 'dev-secret-change-in-production';
+const RESEND_API_KEY = process.env['RESEND_API_KEY'] ?? '';
+const EMAIL_FROM = process.env['EMAIL_FROM'] ?? 'onboarding@resend.dev';
 
 async function bootstrap(): Promise<void> {
   const app = fastify({
@@ -99,13 +106,17 @@ async function bootstrap(): Promise<void> {
   const userRepository = new PrismaUserRepository(prisma);
   const patientRepository = new PrismaPatientRepository(prisma);
   const appointmentRepository = new PrismaAppointmentRepository(prisma);
+  const passwordResetRepository = new PrismaPasswordResetRepository(prisma);
   const hashService = new BunHashService();
   const tokenService = new JwtTokenService(app);
   const auditService = new PrismaAuditService(prisma);
+  const emailService = new ResendEmailService(RESEND_API_KEY, EMAIL_FROM);
 
   // Initialize use cases
   const registerUser = new RegisterUser(userRepository, hashService, tokenService);
   const loginUser = new LoginUser(userRepository, hashService, tokenService);
+  const requestPasswordReset = new RequestPasswordReset(userRepository, passwordResetRepository, emailService);
+  const resetPassword = new ResetPassword(userRepository, passwordResetRepository, hashService);
   const listUsers = new ListUsers(userRepository);
   const createPatient = new CreatePatient(patientRepository, auditService);
   const listPatients = new ListPatients(patientRepository);
@@ -120,6 +131,7 @@ async function bootstrap(): Promise<void> {
 
   // Initialize controllers
   const authController = new AuthController(registerUser, loginUser);
+  const passwordResetController = new PasswordResetController(requestPasswordReset, resetPassword);
   const userController = new UserController(listUsers);
   const patientController = new PatientController(
     createPatient,
@@ -139,7 +151,7 @@ async function bootstrap(): Promise<void> {
   // Register public routes (no auth required)
   app.register(
     async (instance) => {
-      authRoutes(instance, authController);
+      authRoutes(instance, authController, passwordResetController);
     },
     { prefix: '/api/v1' }
   );

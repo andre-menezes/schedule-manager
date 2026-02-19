@@ -12,38 +12,43 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useAuthStore } from '../stores/auth-store';
+import { requestPasswordReset } from '../services/auth';
 import type { AuthStackParamList } from '../navigation/types';
 
-type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
+type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'ForgotPassword'>;
 
-export function LoginScreen() {
+export function ForgotPasswordScreen() {
   const navigation = useNavigation<NavigationProp>();
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert('Erro', 'Preencha todos os campos');
+  const handleSubmit = async () => {
+    if (!email.trim()) {
+      Alert.alert('Erro', 'Digite seu e-mail');
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      Alert.alert('Erro', 'Digite um e-mail válido');
+      return;
+    }
+
+    setIsLoading(true);
     try {
-      await login(email.trim(), password);
-    } catch {
-      // Error is handled by the store
+      await requestPasswordReset(email.trim());
+      navigation.navigate('ResetPassword', { email: email.trim() });
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Erro ao enviar código';
+      Alert.alert('Erro', errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleNavigateToRegister = () => {
-    clearError();
-    navigation.navigate('Register');
-  };
-
-  const handleNavigateToForgotPassword = () => {
-    clearError();
-    navigation.navigate('ForgotPassword');
+  const handleBackToLogin = () => {
+    navigation.navigate('Login');
   };
 
   return (
@@ -52,14 +57,10 @@ export function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>Bem-vindo</Text>
-        <Text style={styles.subtitle}>Faça login para continuar</Text>
-
-        {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
-          </View>
-        )}
+        <Text style={styles.title}>Esqueceu a senha?</Text>
+        <Text style={styles.subtitle}>
+          Digite seu e-mail e enviaremos um código para redefinir sua senha
+        </Text>
 
         <View style={styles.form}>
           <TextInput
@@ -74,46 +75,25 @@ export function LoginScreen() {
             editable={!isLoading}
           />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Senha"
-            placeholderTextColor="#999"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-            editable={!isLoading}
-          />
-
           <TouchableOpacity
             style={[styles.button, isLoading && styles.buttonDisabled]}
-            onPress={handleLogin}
+            onPress={handleSubmit}
             disabled={isLoading}
           >
             {isLoading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.buttonText}>Entrar</Text>
+              <Text style={styles.buttonText}>Enviar código</Text>
             )}
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.forgotPasswordLink}
-            onPress={handleNavigateToForgotPassword}
-            disabled={isLoading}
-          >
-            <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity
-          style={styles.registerLink}
-          onPress={handleNavigateToRegister}
+          style={styles.backLink}
+          onPress={handleBackToLogin}
           disabled={isLoading}
         >
-          <Text style={styles.registerLinkText}>
-            Não tem uma conta?{' '}
-            <Text style={styles.registerLinkHighlight}>Cadastre-se</Text>
-          </Text>
+          <Text style={styles.backLinkText}>Voltar para o login</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -140,16 +120,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     marginBottom: 32,
-  },
-  errorContainer: {
-    backgroundColor: '#ffebee',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  errorText: {
-    color: '#c62828',
-    fontSize: 14,
   },
   form: {
     gap: 16,
@@ -180,25 +150,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
   },
-  registerLink: {
+  backLink: {
     marginTop: 24,
     alignItems: 'center',
   },
-  registerLinkText: {
+  backLinkText: {
     fontSize: 14,
-    color: '#666',
-  },
-  registerLinkHighlight: {
     color: '#007AFF',
     fontWeight: '600',
-  },
-  forgotPasswordLink: {
-    marginTop: 16,
-    alignItems: 'center',
-  },
-  forgotPasswordText: {
-    fontSize: 14,
-    color: '#007AFF',
-    fontWeight: '500',
   },
 });

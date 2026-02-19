@@ -42,3 +42,25 @@ export async function listUsers(): Promise<User[]> {
   const response = await api.get<User[]>('/s/members');
   return response.data;
 }
+
+export interface PasswordResetResponse {
+  message: string;
+}
+
+export async function requestPasswordReset(email: string): Promise<PasswordResetResponse> {
+  const response = await api.post<PasswordResetResponse>('/auth/forgot-password', { email });
+  return response.data;
+}
+
+export async function resetPassword(
+  email: string,
+  code: string,
+  newPassword: string
+): Promise<PasswordResetResponse> {
+  const response = await api.post<PasswordResetResponse>('/auth/reset-password', {
+    email,
+    code,
+    newPassword,
+  });
+  return response.data;
+}

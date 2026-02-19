@@ -61,3 +61,15 @@ export class AccessDeniedError extends DomainError {
     super('Access denied', 'ACCESS_DENIED');
   }
 }
+
+export class InvalidResetTokenError extends DomainError {
+  constructor() {
+    super('Invalid reset token', 'INVALID_RESET_TOKEN');
+  }
+}
+
+export class ResetTokenExpiredError extends DomainError {
+  constructor() {
+    super('Reset token has expired', 'RESET_TOKEN_EXPIRED');
+  }
+}
