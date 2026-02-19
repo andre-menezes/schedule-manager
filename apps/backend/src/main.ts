@@ -18,6 +18,7 @@ import { UpdateAppointmentStatus } from './application/use-cases/update-appointm
 import { UpdatePatient } from './application/use-cases/update-patient.js';
 import { RequestPasswordReset } from './application/use-cases/request-password-reset.js';
 import { ResetPassword } from './application/use-cases/reset-password.js';
+import { DeactivateUser } from './application/use-cases/deactivate-user.js';
 import { BunHashService } from './infrastructure/auth/bun-hash-service.js';
 import { JwtTokenService } from './infrastructure/auth/jwt-token-service.js';
 import { prisma } from './infrastructure/database/prisma-client.js';
@@ -118,6 +119,7 @@ async function bootstrap(): Promise<void> {
   const requestPasswordReset = new RequestPasswordReset(userRepository, passwordResetRepository, emailService);
   const resetPassword = new ResetPassword(userRepository, passwordResetRepository, hashService);
   const listUsers = new ListUsers(userRepository);
+  const deactivateUser = new DeactivateUser(userRepository);
   const createPatient = new CreatePatient(patientRepository, auditService);
   const listPatients = new ListPatients(patientRepository);
   const getPatient = new GetPatient(patientRepository);
@@ -132,7 +134,7 @@ async function bootstrap(): Promise<void> {
   // Initialize controllers
   const authController = new AuthController(registerUser, loginUser);
   const passwordResetController = new PasswordResetController(requestPasswordReset, resetPassword);
-  const userController = new UserController(listUsers);
+  const userController = new UserController(listUsers, deactivateUser);
   const patientController = new PatientController(
     createPatient,
     listPatients,

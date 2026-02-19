@@ -73,3 +73,15 @@ export class ResetTokenExpiredError extends DomainError {
     super('Reset token has expired', 'RESET_TOKEN_EXPIRED');
   }
 }
+
+export class CannotDeactivateAdminError extends DomainError {
+  constructor() {
+    super('Cannot deactivate admin user', 'CANNOT_DEACTIVATE_ADMIN');
+  }
+}
+
+export class UserDeactivatedError extends DomainError {
+  constructor() {
+    super('User account has been deactivated', 'USER_DEACTIVATED');
+  }
+}

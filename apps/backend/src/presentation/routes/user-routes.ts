@@ -53,4 +53,31 @@ export function userRoutes(
   app.get('/s/members', { schema: listUsersSchema }, (request, reply) =>
     controller.list(request, reply)
   );
+
+  app.delete(
+    '/s/members/:id',
+    {
+      schema: {
+        tags: ['System'],
+        summary: 'Deactivate a member',
+        description: 'Soft-deletes a user account (admin only)',
+        security: securitySchema,
+        params: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+          },
+          required: ['id'],
+        },
+        response: {
+          204: { description: 'User deactivated', type: 'null' },
+          400: { description: 'Bad request', ...errorSchema },
+          401: { description: 'Not authenticated', ...errorSchema },
+          403: { description: 'Access denied', ...errorSchema },
+          404: { description: 'User not found', ...errorSchema },
+        },
+      },
+    },
+    (request, reply) => controller.deactivate(request, reply)
+  );
 }

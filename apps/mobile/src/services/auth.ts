@@ -43,6 +43,10 @@ export async function listUsers(): Promise<User[]> {
   return response.data;
 }
 
+export async function deactivateUser(userId: string): Promise<void> {
+  await api.delete(`/s/members/${userId}`);
+}
+
 export interface PasswordResetResponse {
   message: string;
 }

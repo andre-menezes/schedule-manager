@@ -6,4 +6,5 @@ export interface UserRepository {
   findById(id: string): Promise<User | null>;
   findAll(): Promise<User[]>;
   updatePassword(id: string, passwordHash: string): Promise<void>;
+  deactivate(id: string): Promise<void>;
 }
