@@ -56,8 +56,12 @@ O sistema deve permitir que o usuário:
 
 Restrições:
 
-- Não permitir atendimentos sobrepostos
+- Não permitir atendimentos sobrepostos (exceto quando o existente estiver cancelado)
 - Atendimentos realizados não podem ser editados
+- Não permitir agendamento em data/hora anterior à atual
+- Duração da sessão configurável (padrão: 1 hora)
+- Horários disponíveis gerados automaticamente com base no expediente do profissional
+- Último horário de agendamento deve respeitar o fim do expediente menos a duração da sessão
 
 ---
 

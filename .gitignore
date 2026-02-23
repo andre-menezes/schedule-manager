@@ -21,6 +21,7 @@ out/
 # OS
 .DS_Store
 Thumbs.db
+nul
 
 # Logs
 *.log
@@ -41,3 +42,6 @@ prisma/*.db-journal
 # Temporary files
 tmp/
 temp/
+
+# Claude Code
+.claude/
