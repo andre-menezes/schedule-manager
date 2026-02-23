@@ -13,7 +13,7 @@ import {
   FlatList,
   Modal,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -134,6 +134,7 @@ function generateTimeSlots(
 }
 
 export function AppointmentFormScreen() {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<FormRouteProp>();
   const { appointmentId, date: routeDate } = route.params || {};
@@ -430,7 +431,7 @@ export function AppointmentFormScreen() {
         onRequestClose={() => setShowPatientPicker(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+          <View style={[styles.modalContent, { paddingTop: insets.top }]}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Selecionar Paciente</Text>
               <TouchableOpacity onPress={() => setShowPatientPicker(false)}>
