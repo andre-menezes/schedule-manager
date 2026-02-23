@@ -16,6 +16,7 @@ describe('CreateAppointment', () => {
     name: 'Maria Santos',
     phone: '11999998888',
     notes: null,
+    deactivatedAt: null,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -24,8 +25,8 @@ describe('CreateAppointment', () => {
     id: 'appointment-123',
     userId: 'user-123',
     patientId: 'patient-123',
-    startAt: new Date('2026-02-01T09:00:00.000Z'),
-    endAt: new Date('2026-02-01T10:00:00.000Z'),
+    startAt: new Date('2027-06-01T09:00:00.000Z'),
+    endAt: new Date('2027-06-01T10:00:00.000Z'),
     status: 'AGENDADO',
     notes: 'Consulta de retorno',
     createdAt: new Date(),
@@ -49,6 +50,9 @@ describe('CreateAppointment', () => {
       findByIdAndUserId: mock(() => Promise.resolve(mockPatient)),
       findAllByUserId: mock(() => Promise.resolve([mockPatient])),
       update: mock(() => Promise.resolve(mockPatient)),
+      delete: mock(() => Promise.resolve()),
+      deactivate: mock(() => Promise.resolve()),
+      countAppointments: mock(() => Promise.resolve(0)),
     };
 
     return { appointmentRepository, patientRepository };
@@ -63,8 +67,8 @@ describe('CreateAppointment', () => {
 
     const result = await createAppointment.execute('user-123', {
       patientId: 'patient-123',
-      startAt: '2026-02-01T09:00:00.000Z',
-      endAt: '2026-02-01T10:00:00.000Z',
+      startAt: '2027-06-01T09:00:00.000Z',
+      endAt: '2027-06-01T10:00:00.000Z',
       notes: 'Consulta de retorno',
     });
 
@@ -92,8 +96,8 @@ describe('CreateAppointment', () => {
     await expect(
       createAppointment.execute('user-123', {
         patientId: 'nonexistent-patient',
-        startAt: '2026-02-01T09:00:00.000Z',
-        endAt: '2026-02-01T10:00:00.000Z',
+        startAt: '2027-06-01T09:00:00.000Z',
+        endAt: '2027-06-01T10:00:00.000Z',
       })
     ).rejects.toThrow(PatientNotFoundError);
   });
@@ -110,8 +114,8 @@ describe('CreateAppointment', () => {
     await expect(
       createAppointment.execute('another-user', {
         patientId: 'patient-123',
-        startAt: '2026-02-01T09:00:00.000Z',
-        endAt: '2026-02-01T10:00:00.000Z',
+        startAt: '2027-06-01T09:00:00.000Z',
+        endAt: '2027-06-01T10:00:00.000Z',
       })
     ).rejects.toThrow(PatientNotFoundError);
   });
@@ -130,8 +134,8 @@ describe('CreateAppointment', () => {
     await expect(
       createAppointment.execute('user-123', {
         patientId: 'patient-123',
-        startAt: '2026-02-01T09:30:00.000Z',
-        endAt: '2026-02-01T10:30:00.000Z',
+        startAt: '2027-06-01T09:30:00.000Z',
+        endAt: '2027-06-01T10:30:00.000Z',
       })
     ).rejects.toThrow(AppointmentConflictError);
   });
@@ -145,8 +149,8 @@ describe('CreateAppointment', () => {
 
     const result = await createAppointment.execute('user-123', {
       patientId: 'patient-123',
-      startAt: '2026-02-01T09:00:00.000Z',
-      endAt: '2026-02-01T10:00:00.000Z',
+      startAt: '2027-06-01T09:00:00.000Z',
+      endAt: '2027-06-01T10:00:00.000Z',
     });
 
     expect(result.id).toBe('appointment-123');
