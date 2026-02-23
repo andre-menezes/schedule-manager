@@ -22,6 +22,7 @@ import type { AppStackParamList } from '../navigation/types';
 import * as patientService from '../services/patients';
 import { isApiError } from '../services/api';
 import { ConfirmDialog } from '../components';
+import { useToast } from '../contexts/ToastContext';
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -41,6 +42,8 @@ export function PatientFormScreen() {
   const patientId = route.params?.patientId;
   const isEditMode = !!patientId;
 
+  const { showToast } = useToast();
+  const [isActive, setIsActive] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(isEditMode);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -60,6 +63,7 @@ export function PatientFormScreen() {
   const loadPatientData = async (id: string) => {
     try {
       const patient = await patientService.getPatient(id);
+      setIsActive(patient.isActive);
       setFormData({
         name: patient.name,
         phone: patient.phone ? formatPhone(patient.phone) : '',
@@ -159,7 +163,12 @@ export function PatientFormScreen() {
 
     setIsDeleting(true);
     try {
-      await patientService.deletePatient(patientId);
+      const result = await patientService.deletePatient(patientId);
+      if (result.action === 'deactivated') {
+        showToast('Paciente desativado (possui histórico de consultas)', 'info');
+      } else {
+        showToast('Paciente excluído com sucesso', 'success');
+      }
       navigation.goBack();
     } catch (error) {
       console.error('Delete error:', error);
@@ -169,7 +178,7 @@ export function PatientFormScreen() {
       } else if (error instanceof Error) {
         message = error.message;
       }
-      Alert.alert('Erro', message);
+      showToast(message, 'error');
       setIsDeleting(false);
     }
   };
@@ -200,10 +209,17 @@ export function PatientFormScreen() {
         <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
           <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>
-          {isEditMode ? 'Editar Paciente' : 'Novo Paciente'}
-        </Text>
-        {isEditMode ? (
+        <View style={styles.headerCenter}>
+          <Text style={styles.headerTitle}>
+            {isEditMode ? 'Editar Paciente' : 'Novo Paciente'}
+          </Text>
+          {isEditMode && !isActive && (
+            <View style={styles.inactiveBadge}>
+              <Text style={styles.inactiveBadgeText}>Inativo</Text>
+            </View>
+          )}
+        </View>
+        {isEditMode && isActive ? (
           <TouchableOpacity
             style={styles.deleteHeaderButton}
             onPress={handleDelete}
@@ -271,7 +287,7 @@ export function PatientFormScreen() {
                 value={formData.phone}
                 onChangeText={value => handleChange('phone', value)}
                 keyboardType="phone-pad"
-                editable={!isLoading && !isDeleting}
+                editable={!isLoading && !isDeleting && isActive}
                 maxLength={15}
               />
             </View>
@@ -286,39 +302,41 @@ export function PatientFormScreen() {
                 onChangeText={value => handleChange('notes', value)}
                 multiline
                 numberOfLines={4}
-                editable={!isLoading && !isDeleting}
+                editable={!isLoading && !isDeleting && isActive}
                 textAlignVertical="top"
               />
             </View>
           </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[
-                styles.submitButton,
-                (isLoading || isDeleting) && styles.submitButtonDisabled,
-              ]}
-              onPress={handleSubmit}
-              disabled={isLoading || isDeleting}
-              activeOpacity={0.8}
-            >
-              {isLoading || isDeleting ? (
-                <ActivityIndicator color={colors.white} />
-              ) : (
-                <Text style={styles.submitButtonText}>
-                  {isEditMode ? 'Salvar Alterações' : 'Cadastrar Paciente'}
-                </Text>
-              )}
-            </TouchableOpacity>
-          </View>
+          {(!isEditMode || isActive) && (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.submitButton,
+                  (isLoading || isDeleting) && styles.submitButtonDisabled,
+                ]}
+                onPress={handleSubmit}
+                disabled={isLoading || isDeleting}
+                activeOpacity={0.8}
+              >
+                {isLoading || isDeleting ? (
+                  <ActivityIndicator color={colors.white} />
+                ) : (
+                  <Text style={styles.submitButtonText}>
+                    {isEditMode ? 'Salvar Alterações' : 'Cadastrar Paciente'}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
 
       <ConfirmDialog
         visible={showDeleteDialog}
         title="Excluir Paciente"
-        message="Tem certeza que deseja excluir? Todos os dados, incluindo histórico e outras informações relevantes serão permanentemente perdidos. Esta ação não pode ser desfeita."
-        confirmText="Excluir"
+        message="Tem certeza que deseja excluir este paciente? Se houver histórico de consultas, ele será apenas desativado. Caso contrário, será excluído permanentemente."
+        confirmText="Confirmar"
         cancelText="Cancelar"
         onConfirm={() => {
           setShowDeleteDialog(false);
@@ -364,6 +382,24 @@ const styles = StyleSheet.create({
   },
   deleteHeaderButton: {
     padding: 8,
+  },
+  headerCenter: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  inactiveBadge: {
+    backgroundColor: '#E0E0E0',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  inactiveBadgeText: {
+    fontSize: 11,
+    color: '#666',
+    fontWeight: '600',
   },
   keyboardView: {
     flex: 1,

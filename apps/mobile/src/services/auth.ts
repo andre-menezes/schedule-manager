@@ -15,6 +15,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  deactivatedAt: string | null;
 }
 
 export interface AuthResponse {
@@ -45,6 +46,10 @@ export async function listUsers(): Promise<User[]> {
 
 export async function deactivateUser(userId: string): Promise<void> {
   await api.delete(`/s/members/${userId}`);
+}
+
+export async function reactivateUser(userId: string): Promise<void> {
+  await api.patch(`/s/members/${userId}/reactivate`);
 }
 
 export interface PasswordResetResponse {

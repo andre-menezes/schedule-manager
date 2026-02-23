@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuthStore } from '../stores/auth-store';
-import { listUsers, deactivateUser, type User } from '../services/auth';
+import { listUsers, deactivateUser, reactivateUser, type User } from '../services/auth';
 import { useToast } from '../contexts/ToastContext';
 import { ConfirmDialog } from '../components';
 import { colors } from '../theme/colors';
@@ -21,6 +21,7 @@ export function AdminPanelScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [userToDeactivate, setUserToDeactivate] = useState<User | null>(null);
+  const [userToReactivate, setUserToReactivate] = useState<User | null>(null);
   const { user, logout } = useAuthStore();
   const { showToast } = useToast();
 
@@ -48,7 +49,6 @@ export function AdminPanelScreen() {
 
   const handleDeactivate = async () => {
     if (!userToDeactivate) return;
-
     try {
       await deactivateUser(userToDeactivate.id);
       showToast(`${userToDeactivate.name} foi desativado`, 'success');
@@ -62,6 +62,21 @@ export function AdminPanelScreen() {
     }
   };
 
+  const handleReactivate = async () => {
+    if (!userToReactivate) return;
+    try {
+      await reactivateUser(userToReactivate.id);
+      showToast(`${userToReactivate.name} foi reativado`, 'success');
+      setUserToReactivate(null);
+      await fetchUsers();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Erro ao reativar usuário';
+      showToast(message, 'error');
+      setUserToReactivate(null);
+    }
+  };
+
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
@@ -72,28 +87,42 @@ export function AdminPanelScreen() {
   }, [fetchUsers]);
 
   const isCurrentUser = (item: User) => item.email === user?.email;
+  const isInactive = (item: User) => item.deactivatedAt !== null;
 
   const renderUserItem = ({ item }: { item: User }) => (
-    <View style={styles.userCard}>
+    <View style={[styles.userCard, isInactive(item) && styles.userCardInactive]}>
       <View style={styles.userInfo}>
-        <Text style={styles.userName}>{item.name}</Text>
+        <View style={styles.userNameRow}>
+          <Text style={[styles.userName, isInactive(item) && styles.userNameInactive]}>
+            {item.name}
+          </Text>
+          {isInactive(item) && (
+            <View style={styles.inactiveBadge}>
+              <Text style={styles.inactiveBadgeText}>Inativo</Text>
+            </View>
+          )}
+        </View>
         <Text style={styles.userEmail}>{item.email}</Text>
       </View>
       {isCurrentUser(item) ? (
         <View style={styles.youBadge}>
           <Text style={styles.youBadgeText}>Você</Text>
         </View>
+      ) : isInactive(item) ? (
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={() => setUserToReactivate(item)}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <MaterialIcons name="refresh" size={22} color={colors.success} />
+        </TouchableOpacity>
       ) : (
         <TouchableOpacity
-          style={styles.deleteButton}
+          style={styles.actionButton}
           onPress={() => setUserToDeactivate(item)}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <MaterialIcons
-            name="delete-outline"
-            size={22}
-            color={colors.secondary}
-          />
+          <MaterialIcons name="delete-outline" size={22} color={colors.secondary} />
         </TouchableOpacity>
       )}
     </View>
@@ -102,7 +131,7 @@ export function AdminPanelScreen() {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -135,7 +164,7 @@ export function AdminPanelScreen() {
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
-            tintColor="#007AFF"
+            tintColor={colors.primary}
           />
         }
         ListEmptyComponent={
@@ -155,6 +184,16 @@ export function AdminPanelScreen() {
         onCancel={() => setUserToDeactivate(null)}
         destructive
       />
+
+      <ConfirmDialog
+        visible={!!userToReactivate}
+        title="Reativar Usuário"
+        message={`Deseja reativar ${userToReactivate?.name}? O usuário voltará a ter acesso ao sistema.`}
+        confirmText="Reativar"
+        cancelText="Cancelar"
+        onConfirm={handleReactivate}
+        onCancel={() => setUserToReactivate(null)}
+      />
     </View>
   );
 }
@@ -162,16 +201,16 @@ export function AdminPanelScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
   },
   header: {
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.primary,
     paddingTop: 60,
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -182,7 +221,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.white,
   },
   headerSubtitle: {
     fontSize: 14,
@@ -196,7 +235,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   logoutButtonText: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 14,
     fontWeight: '600',
   },
@@ -210,41 +249,64 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1a1a1a',
+    color: colors.textPrimary,
   },
   sectionCount: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
   },
   listContent: {
     paddingHorizontal: 20,
     paddingBottom: 20,
   },
   userCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 3,
     elevation: 2,
   },
+  userCardInactive: {
+    backgroundColor: '#F0F0F0',
+    opacity: 0.8,
+  },
   userInfo: {
     flex: 1,
+  },
+  userNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   userName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1a1a1a',
+    color: colors.textPrimary,
+  },
+  userNameInactive: {
+    color: colors.textSecondary,
   },
   userEmail: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
     marginTop: 2,
+  },
+  inactiveBadge: {
+    backgroundColor: '#E0E0E0',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  inactiveBadgeText: {
+    fontSize: 11,
+    color: '#666',
+    fontWeight: '600',
   },
   youBadge: {
     backgroundColor: '#e3f2fd',
@@ -254,10 +316,10 @@ const styles = StyleSheet.create({
   },
   youBadgeText: {
     fontSize: 12,
-    color: '#1976d2',
+    color: colors.primary,
     fontWeight: '600',
   },
-  deleteButton: {
+  actionButton: {
     padding: 8,
   },
   emptyContainer: {
@@ -266,6 +328,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: '#999',
+    color: colors.textLight,
   },
 });

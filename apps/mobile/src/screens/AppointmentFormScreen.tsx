@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -25,36 +25,100 @@ import type { AppStackParamList } from '../navigation/types';
 import * as patientService from '../services/patients';
 import * as appointmentService from '../services/appointments';
 import type { PatientListItem } from '../services/patients';
+import type { AppointmentListItem } from '../services/appointments';
+import { Calendar } from 'react-native-calendars';
+import { SCHEDULING_DEFAULTS } from '../constants/scheduling';
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList, 'AppointmentForm'>;
 type FormRouteProp = RouteProp<AppStackParamList, 'AppointmentForm'>;
+
+interface TimeSlot {
+  time: string;
+  available: boolean;
+}
 
 function formatDateDisplay(dateStr: string): string {
   const [year, month, day] = dateStr.split('-').map(Number);
   const date = new Date(year, month - 1, day);
   return date.toLocaleDateString('pt-BR', {
+    weekday: 'long',
     day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
+    month: 'long',
   });
 }
 
-function formatTimeInput(value: string): string {
-  const digits = value.replace(/\D/g, '');
-  if (digits.length <= 2) return digits;
-  return `${digits.slice(0, 2)}:${digits.slice(2, 4)}`;
+function getTodayDate(): string {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
-function isValidTime(time: string): boolean {
-  const match = time.match(/^(\d{2}):(\d{2})$/);
-  if (!match) return false;
-  const hours = parseInt(match[1], 10);
-  const minutes = parseInt(match[2], 10);
-  return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
+function getCurrentTimeMinutes(): number {
+  const now = new Date();
+  return now.getHours() * 60 + now.getMinutes();
+}
+
+function timeToMinutes(time: string): number {
+  const [h, m] = time.split(':').map(Number);
+  return h * 60 + m;
+}
+
+function addMinutesToTime(time: string, minutes: number): string {
+  const total = timeToMinutes(time) + minutes;
+  const h = Math.floor(total / 60);
+  const m = total % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
 function buildISODateTime(dateStr: string, timeStr: string): string {
   return `${dateStr}T${timeStr}:00.000Z`;
+}
+
+function generateTimeSlots(
+  appointments: AppointmentListItem[],
+  date: string,
+  editingAppointmentId?: string
+): TimeSlot[] {
+  const slots: TimeSlot[] = [];
+  const startMinutes = timeToMinutes(SCHEDULING_DEFAULTS.WORK_START_TIME);
+  const lastMinutes = timeToMinutes(SCHEDULING_DEFAULTS.LAST_SLOT_TIME);
+  const interval = SCHEDULING_DEFAULTS.SLOT_INTERVAL_MINUTES;
+  const duration = SCHEDULING_DEFAULTS.SLOT_DURATION_MINUTES;
+
+  const isToday = date === getTodayDate();
+  const currentMinutes = getCurrentTimeMinutes();
+
+  const activeAppointments = appointments.filter(
+    (a) => a.status !== 'CANCELADO' && a.id !== editingAppointmentId
+  );
+
+  for (let m = startMinutes; m <= lastMinutes; m += interval) {
+    const h = Math.floor(m / 60);
+    const min = m % 60;
+    const time = `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+
+    const slotStart = m;
+    const slotEnd = m + duration;
+
+    const isPast = isToday && slotStart <= currentMinutes;
+
+    const isOccupied = activeAppointments.some((appt) => {
+      const apptStart = new Date(appt.startAt);
+      const apptEnd = new Date(appt.endAt);
+      const apptStartMinutes = apptStart.getUTCHours() * 60 + apptStart.getUTCMinutes();
+      const apptEndMinutes = apptEnd.getUTCHours() * 60 + apptEnd.getUTCMinutes();
+      return slotStart < apptEndMinutes && slotEnd > apptStartMinutes;
+    });
+
+    slots.push({
+      time,
+      available: !isPast && !isOccupied,
+    });
+  }
+
+  return slots;
 }
 
 export function AppointmentFormScreen() {
@@ -71,11 +135,14 @@ export function AppointmentFormScreen() {
   const [showPatientPicker, setShowPatientPicker] = useState(false);
   const [patientSearch, setPatientSearch] = useState('');
   const [date, setDate] = useState(routeDate || selectedDate);
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
+  const [dayAppointments, setDayAppointments] = useState<AppointmentListItem[]>([]);
+
+  const isPastDate = date < getTodayDate();
 
   const loadPatients = useCallback(async () => {
     try {
@@ -86,21 +153,24 @@ export function AppointmentFormScreen() {
     }
   }, [showToast]);
 
+  const loadDayAppointments = useCallback(async () => {
+    try {
+      const data = await appointmentService.listAppointments(date);
+      setDayAppointments(data);
+    } catch {
+      showToast('Erro ao carregar horários', 'error');
+    }
+  }, [date, showToast]);
+
   const loadAppointment = useCallback(async () => {
     if (!appointmentId) return;
     try {
       const appt = await appointmentService.getAppointment(appointmentId);
       const start = new Date(appt.startAt);
-      const end = new Date(appt.endAt);
-      setDate(appt.startAt.split('T')[0]);
-      setStartTime(
-        `${String(start.getUTCHours()).padStart(2, '0')}:${String(start.getUTCMinutes()).padStart(2, '0')}`
-      );
-      setEndTime(
-        `${String(end.getUTCHours()).padStart(2, '0')}:${String(end.getUTCMinutes()).padStart(2, '0')}`
-      );
+      const time = `${String(start.getUTCHours()).padStart(2, '0')}:${String(start.getUTCMinutes()).padStart(2, '0')}`;
+      setSelectedTime(time);
       setNotes(appt.notes || '');
-      setSelectedPatient({ id: appt.patientId, name: appt.patientName, phone: null, notes: null });
+      setSelectedPatient({ id: appt.patientId, name: appt.patientName, phone: null, notes: null, isActive: true });
     } catch {
       showToast('Erro ao carregar agendamento', 'error');
       navigation.goBack();
@@ -109,15 +179,32 @@ export function AppointmentFormScreen() {
 
   useEffect(() => {
     const init = async () => {
-      await loadPatients();
+      await Promise.all([loadPatients(), loadDayAppointments()]);
       if (isEditMode) await loadAppointment();
       setIsLoadingData(false);
     };
     init();
-  }, [loadPatients, loadAppointment, isEditMode]);
+  }, [loadPatients, loadDayAppointments, loadAppointment, isEditMode]);
 
-  const filteredPatients = patients.filter((p) =>
-    p.name.toLowerCase().includes(patientSearch.toLowerCase())
+  const timeSlots = useMemo(
+    () => generateTimeSlots(dayAppointments, date, appointmentId),
+    [dayAppointments, date, appointmentId]
+  );
+
+  const handleDateChange = useCallback((newDate: string) => {
+    setDate(newDate);
+    setSelectedTime(null);
+    setShowDatePicker(false);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoadingData) {
+      loadDayAppointments();
+    }
+  }, [date]);
+
+  const filteredPatients = patients.filter(
+    (p) => p.isActive && p.name.toLowerCase().includes(patientSearch.toLowerCase())
   );
 
   const handleSubmit = async () => {
@@ -125,22 +212,15 @@ export function AppointmentFormScreen() {
       showToast('Selecione um paciente', 'error');
       return;
     }
-    if (!startTime || !isValidTime(startTime)) {
-      showToast('Horário de início inválido', 'error');
-      return;
-    }
-    if (!endTime || !isValidTime(endTime)) {
-      showToast('Horário de fim inválido', 'error');
-      return;
-    }
-    if (startTime >= endTime) {
-      showToast('Horário de início deve ser antes do fim', 'error');
+    if (!selectedTime) {
+      showToast('Selecione um horário', 'error');
       return;
     }
 
     setIsLoading(true);
     try {
-      const startAt = buildISODateTime(date, startTime);
+      const startAt = buildISODateTime(date, selectedTime);
+      const endTime = addMinutesToTime(selectedTime, SCHEDULING_DEFAULTS.SLOT_DURATION_MINUTES);
       const endAt = buildISODateTime(date, endTime);
 
       if (isEditMode && appointmentId) {
@@ -208,8 +288,6 @@ export function AppointmentFormScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.formCard}>
-            <Text style={styles.sectionTitle}>Informações da Consulta</Text>
-
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Paciente *</Text>
               <TouchableOpacity
@@ -237,41 +315,64 @@ export function AppointmentFormScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Data</Text>
-              <View style={[styles.input, styles.inputDisabled]}>
-                <Text style={styles.inputDisabledText}>
+              <Text style={styles.label}>Data *</Text>
+              <TouchableOpacity
+                style={styles.dateDisplay}
+                onPress={() => setShowDatePicker(true)}
+                activeOpacity={0.7}
+              >
+                <MaterialIcons name="event" size={20} color={colors.primary} />
+                <Text style={styles.dateText}>
                   {formatDateDisplay(date)}
                 </Text>
-              </View>
+                <MaterialIcons name="arrow-drop-down" size={24} color={colors.textSecondary} />
+              </TouchableOpacity>
             </View>
 
-            <View style={styles.timeRow}>
-              <View style={styles.timeInput}>
-                <Text style={styles.label}>Início *</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="08:00"
-                  placeholderTextColor={colors.textLight}
-                  value={startTime}
-                  onChangeText={(v) => setStartTime(formatTimeInput(v))}
-                  keyboardType="number-pad"
-                  maxLength={5}
-                  editable={!isLoading}
-                />
-              </View>
-              <View style={styles.timeInput}>
-                <Text style={styles.label}>Fim *</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="09:00"
-                  placeholderTextColor={colors.textLight}
-                  value={endTime}
-                  onChangeText={(v) => setEndTime(formatTimeInput(v))}
-                  keyboardType="number-pad"
-                  maxLength={5}
-                  editable={!isLoading}
-                />
-              </View>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Horário *</Text>
+              {isPastDate ? (
+                <View style={styles.pastDateWarning}>
+                  <MaterialIcons name="warning" size={20} color={colors.warning} />
+                  <Text style={styles.pastDateText}>
+                    Não é possível agendar em datas passadas
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.slotsGrid}>
+                  {timeSlots.map((slot) => (
+                    <TouchableOpacity
+                      key={slot.time}
+                      style={[
+                        styles.slotButton,
+                        slot.available && styles.slotAvailable,
+                        !slot.available && styles.slotOccupied,
+                        selectedTime === slot.time && slot.available && styles.slotSelected,
+                      ]}
+                      onPress={() => slot.available && setSelectedTime(slot.time)}
+                      disabled={!slot.available}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[
+                          styles.slotText,
+                          slot.available && styles.slotTextAvailable,
+                          !slot.available && styles.slotTextOccupied,
+                          selectedTime === slot.time && slot.available && styles.slotTextSelected,
+                        ]}
+                      >
+                        {slot.time}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+              {selectedTime && (
+                <Text style={styles.durationInfo}>
+                  Consulta: {selectedTime} - {addMinutesToTime(selectedTime, SCHEDULING_DEFAULTS.SLOT_DURATION_MINUTES)}
+                  {' '}({SCHEDULING_DEFAULTS.SLOT_DURATION_MINUTES} min)
+                </Text>
+              )}
             </View>
 
             <View style={styles.inputGroup}>
@@ -291,9 +392,12 @@ export function AppointmentFormScreen() {
           </View>
 
           <TouchableOpacity
-            style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
+            style={[
+              styles.submitButton,
+              (isLoading || !selectedTime || isPastDate) && styles.submitButtonDisabled,
+            ]}
             onPress={handleSubmit}
-            disabled={isLoading}
+            disabled={isLoading || !selectedTime || isPastDate}
             activeOpacity={0.8}
           >
             {isLoading ? (
@@ -360,6 +464,39 @@ export function AppointmentFormScreen() {
           </View>
         </View>
       </Modal>
+
+      <Modal
+        visible={showDatePicker}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowDatePicker(false)}
+      >
+        <View style={styles.datePickerOverlay}>
+          <View style={styles.datePickerContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Selecionar Data</Text>
+              <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                <MaterialIcons name="close" size={24} color={colors.textPrimary} />
+              </TouchableOpacity>
+            </View>
+            <Calendar
+              current={date}
+              minDate={getTodayDate()}
+              onDayPress={(day: { dateString: string }) => handleDateChange(day.dateString)}
+              markedDates={{
+                [date]: { selected: true, selectedColor: colors.primary },
+              }}
+              theme={{
+                todayTextColor: colors.primary,
+                arrowColor: colors.primary,
+                textDayFontWeight: '500',
+                textMonthFontWeight: '600',
+                textDayHeaderFontWeight: '500',
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -415,14 +552,8 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.textPrimary,
-    marginBottom: 16,
-  },
   inputGroup: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
   label: {
     fontSize: 14,
@@ -440,23 +571,92 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textPrimary,
   },
-  inputDisabled: {
-    justifyContent: 'center',
-  },
-  inputDisabledText: {
-    fontSize: 16,
-    color: colors.textSecondary,
-  },
   textArea: {
     height: 80,
     paddingTop: 14,
   },
-  timeRow: {
+  dateDisplay: {
     flexDirection: 'row',
-    gap: 16,
-    marginBottom: 16,
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: colors.background,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
   },
-  timeInput: {
+  datePickerOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  datePickerContent: {
+    backgroundColor: colors.white,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  dateText: {
+    flex: 1,
+    fontSize: 16,
+    color: colors.textPrimary,
+    textTransform: 'capitalize',
+  },
+  slotsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  slotButton: {
+    width: '30%',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+  },
+  slotAvailable: {
+    backgroundColor: colors.white,
+    borderColor: colors.primary,
+  },
+  slotOccupied: {
+    backgroundColor: colors.background,
+    borderColor: colors.border,
+  },
+  slotSelected: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  slotText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  slotTextAvailable: {
+    color: colors.primary,
+  },
+  slotTextOccupied: {
+    color: colors.textLight,
+  },
+  slotTextSelected: {
+    color: colors.white,
+  },
+  durationInfo: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  pastDateWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#FFF8E1',
+    borderRadius: 12,
+    padding: 16,
+  },
+  pastDateText: {
+    fontSize: 14,
+    color: colors.warning,
     flex: 1,
   },
   pickerButton: {
@@ -493,7 +693,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   submitButtonDisabled: {
-    opacity: 0.7,
+    opacity: 0.5,
   },
   submitButtonText: {
     color: colors.white,
@@ -503,12 +703,12 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
   },
   modalContent: {
     backgroundColor: colors.white,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
     maxHeight: '70%',
     paddingBottom: 24,
   },

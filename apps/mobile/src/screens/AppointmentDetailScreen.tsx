@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 import { useAppointmentsStore } from '../stores/appointments-store';
@@ -35,12 +35,15 @@ function formatDateTime(isoDate: string): string {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+    timeZone: 'UTC',
   });
 }
 
 function formatTime(isoDate: string): string {
   const date = new Date(isoDate);
-  return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  const hours = String(date.getUTCHours()).padStart(2, '0');
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+  return `${hours}:${minutes}`;
 }
 
 export function AppointmentDetailScreen() {
@@ -60,10 +63,12 @@ export function AppointmentDetailScreen() {
 
   const [showCancelDialog, setShowCancelDialog] = useState(false);
 
-  useEffect(() => {
-    fetchAppointment(appointmentId);
-    return () => clearSelectedAppointment();
-  }, [appointmentId, fetchAppointment, clearSelectedAppointment]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchAppointment(appointmentId);
+      return () => clearSelectedAppointment();
+    }, [appointmentId, fetchAppointment, clearSelectedAppointment])
+  );
 
   const handleMarkCompleted = async () => {
     try {

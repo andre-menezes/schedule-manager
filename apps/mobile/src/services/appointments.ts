@@ -61,6 +61,13 @@ export async function updateAppointment(
   return response.data;
 }
 
+export async function getAppointmentDates(month: string): Promise<string[]> {
+  const response = await api.get<string[]>('/appointments/dates', {
+    params: { month },
+  });
+  return response.data;
+}
+
 export async function updateAppointmentStatus(
   id: string,
   status: 'REALIZADO' | 'CANCELADO'
