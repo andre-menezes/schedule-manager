@@ -20,6 +20,10 @@ describe('LoginUser', () => {
       create: mock(() => Promise.resolve(mockUser)),
       findByEmail: mock(() => Promise.resolve(mockUser)),
       findById: mock(() => Promise.resolve(mockUser)),
+      findAll: mock(() => Promise.resolve([mockUser])),
+      updatePassword: mock(() => Promise.resolve()),
+      deactivate: mock(() => Promise.resolve()),
+      reactivate: mock(() => Promise.resolve()),
     };
 
     const hashService: HashService = {
@@ -46,7 +50,10 @@ describe('LoginUser', () => {
 
     expect(result.token).toBe('jwt-token');
     expect(userRepository.findByEmail).toHaveBeenCalledWith('john@example.com');
-    expect(hashService.compare).toHaveBeenCalledWith('password123', 'hashed-password');
+    expect(hashService.compare).toHaveBeenCalledWith(
+      'password123',
+      'hashed-password'
+    );
     expect(tokenService.generate).toHaveBeenCalledWith({ userId: 'user-123' });
   });
 
