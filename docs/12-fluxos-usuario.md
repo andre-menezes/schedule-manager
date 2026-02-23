@@ -81,17 +81,18 @@ Este documento serve para:
 
 1. Usuário toca em "Novo atendimento"
 2. Seleciona paciente
-   - ou cadastra novo paciente
-
-3. Informa data e horário
-4. Confirma criação
-5. Sistema valida conflitos
-6. Atendimento é criado
-7. Usuário retorna à agenda
+3. Visualiza grid de horários disponíveis do dia
+4. Seleciona horário (slots ocupados aparecem desabilitados)
+5. Opcionalmente adiciona observações
+6. Confirma criação
+7. Sistema valida conflitos e data/hora
+8. Atendimento é criado
+9. Usuário retorna à agenda
 
 **Erros possíveis**:
 
 - Horário em conflito
+- Data/hora no passado
 - Dados obrigatórios ausentes
 
 ---
