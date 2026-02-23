@@ -35,7 +35,7 @@ export class PrismaPatientRepository implements PatientRepository {
   async findAllByUserId(userId: string): Promise<Patient[]> {
     return this.prisma.patient.findMany({
       where: { userId },
-      orderBy: { name: 'asc' },
+      orderBy: [{ deactivatedAt: 'asc' }, { name: 'asc' }],
     });
   }
 
@@ -53,6 +53,19 @@ export class PrismaPatientRepository implements PatientRepository {
   async delete(id: string): Promise<void> {
     await this.prisma.patient.delete({
       where: { id },
+    });
+  }
+
+  async deactivate(id: string): Promise<void> {
+    await this.prisma.patient.update({
+      where: { id },
+      data: { deactivatedAt: new Date() },
+    });
+  }
+
+  async countAppointments(id: string): Promise<number> {
+    return this.prisma.appointment.count({
+      where: { patientId: id },
     });
   }
 }

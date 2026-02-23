@@ -33,6 +33,7 @@ export class CreatePatient {
       name: patient.name,
       phone: patient.phone,
       notes: patient.notes,
+      isActive: true,
     };
   }
 }

@@ -47,6 +47,7 @@ export class UpdatePatient {
       name: patient.name,
       phone: patient.phone,
       notes: patient.notes,
+      isActive: !patient.deactivatedAt,
     };
   }
 }

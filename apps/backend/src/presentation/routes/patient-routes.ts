@@ -9,6 +9,7 @@ const patientOutputSchema = {
     name: { type: 'string', example: 'Maria Santos' },
     phone: { type: 'string', nullable: true, example: '11999998888' },
     notes: { type: 'string', nullable: true, example: 'Paciente com alergia a dipirona' },
+    isActive: { type: 'boolean', example: true },
   },
 };
 
@@ -19,6 +20,7 @@ const patientListOutputSchema = {
     name: { type: 'string', example: 'Maria Santos' },
     phone: { type: 'string', nullable: true, example: '11999998888' },
     notes: { type: 'string', nullable: true, example: 'Paciente com alergia a dipirona' },
+    isActive: { type: 'boolean', example: true },
   },
 };
 
@@ -148,8 +150,8 @@ const updatePatientSchema = {
 
 const deletePatientSchema = {
   tags: ['Patients'],
-  summary: 'Excluir paciente',
-  description: 'Exclui um paciente e todos os seus dados relacionados',
+  summary: 'Excluir ou desativar paciente',
+  description: 'Exclui definitivamente se não tem histórico; desativa se tem',
   security: securitySchema,
   params: {
     type: 'object',
@@ -158,9 +160,12 @@ const deletePatientSchema = {
     },
   },
   response: {
-    204: {
-      description: 'Paciente excluído com sucesso',
-      type: 'null',
+    200: {
+      description: 'Ação realizada',
+      type: 'object',
+      properties: {
+        action: { type: 'string', enum: ['deleted', 'deactivated'] },
+      },
     },
     401: {
       description: 'Não autenticado',

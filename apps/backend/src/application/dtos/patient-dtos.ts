@@ -20,6 +20,7 @@ export interface PatientOutput {
   name: string;
   phone: string | null;
   notes: string | null;
+  isActive: boolean;
 }
 
 export interface PatientListOutput {
@@ -27,4 +28,5 @@ export interface PatientListOutput {
   name: string;
   phone: string | null;
   notes: string | null;
+  isActive: boolean;
 }

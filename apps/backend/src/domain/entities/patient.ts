@@ -4,6 +4,7 @@ export interface Patient {
   name: string;
   phone: string | null;
   notes: string | null;
+  deactivatedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -79,8 +79,8 @@ export class PatientController {
     try {
       const { user } = request as AuthenticatedRequest;
       const { id } = request.params as PatientParams;
-      await this.deletePatient.execute(user.userId, id);
-      reply.status(204).send();
+      const result = await this.deletePatient.execute(user.userId, id);
+      reply.status(200).send(result);
     } catch (error) {
       this.handleError(error, reply);
     }

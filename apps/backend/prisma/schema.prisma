@@ -38,13 +38,14 @@ model PasswordResetToken {
 }
 
 model Patient {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  name      String
-  phone     String?
-  notes     String?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  name          String
+  phone         String?
+  notes         String?
+  deactivatedAt DateTime? @map("deactivated_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   appointments Appointment[]

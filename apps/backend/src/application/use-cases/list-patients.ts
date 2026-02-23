@@ -12,6 +12,7 @@ export class ListPatients {
       name: patient.name,
       phone: patient.phone,
       notes: patient.notes,
+      isActive: !patient.deactivatedAt,
     }));
   }
 }
