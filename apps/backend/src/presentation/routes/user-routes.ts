@@ -8,6 +8,7 @@ const userListOutputSchema = {
     id: { type: 'string', format: 'uuid' },
     name: { type: 'string' },
     email: { type: 'string', format: 'email' },
+    deactivatedAt: { type: 'string', nullable: true },
   },
 };
 
@@ -52,6 +53,32 @@ export function userRoutes(
   // Hidden route - not obvious like /admin or /users
   app.get('/s/members', { schema: listUsersSchema }, (request, reply) =>
     controller.list(request, reply)
+  );
+
+  app.patch(
+    '/s/members/:id/reactivate',
+    {
+      schema: {
+        tags: ['System'],
+        summary: 'Reactivate a member',
+        description: 'Reactivates a previously deactivated user account (admin only)',
+        security: securitySchema,
+        params: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+          },
+          required: ['id'],
+        },
+        response: {
+          204: { description: 'User reactivated', type: 'null' },
+          401: { description: 'Not authenticated', ...errorSchema },
+          403: { description: 'Access denied', ...errorSchema },
+          404: { description: 'User not found', ...errorSchema },
+        },
+      },
+    },
+    (request, reply) => controller.reactivate(request, reply)
   );
 
   app.delete(

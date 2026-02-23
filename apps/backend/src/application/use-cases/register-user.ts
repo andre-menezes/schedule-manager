@@ -34,6 +34,7 @@ export class RegisterUser {
         id: user.id,
         name: user.name,
         email: user.email,
+        deactivatedAt: user.deactivatedAt?.toISOString() ?? null,
       },
     };
   }

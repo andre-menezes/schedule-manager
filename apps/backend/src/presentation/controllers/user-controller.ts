@@ -1,6 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import type { ListUsers } from '../../application/use-cases/list-users.js';
 import type { DeactivateUser } from '../../application/use-cases/deactivate-user.js';
+import type { ReactivateUser } from '../../application/use-cases/reactivate-user.js';
 import {
   AccessDeniedError,
   CannotDeactivateAdminError,
@@ -16,6 +17,7 @@ export class UserController {
   constructor(
     private readonly listUsers: ListUsers,
     private readonly deactivateUserUseCase: DeactivateUser,
+    private readonly reactivateUserUseCase: ReactivateUser,
   ) {}
 
   async list(request: FastifyRequest, reply: FastifyReply): Promise<void> {
@@ -33,6 +35,17 @@ export class UserController {
       const { user } = request as AuthenticatedRequest;
       const { id } = request.params as { id: string };
       await this.deactivateUserUseCase.execute(user.userId, id);
+      reply.status(204).send();
+    } catch (error) {
+      this.handleError(error, reply);
+    }
+  }
+
+  async reactivate(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+    try {
+      const { user } = request as AuthenticatedRequest;
+      const { id } = request.params as { id: string };
+      await this.reactivateUserUseCase.execute(user.userId, id);
       reply.status(204).send();
     } catch (error) {
       this.handleError(error, reply);

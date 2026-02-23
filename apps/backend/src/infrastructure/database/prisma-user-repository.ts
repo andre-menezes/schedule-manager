@@ -29,8 +29,7 @@ export class PrismaUserRepository implements UserRepository {
 
   async findAll(): Promise<User[]> {
     return this.prisma.user.findMany({
-      where: { deactivatedAt: null },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ deactivatedAt: 'asc' }, { createdAt: 'desc' }],
     });
   }
 
@@ -45,6 +44,13 @@ export class PrismaUserRepository implements UserRepository {
     await this.prisma.user.update({
       where: { id },
       data: { deactivatedAt: new Date() },
+    });
+  }
+
+  async reactivate(id: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { id },
+      data: { deactivatedAt: null },
     });
   }
 }
