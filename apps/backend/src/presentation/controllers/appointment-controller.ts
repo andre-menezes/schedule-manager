@@ -1,12 +1,14 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { ZodError } from 'zod';
 import {
+  appointmentDatesQuerySchema,
   createAppointmentSchema,
   listAppointmentsQuerySchema,
   updateAppointmentSchema,
   updateAppointmentStatusSchema,
 } from '../../application/dtos/appointment-dtos.js';
 import type { CreateAppointment } from '../../application/use-cases/create-appointment.js';
+import type { GetAppointmentDates } from '../../application/use-cases/get-appointment-dates.js';
 import type { GetAppointment } from '../../application/use-cases/get-appointment.js';
 import type { ListAppointments } from '../../application/use-cases/list-appointments.js';
 import type { UpdateAppointment } from '../../application/use-cases/update-appointment.js';
@@ -35,7 +37,8 @@ export class AppointmentController {
     private readonly listAppointments: ListAppointments,
     private readonly getAppointment: GetAppointment,
     private readonly updateAppointment: UpdateAppointment,
-    private readonly updateAppointmentStatus: UpdateAppointmentStatus
+    private readonly updateAppointmentStatus: UpdateAppointmentStatus,
+    private readonly getAppointmentDates: GetAppointmentDates
   ) {}
 
   async create(request: FastifyRequest, reply: FastifyReply): Promise<void> {
@@ -77,6 +80,17 @@ export class AppointmentController {
       const { id } = request.params as AppointmentParams;
       const input = updateAppointmentSchema.parse(request.body);
       const result = await this.updateAppointment.execute(user.userId, id, input);
+      reply.status(200).send(result);
+    } catch (error) {
+      this.handleError(error, reply);
+    }
+  }
+
+  async listDates(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+    try {
+      const { user } = request as AuthenticatedRequest;
+      const { month } = appointmentDatesQuerySchema.parse(request.query);
+      const result = await this.getAppointmentDates.execute(user.userId, month);
       reply.status(200).send(result);
     } catch (error) {
       this.handleError(error, reply);

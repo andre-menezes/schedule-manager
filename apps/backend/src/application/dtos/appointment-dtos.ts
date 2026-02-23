@@ -39,6 +39,10 @@ export const listAppointmentsQuerySchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format'),
 });
 
+export const appointmentDatesQuerySchema = z.object({
+  month: z.string().regex(/^\d{4}-\d{2}$/, 'Month must be in YYYY-MM format'),
+});
+
 export type CreateAppointmentDto = z.infer<typeof createAppointmentSchema>;
 export type UpdateAppointmentDto = z.infer<typeof updateAppointmentSchema>;
 export type UpdateAppointmentStatusDto = z.infer<typeof updateAppointmentStatusSchema>;

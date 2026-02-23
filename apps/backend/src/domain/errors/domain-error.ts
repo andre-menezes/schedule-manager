@@ -85,3 +85,9 @@ export class UserDeactivatedError extends DomainError {
     super('User account has been deactivated', 'USER_DEACTIVATED');
   }
 }
+
+export class PastAppointmentError extends DomainError {
+  constructor() {
+    super('Cannot schedule appointments in the past', 'PAST_APPOINTMENT');
+  }
+}

@@ -1,5 +1,6 @@
 import {
   AppointmentConflictError,
+  PastAppointmentError,
   PatientNotFoundError,
 } from '../../domain/errors/domain-error.js';
 import type { AppointmentRepository } from '../../domain/repositories/appointment-repository.js';
@@ -27,6 +28,10 @@ export class CreateAppointment {
 
     const startAt = new Date(input.startAt);
     const endAt = new Date(input.endAt);
+
+    if (startAt < new Date()) {
+      throw new PastAppointmentError();
+    }
 
     const conflicting = await this.appointmentRepository.findConflicting(
       userId,

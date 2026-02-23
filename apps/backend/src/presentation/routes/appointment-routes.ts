@@ -231,6 +231,37 @@ export function appointmentRoutes(
     controller.list(request, reply)
   );
 
+  app.get('/appointments/dates', {
+    schema: {
+      tags: ['Appointments'],
+      summary: 'Listar datas com agendamentos',
+      description: 'Retorna as datas que possuem agendamentos em um determinado mês',
+      security: securitySchema,
+      querystring: {
+        type: 'object',
+        required: ['month'],
+        properties: {
+          month: { type: 'string', pattern: '^\\d{4}-\\d{2}$', example: '2026-02' },
+        },
+      },
+      response: {
+        200: {
+          description: 'Lista de datas com agendamentos',
+          type: 'array',
+          items: { type: 'string', example: '2026-02-01' },
+        },
+        400: {
+          description: 'Mês inválido',
+          ...errorSchema,
+        },
+        401: {
+          description: 'Não autenticado',
+          ...errorSchema,
+        },
+      },
+    },
+  }, (request, reply) => controller.listDates(request, reply));
+
   app.get('/appointments/:id', { schema: getAppointmentSchema }, (request, reply) =>
     controller.getById(request, reply)
   );

@@ -6,6 +6,7 @@ import fastifySwaggerUi from '@fastify/swagger-ui';
 import { CreateAppointment } from './application/use-cases/create-appointment.js';
 import { CreatePatient } from './application/use-cases/create-patient.js';
 import { DeletePatient } from './application/use-cases/delete-patient.js';
+import { GetAppointmentDates } from './application/use-cases/get-appointment-dates.js';
 import { GetAppointment } from './application/use-cases/get-appointment.js';
 import { GetPatient } from './application/use-cases/get-patient.js';
 import { ListAppointments } from './application/use-cases/list-appointments.js';
@@ -19,6 +20,7 @@ import { UpdatePatient } from './application/use-cases/update-patient.js';
 import { RequestPasswordReset } from './application/use-cases/request-password-reset.js';
 import { ResetPassword } from './application/use-cases/reset-password.js';
 import { DeactivateUser } from './application/use-cases/deactivate-user.js';
+import { ReactivateUser } from './application/use-cases/reactivate-user.js';
 import { BunHashService } from './infrastructure/auth/bun-hash-service.js';
 import { JwtTokenService } from './infrastructure/auth/jwt-token-service.js';
 import { prisma } from './infrastructure/database/prisma-client.js';
@@ -120,6 +122,7 @@ async function bootstrap(): Promise<void> {
   const resetPassword = new ResetPassword(userRepository, passwordResetRepository, hashService);
   const listUsers = new ListUsers(userRepository);
   const deactivateUser = new DeactivateUser(userRepository);
+  const reactivateUser = new ReactivateUser(userRepository);
   const createPatient = new CreatePatient(patientRepository, auditService);
   const listPatients = new ListPatients(patientRepository);
   const getPatient = new GetPatient(patientRepository);
@@ -128,13 +131,14 @@ async function bootstrap(): Promise<void> {
   const createAppointment = new CreateAppointment(appointmentRepository, patientRepository);
   const listAppointments = new ListAppointments(appointmentRepository, patientRepository);
   const getAppointment = new GetAppointment(appointmentRepository, patientRepository);
+  const getAppointmentDates = new GetAppointmentDates(appointmentRepository);
   const updateAppointment = new UpdateAppointment(appointmentRepository, patientRepository);
   const updateAppointmentStatus = new UpdateAppointmentStatus(appointmentRepository, patientRepository);
 
   // Initialize controllers
   const authController = new AuthController(registerUser, loginUser);
   const passwordResetController = new PasswordResetController(requestPasswordReset, resetPassword);
-  const userController = new UserController(listUsers, deactivateUser);
+  const userController = new UserController(listUsers, deactivateUser, reactivateUser);
   const patientController = new PatientController(
     createPatient,
     listPatients,
@@ -147,7 +151,8 @@ async function bootstrap(): Promise<void> {
     listAppointments,
     getAppointment,
     updateAppointment,
-    updateAppointmentStatus
+    updateAppointmentStatus,
+    getAppointmentDates
   );
 
   // Register public routes (no auth required)
