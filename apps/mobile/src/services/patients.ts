@@ -5,6 +5,7 @@ export interface Patient {
   name: string;
   phone: string | null;
   notes: string | null;
+  isActive: boolean;
 }
 
 export interface PatientListItem {
@@ -12,6 +13,7 @@ export interface PatientListItem {
   name: string;
   phone: string | null;
   notes: string | null;
+  isActive: boolean;
 }
 
 export interface CreatePatientInput {
@@ -51,6 +53,7 @@ export async function updatePatient(
   return response.data;
 }
 
-export async function deletePatient(id: string): Promise<void> {
-  await api.delete(`/patients/${id}`);
+export async function deletePatient(id: string): Promise<{ action: string }> {
+  const response = await api.delete<{ action: string }>(`/patients/${id}`);
+  return response.data;
 }

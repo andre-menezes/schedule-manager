@@ -29,14 +29,24 @@ function getInitials(name: string): string {
 }
 
 export function PatientCard({ patient, onPress }: PatientCardProps) {
+  const inactive = !patient.isActive;
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, inactive && styles.cardInactive]}>
       <View style={styles.cardHeader}>
-        <View style={styles.avatar}>
+        <View style={[styles.avatar, inactive && styles.avatarInactive]}>
           <Text style={styles.avatarText}>{getInitials(patient.name)}</Text>
         </View>
         <View style={styles.headerInfo}>
-          <Text style={styles.patientName}>{patient.name}</Text>
+          <View style={styles.nameRow}>
+            <Text style={[styles.patientName, inactive && styles.patientNameInactive]}>
+              {patient.name}
+            </Text>
+            {inactive && (
+              <View style={styles.inactiveBadge}>
+                <Text style={styles.inactiveBadgeText}>Inativo</Text>
+              </View>
+            )}
+          </View>
           <Text style={styles.phoneText}>
             Telefone: {patient.phone ? formatPhone(patient.phone) : 'Não informado'}
           </Text>
@@ -83,6 +93,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  cardInactive: {
+    opacity: 0.65,
+    backgroundColor: '#F5F5F5',
+  },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -95,6 +109,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
+  },
+  avatarInactive: {
+    backgroundColor: colors.textLight,
+  },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexWrap: 'wrap',
+  },
+  patientNameInactive: {
+    color: colors.textSecondary,
+  },
+  inactiveBadge: {
+    backgroundColor: '#E0E0E0',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  inactiveBadgeText: {
+    fontSize: 11,
+    color: '#666',
+    fontWeight: '600',
   },
   avatarText: {
     fontSize: 24,
