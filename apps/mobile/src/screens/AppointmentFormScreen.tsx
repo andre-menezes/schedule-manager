@@ -76,6 +76,18 @@ function buildISODateTime(dateStr: string, timeStr: string): string {
   return `${dateStr}T${timeStr}:00.000Z`;
 }
 
+function formatPhone(phone: string | null): string {
+  if (!phone) return '';
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length === 11) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  }
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+  return phone;
+}
+
 function generateTimeSlots(
   appointments: AppointmentListItem[],
   date: string,
@@ -449,7 +461,7 @@ export function AppointmentFormScreen() {
                 >
                   <Text style={styles.patientItemName}>{item.name}</Text>
                   {item.phone && (
-                    <Text style={styles.patientItemPhone}>{item.phone}</Text>
+                    <Text style={styles.patientItemPhone}>{formatPhone(item.phone)}</Text>
                   )}
                 </TouchableOpacity>
               )}
