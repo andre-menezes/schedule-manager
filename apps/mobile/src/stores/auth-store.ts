@@ -5,7 +5,7 @@ import type { User } from '../services/auth';
 
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';
-const ADMIN_EMAIL = 'andre_menezes@outlook.com';
+const ADMIN_EMAIL = 'dehhmenezes87@gmail.com';
 
 interface AuthState {
   isAuthenticated: boolean;

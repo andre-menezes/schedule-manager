@@ -24,7 +24,7 @@ const mockUser = {
 const mockAdminUser = {
   id: '2',
   name: 'Admin User',
-  email: 'andre_menezes@outlook.com',
+  email: 'dehhmenezes87@gmail.com',
 };
 
 describe('useAuthStore', () => {

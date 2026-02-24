@@ -9,6 +9,7 @@ import {
   AppointmentDetailScreen,
   AppointmentFormScreen,
 } from '../screens';
+
 import { colors } from '../theme/colors';
 import type { MainTabParamList, HomeStackParamList, PatientsStackParamList } from './types';
 
@@ -22,6 +23,7 @@ function HomeStackNavigator() {
       <HomeStack.Screen name="Home" component={HomeScreen} />
       <HomeStack.Screen name="AppointmentDetail" component={AppointmentDetailScreen} />
       <HomeStack.Screen name="AppointmentForm" component={AppointmentFormScreen} />
+      <HomeStack.Screen name="PatientForm" component={PatientFormScreen} />
     </HomeStack.Navigator>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import {
   FlatList,
   Modal,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -21,7 +21,7 @@ import type { RouteProp } from '@react-navigation/native';
 import { useAppointmentsStore } from '../stores/appointments-store';
 import { useToast } from '../contexts/ToastContext';
 import { colors } from '../theme/colors';
-import type { AppStackParamList } from '../navigation/types';
+import type { HomeStackParamList } from '../navigation/types';
 import * as patientService from '../services/patients';
 import * as appointmentService from '../services/appointments';
 import type { PatientListItem } from '../services/patients';
@@ -29,8 +29,8 @@ import type { AppointmentListItem } from '../services/appointments';
 import { Calendar } from 'react-native-calendars';
 import { SCHEDULING_DEFAULTS } from '../constants/scheduling';
 
-type NavigationProp = NativeStackNavigationProp<AppStackParamList, 'AppointmentForm'>;
-type FormRouteProp = RouteProp<AppStackParamList, 'AppointmentForm'>;
+type NavigationProp = NativeStackNavigationProp<HomeStackParamList, 'AppointmentForm'>;
+type FormRouteProp = RouteProp<HomeStackParamList, 'AppointmentForm'>;
 
 interface TimeSlot {
   time: string;
@@ -73,7 +73,21 @@ function addMinutesToTime(time: string, minutes: number): string {
 }
 
 function buildISODateTime(dateStr: string, timeStr: string): string {
-  return `${dateStr}T${timeStr}:00.000Z`;
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  return new Date(year, month - 1, day, hours, minutes, 0, 0).toISOString();
+}
+
+function formatPhone(phone: string | null): string {
+  if (!phone) return '';
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length === 11) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  }
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+  return phone;
 }
 
 function generateTimeSlots(
@@ -122,6 +136,7 @@ function generateTimeSlots(
 }
 
 export function AppointmentFormScreen() {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<FormRouteProp>();
   const { appointmentId, date: routeDate } = route.params || {};
@@ -129,6 +144,8 @@ export function AppointmentFormScreen() {
 
   const { createAppointment, fetchAppointments, selectedDate } = useAppointmentsStore();
   const { showToast } = useToast();
+
+  const prevPatientIdsRef = useRef<Set<string>>(new Set());
 
   const [patients, setPatients] = useState<PatientListItem[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<PatientListItem | null>(null);
@@ -147,11 +164,29 @@ export function AppointmentFormScreen() {
   const loadPatients = useCallback(async () => {
     try {
       const data = await patientService.listPatients();
+      const prevIds = prevPatientIdsRef.current;
+      if (prevIds.size > 0) {
+        const newPatients = data.filter(p => !prevIds.has(p.id) && p.isActive);
+        if (newPatients.length === 1) {
+          setSelectedPatient(newPatients[0]);
+          showToast(`${newPatients[0].name} selecionado(a)`, 'success');
+        } else if (newPatients.length > 1) {
+          setShowPatientPicker(true);
+        }
+        prevPatientIdsRef.current = new Set();
+      }
       setPatients(data);
     } catch {
       showToast('Erro ao carregar pacientes', 'error');
     }
   }, [showToast]);
+
+  const handleNavigateToNewPatient = useCallback(() => {
+    prevPatientIdsRef.current = new Set(patients.map(p => p.id));
+    setShowPatientPicker(false);
+    setPatientSearch('');
+    navigation.navigate('PatientForm', {});
+  }, [patients, navigation]);
 
   const loadDayAppointments = useCallback(async () => {
     try {
@@ -185,6 +220,15 @@ export function AppointmentFormScreen() {
     };
     init();
   }, [loadPatients, loadDayAppointments, loadAppointment, isEditMode]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (prevPatientIdsRef.current.size > 0) {
+        loadPatients();
+      }
+    });
+    return unsubscribe;
+  }, [navigation, loadPatients]);
 
   const timeSlots = useMemo(
     () => generateTimeSlots(dayAppointments, date, appointmentId),
@@ -418,7 +462,7 @@ export function AppointmentFormScreen() {
         onRequestClose={() => setShowPatientPicker(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+          <View style={[styles.modalContent, { paddingTop: insets.top }]}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Selecionar Paciente</Text>
               <TouchableOpacity onPress={() => setShowPatientPicker(false)}>
@@ -435,6 +479,15 @@ export function AppointmentFormScreen() {
               autoFocus
             />
 
+            <TouchableOpacity
+              style={styles.newPatientButton}
+              onPress={handleNavigateToNewPatient}
+              activeOpacity={0.7}
+            >
+              <MaterialIcons name="person-add" size={18} color={colors.primary} />
+              <Text style={styles.newPatientButtonText}>Cadastrar novo paciente</Text>
+            </TouchableOpacity>
+
             <FlatList
               data={filteredPatients}
               keyExtractor={(item) => item.id}
@@ -449,7 +502,7 @@ export function AppointmentFormScreen() {
                 >
                   <Text style={styles.patientItemName}>{item.name}</Text>
                   {item.phone && (
-                    <Text style={styles.patientItemPhone}>{item.phone}</Text>
+                    <Text style={styles.patientItemPhone}>{formatPhone(item.phone)}</Text>
                   )}
                 </TouchableOpacity>
               )}
@@ -458,6 +511,14 @@ export function AppointmentFormScreen() {
                   <Text style={styles.emptyPatientsText}>
                     Nenhum paciente encontrado
                   </Text>
+                  <TouchableOpacity
+                    style={styles.newPatientButtonEmpty}
+                    onPress={handleNavigateToNewPatient}
+                    activeOpacity={0.7}
+                  >
+                    <MaterialIcons name="person-add" size={16} color={colors.white} />
+                    <Text style={styles.newPatientButtonEmptyText}>Cadastrar paciente</Text>
+                  </TouchableOpacity>
                 </View>
               }
             />
@@ -759,5 +820,38 @@ const styles = StyleSheet.create({
   emptyPatientsText: {
     fontSize: 14,
     color: colors.textSecondary,
+    marginBottom: 16,
+  },
+  newPatientButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginHorizontal: 16,
+    marginBottom: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderStyle: 'dashed',
+  },
+  newPatientButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: colors.primary,
+  },
+  newPatientButtonEmpty: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: colors.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  newPatientButtonEmptyText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.white,
   },
 });

@@ -2,7 +2,7 @@ import { AccessDeniedError } from '../../domain/errors/domain-error.js';
 import type { UserRepository } from '../../domain/repositories/user-repository.js';
 import type { UserOutput } from '../dtos/auth-dtos.js';
 
-const ADMIN_EMAIL = 'andre_menezes@outlook.com';
+const ADMIN_EMAIL = 'dehhmenezes87@gmail.com';
 
 export class ListUsers {
   constructor(private readonly userRepository: UserRepository) {}
