@@ -34,10 +34,14 @@ export class RequestPasswordReset {
       expiresAt,
     });
 
-    await this.emailService.sendPasswordResetEmail({
-      to: user.email,
-      code,
-    });
+    try {
+      await this.emailService.sendPasswordResetEmail({
+        to: user.email,
+        code,
+      });
+    } catch (error) {
+      console.error('[RequestPasswordReset] Failed to send reset email:', error);
+    }
 
     return { message: 'If this email exists, a reset code will be sent' };
   }

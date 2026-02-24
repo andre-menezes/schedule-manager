@@ -43,6 +43,7 @@ export class ResendEmailService implements EmailService {
 
     if (result.error) {
       console.error('[ResendEmailService] Error sending email:', result.error);
+      console.warn(`[ResendEmailService] Fallback - reset code for ${input.to}: ${input.code}`);
       throw new Error(`Failed to send email: ${result.error.message}`);
     }
 

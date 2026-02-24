@@ -4,7 +4,7 @@ import {
 } from '../../domain/errors/domain-error.js';
 import type { UserRepository } from '../../domain/repositories/user-repository.js';
 
-const ADMIN_EMAIL = 'andre_menezes@outlook.com';
+const ADMIN_EMAIL = 'dehhmenezes87@gmail.com';
 
 export class ReactivateUser {
   constructor(private readonly userRepository: UserRepository) {}
