@@ -12,6 +12,7 @@ export type HomeStackParamList = {
   Home: undefined;
   AppointmentDetail: { appointmentId: string };
   AppointmentForm: { appointmentId?: string; date?: string };
+  PatientForm: { patientId?: string };
 };
 
 export type PatientsStackParamList = {

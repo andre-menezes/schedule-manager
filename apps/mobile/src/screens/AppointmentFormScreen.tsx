@@ -21,7 +21,7 @@ import type { RouteProp } from '@react-navigation/native';
 import { useAppointmentsStore } from '../stores/appointments-store';
 import { useToast } from '../contexts/ToastContext';
 import { colors } from '../theme/colors';
-import type { AppStackParamList } from '../navigation/types';
+import type { HomeStackParamList } from '../navigation/types';
 import * as patientService from '../services/patients';
 import * as appointmentService from '../services/appointments';
 import type { PatientListItem } from '../services/patients';
@@ -29,8 +29,8 @@ import type { AppointmentListItem } from '../services/appointments';
 import { Calendar } from 'react-native-calendars';
 import { SCHEDULING_DEFAULTS } from '../constants/scheduling';
 
-type NavigationProp = NativeStackNavigationProp<AppStackParamList, 'AppointmentForm'>;
-type FormRouteProp = RouteProp<AppStackParamList, 'AppointmentForm'>;
+type NavigationProp = NativeStackNavigationProp<HomeStackParamList, 'AppointmentForm'>;
+type FormRouteProp = RouteProp<HomeStackParamList, 'AppointmentForm'>;
 
 interface TimeSlot {
   time: string;
