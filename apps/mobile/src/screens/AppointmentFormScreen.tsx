@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -143,6 +143,8 @@ export function AppointmentFormScreen() {
   const { createAppointment, fetchAppointments, selectedDate } = useAppointmentsStore();
   const { showToast } = useToast();
 
+  const prevPatientIdsRef = useRef<Set<string>>(new Set());
+
   const [patients, setPatients] = useState<PatientListItem[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<PatientListItem | null>(null);
   const [showPatientPicker, setShowPatientPicker] = useState(false);
@@ -160,11 +162,29 @@ export function AppointmentFormScreen() {
   const loadPatients = useCallback(async () => {
     try {
       const data = await patientService.listPatients();
+      const prevIds = prevPatientIdsRef.current;
+      if (prevIds.size > 0) {
+        const newPatients = data.filter(p => !prevIds.has(p.id) && p.isActive);
+        if (newPatients.length === 1) {
+          setSelectedPatient(newPatients[0]);
+          showToast(`${newPatients[0].name} selecionado(a)`, 'success');
+        } else if (newPatients.length > 1) {
+          setShowPatientPicker(true);
+        }
+        prevPatientIdsRef.current = new Set();
+      }
       setPatients(data);
     } catch {
       showToast('Erro ao carregar pacientes', 'error');
     }
   }, [showToast]);
+
+  const handleNavigateToNewPatient = useCallback(() => {
+    prevPatientIdsRef.current = new Set(patients.map(p => p.id));
+    setShowPatientPicker(false);
+    setPatientSearch('');
+    navigation.navigate('PatientForm', {});
+  }, [patients, navigation]);
 
   const loadDayAppointments = useCallback(async () => {
     try {
@@ -198,6 +218,15 @@ export function AppointmentFormScreen() {
     };
     init();
   }, [loadPatients, loadDayAppointments, loadAppointment, isEditMode]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (prevPatientIdsRef.current.size > 0) {
+        loadPatients();
+      }
+    });
+    return unsubscribe;
+  }, [navigation, loadPatients]);
 
   const timeSlots = useMemo(
     () => generateTimeSlots(dayAppointments, date, appointmentId),
@@ -448,6 +477,15 @@ export function AppointmentFormScreen() {
               autoFocus
             />
 
+            <TouchableOpacity
+              style={styles.newPatientButton}
+              onPress={handleNavigateToNewPatient}
+              activeOpacity={0.7}
+            >
+              <MaterialIcons name="person-add" size={18} color={colors.primary} />
+              <Text style={styles.newPatientButtonText}>Cadastrar novo paciente</Text>
+            </TouchableOpacity>
+
             <FlatList
               data={filteredPatients}
               keyExtractor={(item) => item.id}
@@ -471,6 +509,14 @@ export function AppointmentFormScreen() {
                   <Text style={styles.emptyPatientsText}>
                     Nenhum paciente encontrado
                   </Text>
+                  <TouchableOpacity
+                    style={styles.newPatientButtonEmpty}
+                    onPress={handleNavigateToNewPatient}
+                    activeOpacity={0.7}
+                  >
+                    <MaterialIcons name="person-add" size={16} color={colors.white} />
+                    <Text style={styles.newPatientButtonEmptyText}>Cadastrar paciente</Text>
+                  </TouchableOpacity>
                 </View>
               }
             />
@@ -772,5 +818,38 @@ const styles = StyleSheet.create({
   emptyPatientsText: {
     fontSize: 14,
     color: colors.textSecondary,
+    marginBottom: 16,
+  },
+  newPatientButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginHorizontal: 16,
+    marginBottom: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderStyle: 'dashed',
+  },
+  newPatientButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: colors.primary,
+  },
+  newPatientButtonEmpty: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: colors.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  newPatientButtonEmptyText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.white,
   },
 });
