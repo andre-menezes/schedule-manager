@@ -44,6 +44,7 @@ const PORT = Number(process.env['PORT'] ?? 3000);
 const JWT_SECRET = process.env['JWT_SECRET'] ?? 'dev-secret-change-in-production';
 const RESEND_API_KEY = process.env['RESEND_API_KEY'] ?? '';
 const EMAIL_FROM = process.env['EMAIL_FROM'] ?? 'onboarding@resend.dev';
+const CORS_ORIGIN = process.env['CORS_ORIGIN'] ?? true;
 
 async function bootstrap(): Promise<void> {
   const app = fastify({
@@ -58,7 +59,7 @@ async function bootstrap(): Promise<void> {
 
   // Register CORS
   await app.register(fastifyCors, {
-    origin: true,
+    origin: CORS_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
