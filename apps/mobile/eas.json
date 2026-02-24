@@ -14,13 +14,13 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://scheduler-api.onrender.com"
+        "EXPO_PUBLIC_API_URL": "https://schedule-manager-zzcd.onrender.com"
       }
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://scheduler-api.onrender.com"
+        "EXPO_PUBLIC_API_URL": "https://schedule-manager-zzcd.onrender.com"
       }
     }
   },
