@@ -73,7 +73,9 @@ function addMinutesToTime(time: string, minutes: number): string {
 }
 
 function buildISODateTime(dateStr: string, timeStr: string): string {
-  return `${dateStr}T${timeStr}:00.000Z`;
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  return new Date(year, month - 1, day, hours, minutes, 0, 0).toISOString();
 }
 
 function formatPhone(phone: string | null): string {
