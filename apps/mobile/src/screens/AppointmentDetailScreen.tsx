@@ -16,7 +16,7 @@ import type { RouteProp } from '@react-navigation/native';
 import { useAppointmentsStore } from '../stores/appointments-store';
 import { useToast } from '../contexts/ToastContext';
 import { Badge, ConfirmDialog } from '../components';
-import { colors } from '../theme/colors';
+import { colors } from '../theme';
 import type { AppStackParamList } from '../navigation/types';
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList, 'AppointmentDetail'>;
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 16,
     padding: 20,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,

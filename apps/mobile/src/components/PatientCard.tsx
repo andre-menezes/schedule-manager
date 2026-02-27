@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { colors } from '../theme/colors';
+import { colors, spacing, borderRadius, tokens } from '../theme';
 import type { PatientListItem } from '../services/patients';
 
 interface PatientCardProps {
@@ -82,14 +82,14 @@ export function PatientCard({ patient, onPress }: PatientCardProps) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
+    borderRadius: borderRadius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.base,
     shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOpacity: tokens.elevation.ios.level2.shadowOpacity,
+    shadowRadius: tokens.elevation.ios.level2.shadowRadius,
+    elevation: tokens.elevation.android.level2,
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -102,13 +102,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: spacing.giant,
+    height: spacing.giant,
+    borderRadius: borderRadius.pill,
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: spacing.base,
   },
   avatarInactive: {
     backgroundColor: colors.textLight,
@@ -116,21 +116,21 @@ const styles = StyleSheet.create({
   nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: spacing.sm,
     flexWrap: 'wrap',
   },
   patientNameInactive: {
     color: colors.textSecondary,
   },
   inactiveBadge: {
-    backgroundColor: '#E0E0E0',
-    paddingHorizontal: 8,
+    backgroundColor: tokens.colors.border.default,
+    paddingHorizontal: spacing.sm,
     paddingVertical: 2,
-    borderRadius: 10,
+    borderRadius: borderRadius.md,
   },
   inactiveBadgeText: {
     fontSize: 11,
-    color: '#666',
+    color: tokens.colors.text.secondary,
     fontWeight: '600',
   },
   avatarText: {
@@ -142,48 +142,48 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   patientName: {
-    fontSize: 20,
+    fontSize: tokens.typography.h1.size,
     fontWeight: '600',
     color: colors.textPrimary,
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   phoneText: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     color: colors.textSecondary,
   },
   divider: {
     height: 1,
     backgroundColor: colors.border,
-    marginVertical: 16,
+    marginVertical: spacing.base,
   },
   notesSection: {
-    marginBottom: 16,
+    marginBottom: spacing.base,
   },
   notesLabel: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     fontWeight: '500',
     color: colors.textSecondary,
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   notesText: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     color: colors.textPrimary,
-    lineHeight: 20,
+    lineHeight: tokens.typography.caption.lineHeight,
   },
   noNotesText: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     color: colors.textLight,
     fontStyle: 'italic',
   },
   viewButton: {
     backgroundColor: colors.primary,
-    paddingVertical: 14,
-    borderRadius: 8,
+    paddingVertical: spacing.base,
+    borderRadius: borderRadius.md,
     alignItems: 'center',
   },
   viewButtonText: {
     color: colors.white,
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     fontWeight: '600',
     letterSpacing: 1,
   },

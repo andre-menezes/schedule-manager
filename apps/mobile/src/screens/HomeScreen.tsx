@@ -16,7 +16,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAppointmentsStore } from '../stores/appointments-store';
 import { useAuthStore } from '../stores/auth-store';
 import { Badge } from '../components';
-import { colors } from '../theme/colors';
+import { colors } from '../theme';
 import type { AppStackParamList } from '../navigation/types';
 import type { AppointmentListItem } from '../services/appointments';
 import { getAppointmentDates } from '../services/appointments';
@@ -729,7 +729,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingTop: 14,
     paddingBottom: 4,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 6,
@@ -759,7 +759,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   dropdownBtnActive: {
-    backgroundColor: '#EEF0FB',
+    backgroundColor: '#E8EAFF',
   },
   dropdownText: {
     fontSize: 14,
@@ -902,7 +902,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 3,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
-import { colors, borderRadius, spacing } from '../theme';
+import { colors, borderRadius, spacing, tokens } from '../theme';
 
 interface CardProps {
   children: React.ReactNode;
@@ -20,11 +20,11 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
     borderRadius: borderRadius.lg,
-    shadowColor: colors.black,
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOpacity: tokens.elevation.ios.level1.shadowOpacity,
+    shadowRadius: tokens.elevation.ios.level1.shadowRadius,
+    elevation: tokens.elevation.android.level1,
   },
   none: {
     padding: 0,

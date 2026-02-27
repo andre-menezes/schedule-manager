@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Text, StyleSheet, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '../theme/colors';
+import { colors, spacing, tokens } from '../theme';
 
 export type ToastType = 'success' | 'error' | 'info';
 
@@ -15,7 +15,7 @@ interface ToastProps {
 
 const TOAST_COLORS: Record<ToastType, string> = {
   success: colors.success,
-  error: '#E53935',
+  error: tokens.colors.state.error,
   info: colors.primary,
 };
 
@@ -87,22 +87,22 @@ export function Toast({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    left: 16,
-    right: 16,
-    paddingHorizontal: 20,
+    left: spacing.base,
+    right: spacing.base,
+    paddingHorizontal: spacing.lg,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: tokens.radius.md,
     zIndex: 9999,
     elevation: 10,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+    shadowOpacity: tokens.elevation.ios.level3.shadowOpacity,
+    shadowRadius: tokens.elevation.ios.level3.shadowRadius,
   },
   message: {
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: '600',
+    color: tokens.colors.text.inverse,
+    fontSize: tokens.typography.body.size,
+    fontWeight: tokens.typography.button.weight,
     textAlign: 'center',
   },
 });

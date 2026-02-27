@@ -20,7 +20,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 import { useAppointmentsStore } from '../stores/appointments-store';
 import { useToast } from '../contexts/ToastContext';
-import { colors } from '../theme/colors';
+import { colors } from '../theme';
 import type { HomeStackParamList } from '../navigation/types';
 import * as patientService from '../services/patients';
 import * as appointmentService from '../services/appointments';
@@ -607,7 +607,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 16,
     padding: 20,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,

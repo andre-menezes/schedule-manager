@@ -14,7 +14,7 @@ import { useAuthStore } from '../stores/auth-store';
 import { listUsers, deactivateUser, reactivateUser, type User } from '../services/auth';
 import { useToast } from '../contexts/ToastContext';
 import { ConfirmDialog } from '../components';
-import { colors } from '../theme/colors';
+import { colors, tokens } from '../theme';
 
 export function AdminPanelScreen() {
   const [users, setUsers] = useState<User[]>([]);
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   userCardInactive: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: colors.background,
     opacity: 0.8,
   },
   userInfo: {
@@ -298,18 +298,18 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   inactiveBadge: {
-    backgroundColor: '#E0E0E0',
+    backgroundColor: tokens.colors.border.default,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
   },
   inactiveBadgeText: {
     fontSize: 11,
-    color: '#666',
+    color: colors.textSecondary,
     fontWeight: '600',
   },
   youBadge: {
-    backgroundColor: '#e3f2fd',
+    backgroundColor: '#E8EAFF',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,

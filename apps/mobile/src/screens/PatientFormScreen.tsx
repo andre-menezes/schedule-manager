@@ -17,7 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
-import { colors } from '../theme/colors';
+import { colors, tokens } from '../theme';
 import type { AppStackParamList } from '../navigation/types';
 import * as patientService from '../services/patients';
 import { isApiError } from '../services/api';
@@ -391,14 +391,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   inactiveBadge: {
-    backgroundColor: '#E0E0E0',
+    backgroundColor: tokens.colors.border.default,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
   },
   inactiveBadgeText: {
     fontSize: 11,
-    color: '#666',
+    color: colors.textSecondary,
     fontWeight: '600',
   },
   keyboardView: {

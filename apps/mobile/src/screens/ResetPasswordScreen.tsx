@@ -17,6 +17,7 @@ import type { RouteProp } from '@react-navigation/native';
 import { resetPassword } from '../services/auth';
 import { useToast } from '../contexts/ToastContext';
 import type { AuthStackParamList } from '../navigation/types';
+import { colors, tokens } from '../theme';
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'ResetPassword'>;
 type ResetPasswordRouteProp = RouteProp<AuthStackParamList, 'ResetPassword'>;
@@ -47,7 +48,7 @@ function Requirement({ met, text }: { met: boolean; text: string }) {
       <MaterialIcons
         name={met ? 'check-circle' : 'radio-button-unchecked'}
         size={14}
-        color={met ? '#2ECC71' : '#bbb'}
+        color={met ? colors.success : colors.textLight}
       />
       <Text style={[reqStyles.text, met && reqStyles.textMet]}>{text}</Text>
     </View>
@@ -62,11 +63,11 @@ const reqStyles = StyleSheet.create({
     marginTop: 4,
   },
   text: {
-    fontSize: 12,
-    color: '#999',
+    fontSize: tokens.typography.small.size,
+    color: colors.textLight,
   },
   textMet: {
-    color: '#2ECC71',
+    color: colors.success,
   },
 });
 
@@ -164,7 +165,7 @@ export function ResetPasswordScreen() {
               <TextInput
                 style={[styles.codeInput, errors.code && styles.inputError]}
                 placeholder="000000"
-                placeholderTextColor="#999"
+                placeholderTextColor={colors.textLight}
                 keyboardType="number-pad"
                 maxLength={6}
                 value={code}
@@ -180,7 +181,7 @@ export function ResetPasswordScreen() {
                 <TextInput
                   style={styles.passwordInput}
                   placeholder="Nova senha"
-                  placeholderTextColor="#999"
+                  placeholderTextColor={colors.textLight}
                   secureTextEntry={!showPassword}
                   value={newPassword}
                   onChangeText={(v) => { setNewPassword(v); clearFieldError('newPassword'); }}
@@ -219,7 +220,7 @@ export function ResetPasswordScreen() {
                 <TextInput
                   style={styles.passwordInput}
                   placeholder="Confirmar nova senha"
-                  placeholderTextColor="#999"
+                  placeholderTextColor={colors.textLight}
                   secureTextEntry={!showConfirmPassword}
                   value={confirmPassword}
                   onChangeText={(v) => { setConfirmPassword(v); clearFieldError('confirmPassword'); }}
@@ -248,7 +249,7 @@ export function ResetPasswordScreen() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={colors.white} />
               ) : (
                 <Text style={styles.buttonText}>Redefinir senha</Text>
               )}
@@ -271,7 +272,7 @@ export function ResetPasswordScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
   },
   scrollContent: {
     flexGrow: 1,
@@ -283,14 +284,14 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
   },
   title: {
-    fontSize: 32,
+    fontSize: tokens.typography.display.size,
     fontWeight: 'bold',
-    color: '#1a1a1a',
+    color: colors.textPrimary,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: colors.textSecondary,
     marginBottom: 32,
   },
   form: {
@@ -302,40 +303,40 @@ const styles = StyleSheet.create({
   codeInput: {
     height: 64,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 16,
     fontSize: 28,
     fontWeight: 'bold',
-    backgroundColor: '#fafafa',
-    color: '#1a1a1a',
+    backgroundColor: colors.background,
+    color: colors.textPrimary,
     textAlign: 'center',
     letterSpacing: 8,
   },
   inputError: {
-    borderColor: '#c62828',
+    borderColor: colors.error,
   },
   passwordContainer: {
     height: 56,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     borderRadius: 12,
-    backgroundColor: '#fafafa',
+    backgroundColor: colors.background,
     paddingHorizontal: 16,
   },
   passwordInput: {
     flex: 1,
     fontSize: 16,
-    color: '#1a1a1a',
+    color: colors.textPrimary,
   },
   eyeButton: {
     padding: 4,
   },
   fieldError: {
-    fontSize: 12,
-    color: '#c62828',
+    fontSize: tokens.typography.small.size,
+    color: colors.error,
     marginLeft: 4,
   },
   requirements: {
@@ -345,7 +346,7 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 56,
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
@@ -355,8 +356,8 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
+    color: colors.white,
+    fontSize: tokens.typography.h2.size,
     fontWeight: '600',
   },
   backLink: {
@@ -364,8 +365,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backLinkText: {
-    fontSize: 14,
-    color: '#007AFF',
+    fontSize: tokens.typography.caption.size,
+    color: colors.primary,
     fontWeight: '600',
   },
 });

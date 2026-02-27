@@ -8,7 +8,7 @@ import {
   TextInputProps,
   ViewStyle,
 } from 'react-native';
-import { colors, borderRadius, spacing } from '../theme';
+import { colors, borderRadius, spacing, tokens } from '../theme';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   label: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     fontWeight: '500',
     color: colors.textSecondary,
     marginBottom: spacing.sm,
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontSize: tokens.typography.body.size,
     color: colors.textPrimary,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
@@ -119,12 +119,12 @@ const styles = StyleSheet.create({
     paddingRight: spacing.md,
   },
   showHideText: {
-    fontSize: 12,
+    fontSize: tokens.typography.small.size,
     color: colors.primary,
     fontWeight: '500',
   },
   errorText: {
-    fontSize: 12,
+    fontSize: tokens.typography.small.size,
     color: colors.error,
     marginTop: spacing.xs,
   },

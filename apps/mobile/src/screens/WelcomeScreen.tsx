@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAuthStore } from '../stores/auth-store';
-import { colors } from '../theme/colors';
+import { colors } from '../theme';
 import type { AppStackParamList } from '../navigation/types';
 import * as patientService from '../services/patients';
 import type { PatientListItem } from '../services/patients';
