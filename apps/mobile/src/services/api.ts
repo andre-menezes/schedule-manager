@@ -6,7 +6,7 @@ const TOKEN_KEY = 'auth_token';
 
 export const api: AxiosInstance = axios.create({
   baseURL: `${API_BASE_URL}/api/v1`,
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },

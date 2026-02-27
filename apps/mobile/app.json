@@ -30,6 +30,12 @@
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a202ba55-99d8-4cea-81b6-6767a9bc7db9"
+      }
+    },
+    "owner": "andre-menezes"
   }
 }
