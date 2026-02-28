@@ -14,7 +14,7 @@ import { useAuthStore } from '../stores/auth-store';
 import { listUsers, deactivateUser, reactivateUser, type User } from '../services/auth';
 import { useToast } from '../contexts/ToastContext';
 import { ConfirmDialog } from '../components';
-import { colors, tokens } from '../theme';
+import { colors, spacing, tokens } from '../theme';
 
 export function AdminPanelScreen() {
   const [users, setUsers] = useState<User[]>([]);
@@ -212,69 +212,69 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: colors.primary,
     paddingTop: 60,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
+    paddingBottom: spacing.lg,
+    paddingHorizontal: spacing.lg,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: tokens.typography.h1.size,
+    fontWeight: tokens.typography.h1.weight,
     color: colors.white,
   },
   headerSubtitle: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     color: 'rgba(255, 255, 255, 0.8)',
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
   logoutButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.sm,
+    borderRadius: tokens.radius.sm,
   },
   logoutButtonText: {
     color: colors.white,
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     fontWeight: '600',
   },
   section: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.base,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: tokens.typography.h2.size,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   sectionCount: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     color: colors.textSecondary,
   },
   listContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.lg,
   },
   userCard: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
+    borderRadius: tokens.radius.lg,
+    padding: spacing.base,
+    marginBottom: spacing.md,
     flexDirection: 'row',
     alignItems: 'center',
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
+    shadowOffset: tokens.elevation.ios.level1.shadowOffset,
+    shadowOpacity: tokens.elevation.ios.level1.shadowOpacity,
+    shadowRadius: tokens.elevation.ios.level1.shadowRadius,
+    elevation: tokens.elevation.android.level1,
   },
   userCardInactive: {
     backgroundColor: colors.background,
-    opacity: 0.8,
+    opacity: tokens.state.opacity.focus,
   },
   userInfo: {
     flex: 1,
@@ -282,10 +282,10 @@ const styles = StyleSheet.create({
   userNameRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: spacing.sm,
   },
   userName: {
-    fontSize: 16,
+    fontSize: tokens.typography.body.size,
     fontWeight: '600',
     color: colors.textPrimary,
   },
@@ -293,41 +293,41 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   userEmail: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     color: colors.textSecondary,
-    marginTop: 2,
+    marginTop: spacing.xs,
   },
   inactiveBadge: {
     backgroundColor: tokens.colors.border.default,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: tokens.radius.md,
   },
   inactiveBadgeText: {
-    fontSize: 11,
+    fontSize: tokens.typography.small.size,
     color: colors.textSecondary,
     fontWeight: '600',
   },
   youBadge: {
     backgroundColor: '#E8EAFF',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: tokens.radius.md,
   },
   youBadgeText: {
-    fontSize: 12,
+    fontSize: tokens.typography.small.size,
     color: colors.primary,
     fontWeight: '600',
   },
   actionButton: {
-    padding: 8,
+    padding: spacing.sm,
   },
   emptyContainer: {
-    paddingVertical: 40,
+    paddingVertical: spacing.xxxl,
     alignItems: 'center',
   },
   emptyText: {
-    fontSize: 16,
+    fontSize: tokens.typography.body.size,
     color: colors.textLight,
   },
 });

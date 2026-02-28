@@ -108,7 +108,7 @@ export function LoginScreen() {
                 <MaterialIcons
                   name={showPassword ? 'visibility-off' : 'visibility'}
                   size={22}
-                  color="#999"
+                  color={colors.textLight}
                 />
               </TouchableOpacity>
             </View>

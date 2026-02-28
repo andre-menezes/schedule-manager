@@ -197,7 +197,7 @@ export function ResetPasswordScreen() {
                   <MaterialIcons
                     name={showPassword ? 'visibility-off' : 'visibility'}
                     size={22}
-                    color="#999"
+                    color={colors.textLight}
                   />
                 </TouchableOpacity>
               </View>
@@ -234,7 +234,7 @@ export function ResetPasswordScreen() {
                   <MaterialIcons
                     name={showConfirmPassword ? 'visibility-off' : 'visibility'}
                     size={22}
-                    color="#999"
+                    color={colors.textLight}
                   />
                 </TouchableOpacity>
               </View>

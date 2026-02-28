@@ -206,7 +206,7 @@ export function RegisterScreen() {
                   <MaterialIcons
                     name={showPassword ? 'visibility-off' : 'visibility'}
                     size={22}
-                    color="#999"
+                    color={colors.textLight}
                   />
                 </TouchableOpacity>
               </View>
@@ -241,7 +241,7 @@ export function RegisterScreen() {
                   <MaterialIcons
                     name={showConfirmPassword ? 'visibility-off' : 'visibility'}
                     size={22}
-                    color="#999"
+                    color={colors.textLight}
                   />
                 </TouchableOpacity>
               </View>

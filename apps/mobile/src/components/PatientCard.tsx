@@ -94,8 +94,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   cardInactive: {
-    opacity: 0.65,
-    backgroundColor: '#F5F5F5',
+    opacity: tokens.state.opacity.pressed,
+    backgroundColor: colors.background,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -129,12 +129,12 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.md,
   },
   inactiveBadgeText: {
-    fontSize: 11,
+    fontSize: tokens.typography.small.size,
     color: tokens.colors.text.secondary,
     fontWeight: '600',
   },
   avatarText: {
-    fontSize: 24,
+    fontSize: tokens.typography.h1.size,
     fontWeight: '600',
     color: colors.white,
   },

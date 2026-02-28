@@ -16,7 +16,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAppointmentsStore } from '../stores/appointments-store';
 import { useAuthStore } from '../stores/auth-store';
 import { Badge } from '../components';
-import { colors } from '../theme';
+import { colors, spacing, borderRadius, tokens } from '../theme';
 import type { AppStackParamList } from '../navigation/types';
 import type { AppointmentListItem } from '../services/appointments';
 import { getAppointmentDates } from '../services/appointments';
@@ -74,6 +74,12 @@ const STATUS_BADGE: Record<
   AGENDADO: { label: 'Agendado', variant: 'primary' },
   REALIZADO: { label: 'Realizado', variant: 'green' },
   CANCELADO: { label: 'Cancelado', variant: 'red' },
+};
+
+const STATUS_STRIP_COLOR: Record<string, string> = {
+  AGENDADO: colors.primary,
+  REALIZADO: colors.success,
+  CANCELADO: colors.secondary,
 };
 
 const MONTH_NAMES = [
@@ -306,17 +312,17 @@ export function HomeScreen() {
 
   const renderAppointmentItem = ({ item }: { item: AppointmentListItem }) => {
     const badge = STATUS_BADGE[item.status];
+    const stripColor = STATUS_STRIP_COLOR[item.status] ?? colors.textLight;
     return (
       <TouchableOpacity
-        style={styles.appointmentCard}
+        style={[styles.appointmentCard, { borderLeftColor: stripColor }]}
         onPress={() => handleAppointmentPress(item)}
         activeOpacity={0.7}
       >
-        <View style={styles.timeColumn}>
-          <Text style={styles.timeStart}>{formatTime(item.startAt)}</Text>
-          <Text style={styles.timeEnd}>{formatTime(item.endAt)}</Text>
-        </View>
-        <View style={styles.appointmentInfo}>
+        <View style={styles.cardContent}>
+          <Text style={styles.timeRange}>
+            {formatTime(item.startAt)} - {formatTime(item.endAt)}
+          </Text>
           <Text style={styles.patientName}>{item.patientName}</Text>
           {badge && (
             <Badge label={badge.label} variant={badge.variant} size="small" />
@@ -707,33 +713,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 8,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.base,
+    paddingBottom: spacing.sm,
   },
   welcomeHeader: { flex: 1 },
-  welcomeLabel: { fontSize: 16, color: colors.textSecondary },
-  userName: { fontSize: 24, fontWeight: 'bold', color: colors.textPrimary },
+  welcomeLabel: { fontSize: tokens.typography.body.size, color: colors.textSecondary },
+  userName: { fontSize: tokens.typography.h1.size, fontWeight: tokens.typography.h1.weight, color: colors.textPrimary },
   logoutButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.base,
+    borderRadius: borderRadius.sm,
     backgroundColor: colors.secondary,
   },
-  logoutButtonText: { color: colors.white, fontSize: 14, fontWeight: '600' },
+  logoutButtonText: { color: colors.white, fontSize: tokens.typography.caption.size, fontWeight: '600' },
 
   // Calendar card
   calendarCard: {
     backgroundColor: colors.white,
-    marginHorizontal: 16,
-    borderRadius: 16,
-    paddingTop: 14,
-    paddingBottom: 4,
+    marginHorizontal: spacing.base,
+    borderRadius: tokens.radius.lg,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.xs,
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    elevation: 3,
+    shadowOffset: tokens.elevation.ios.level1.shadowOffset,
+    shadowOpacity: tokens.elevation.ios.level1.shadowOpacity,
+    shadowRadius: tokens.elevation.ios.level1.shadowRadius,
+    elevation: tokens.elevation.android.level1,
   },
 
   // Nav header
@@ -741,28 +747,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingBottom: 8,
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.sm,
   },
   navCenter: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: spacing.xs,
   },
   dropdownBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.background,
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    gap: 2,
+    borderRadius: tokens.radius.xl,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    gap: spacing.xs,
   },
   dropdownBtnActive: {
     backgroundColor: '#E8EAFF',
   },
   dropdownText: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     fontWeight: '600',
     color: colors.textPrimary,
   },
@@ -770,30 +776,30 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
   navSeparator: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     color: colors.textLight,
-    marginHorizontal: 2,
+    marginHorizontal: spacing.xs,
   },
 
   // Picker grid (month / year)
   pickerGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.md,
   },
   pickerCell: {
     width: '25%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 14,
+    paddingVertical: spacing.base,
   },
   pickerCellActive: {
     backgroundColor: colors.primary,
-    borderRadius: 20,
+    borderRadius: tokens.radius.pill,
   },
   pickerCellText: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     fontWeight: '500',
     color: colors.textPrimary,
   },
@@ -805,11 +811,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 8,
-    gap: 16,
+    paddingTop: spacing.sm,
+    gap: spacing.base,
   },
   decadeText: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     fontWeight: '700',
     color: colors.textPrimary,
   },
@@ -817,18 +823,18 @@ const styles = StyleSheet.create({
   // Expand toggle
   expandToggle: {
     alignItems: 'center',
-    paddingVertical: 2,
+    paddingVertical: spacing.xs,
   },
 
   // Week strip
   weekStrip: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 4,
+    paddingTop: spacing.xs,
   },
   weekArrow: {
-    paddingHorizontal: 6,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.md,
   },
   weekDays: {
     flex: 1,
@@ -837,43 +843,43 @@ const styles = StyleSheet.create({
   },
   weekDayCell: {
     alignItems: 'center',
-    paddingVertical: 2,
+    paddingVertical: spacing.xs,
     flex: 1,
   },
   weekDayName: {
-    fontSize: 11,
+    fontSize: tokens.typography.small.size,
     fontWeight: '600',
     color: colors.textLight,
-    marginBottom: 6,
+    marginBottom: spacing.xs,
   },
   weekDayNameActive: { color: colors.primary },
   weekDayNumWrap: {
     width: 34,
     height: 34,
-    borderRadius: 17,
+    borderRadius: tokens.radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
   },
   weekDayNumWrapActive: { backgroundColor: colors.primary },
   weekDayNum: {
-    fontSize: 16,
+    fontSize: tokens.typography.body.size,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   weekDayNumToday: { color: colors.primary, fontWeight: '700' },
   weekDayNumActive: { color: colors.white },
   weekMonthAbbrev: {
-    fontSize: 10,
+    fontSize: tokens.typography.small.size,
     color: colors.textLight,
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
   weekMonthAbbrevActive: { color: colors.primary },
   weekDot: {
     width: 5,
     height: 5,
-    borderRadius: 3,
+    borderRadius: tokens.radius.pill,
     backgroundColor: colors.primary,
-    marginTop: 3,
+    marginTop: spacing.xs,
   },
   weekDotActive: { backgroundColor: colors.primaryLight },
 
@@ -882,65 +888,71 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 12,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.base,
+    paddingBottom: spacing.md,
   },
   dateTitle: {
-    fontSize: 16,
+    fontSize: tokens.typography.body.size,
     fontWeight: '600',
     color: colors.textPrimary,
     textTransform: 'capitalize',
   },
-  appointmentCount: { fontSize: 13, color: colors.textSecondary },
-  listContent: { paddingHorizontal: 24, paddingBottom: 80 },
+  appointmentCount: { fontSize: tokens.typography.small.size, color: colors.textSecondary },
+  listContent: { paddingHorizontal: spacing.xl, paddingBottom: 80 },
   emptyListContent: { paddingBottom: 80 },
   appointmentCard: {
     backgroundColor: colors.white,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 10,
+    borderRadius: tokens.radius.lg,
+    padding: spacing.base,
+    marginBottom: spacing.sm,
     flexDirection: 'row',
     alignItems: 'center',
+    borderLeftWidth: 4,
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
+    shadowOffset: tokens.elevation.ios.level1.shadowOffset,
+    shadowOpacity: tokens.elevation.ios.level1.shadowOpacity,
+    shadowRadius: tokens.elevation.ios.level1.shadowRadius,
+    elevation: tokens.elevation.android.level1,
   },
-  timeColumn: { alignItems: 'center', marginRight: 16, minWidth: 50 },
-  timeStart: { fontSize: 15, fontWeight: '700', color: colors.textPrimary },
-  timeEnd: { fontSize: 12, color: colors.textSecondary, marginTop: 2 },
-  appointmentInfo: { flex: 1, gap: 4 },
-  patientName: { fontSize: 15, fontWeight: '600', color: colors.textPrimary },
+  cardContent: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+  timeRange: {
+    fontSize: tokens.typography.small.size,
+    fontWeight: '500',
+    color: colors.textSecondary,
+  },
+  patientName: { fontSize: tokens.typography.body.size, fontWeight: '600', color: colors.textPrimary },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   emptyContainer: {
     alignItems: 'center',
-    paddingHorizontal: 32,
-    paddingTop: 40,
+    paddingHorizontal: spacing.xxl,
+    paddingTop: spacing.xxxl,
   },
   emptyText: {
-    fontSize: 16,
+    fontSize: tokens.typography.body.size,
     fontWeight: '500',
     color: colors.textSecondary,
-    marginTop: 12,
-    marginBottom: 4,
+    marginTop: spacing.md,
+    marginBottom: spacing.xs,
   },
-  emptySubtext: { fontSize: 14, color: colors.textLight, textAlign: 'center' },
+  emptySubtext: { fontSize: tokens.typography.caption.size, color: colors.textLight, textAlign: 'center' },
   fab: {
     position: 'absolute',
-    right: 24,
-    bottom: 24,
+    right: spacing.xl,
+    bottom: spacing.xl,
     width: 56,
     height: 56,
-    borderRadius: 28,
+    borderRadius: tokens.radius.pill,
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: tokens.elevation.ios.level2.shadowOffset,
     shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowRadius: tokens.elevation.ios.level2.shadowRadius,
+    elevation: tokens.elevation.android.level3,
   },
 });

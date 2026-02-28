@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     flex: 1,
-    paddingVertical: 14,
+    paddingVertical: spacing.base,
     borderRadius: borderRadius.md,
     backgroundColor: colors.background,
     alignItems: 'center',
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     flex: 1,
-    paddingVertical: 14,
+    paddingVertical: spacing.base,
     borderRadius: borderRadius.md,
     backgroundColor: colors.primary,
     alignItems: 'center',

@@ -14,7 +14,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { requestPasswordReset } from '../services/auth';
 import { useToast } from '../contexts/ToastContext';
 import type { AuthStackParamList } from '../navigation/types';
-import { colors, tokens } from '../theme';
+import { colors, spacing, borderRadius, tokens } from '../theme';
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'ForgotPassword'>;
 
@@ -111,42 +111,42 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.xl,
   },
   title: {
     fontSize: tokens.typography.display.size,
     fontWeight: 'bold',
     color: colors.textPrimary,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: tokens.typography.body.size,
     color: colors.textSecondary,
-    marginBottom: 32,
+    marginBottom: spacing.xxl,
   },
   form: {
-    gap: 16,
+    gap: spacing.base,
   },
   input: {
     height: 56,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    fontSize: 16,
+    borderRadius: borderRadius.lg,
+    paddingHorizontal: spacing.base,
+    fontSize: tokens.typography.body.size,
     backgroundColor: colors.background,
     color: colors.textPrimary,
   },
   button: {
     height: 56,
     backgroundColor: colors.primary,
-    borderRadius: 12,
+    borderRadius: borderRadius.lg,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: spacing.sm,
   },
   buttonDisabled: {
-    opacity: 0.7,
+    opacity: tokens.state.opacity.pressed,
   },
   buttonText: {
     color: colors.white,
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   backLink: {
-    marginTop: 24,
+    marginTop: spacing.xl,
     alignItems: 'center',
   },
   backLinkText: {
