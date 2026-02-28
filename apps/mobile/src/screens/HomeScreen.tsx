@@ -399,9 +399,13 @@ export function HomeScreen() {
                 {MONTH_NAMES[currentMonth]}
               </Text>
               <MaterialIcons
-                name={pickerMode === 'month' ? 'arrow-drop-up' : 'arrow-drop-down'}
+                name={
+                  pickerMode === 'month' ? 'arrow-drop-up' : 'arrow-drop-down'
+                }
                 size={20}
-                color={pickerMode === 'month' ? colors.primary : colors.textSecondary}
+                color={
+                  pickerMode === 'month' ? colors.primary : colors.textSecondary
+                }
               />
             </TouchableOpacity>
 
@@ -423,9 +427,13 @@ export function HomeScreen() {
                 {currentYear}
               </Text>
               <MaterialIcons
-                name={pickerMode === 'year' ? 'arrow-drop-up' : 'arrow-drop-down'}
+                name={
+                  pickerMode === 'year' ? 'arrow-drop-up' : 'arrow-drop-down'
+                }
                 size={20}
-                color={pickerMode === 'year' ? colors.primary : colors.textSecondary}
+                color={
+                  pickerMode === 'year' ? colors.primary : colors.textSecondary
+                }
               />
             </TouchableOpacity>
           </View>
@@ -718,15 +726,26 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.sm,
   },
   welcomeHeader: { flex: 1 },
-  welcomeLabel: { fontSize: tokens.typography.body.size, color: colors.textSecondary },
-  userName: { fontSize: tokens.typography.h1.size, fontWeight: tokens.typography.h1.weight, color: colors.textPrimary },
+  welcomeLabel: {
+    fontSize: tokens.typography.body.size,
+    color: colors.textSecondary,
+  },
+  userName: {
+    fontSize: tokens.typography.h1.size,
+    fontWeight: tokens.typography.h1.weight,
+    color: colors.textPrimary,
+  },
   logoutButton: {
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.base,
     borderRadius: borderRadius.sm,
     backgroundColor: colors.secondary,
   },
-  logoutButtonText: { color: colors.white, fontSize: tokens.typography.caption.size, fontWeight: '600' },
+  logoutButtonText: {
+    color: colors.white,
+    fontSize: tokens.typography.caption.size,
+    fontWeight: '600',
+  },
 
   // Calendar card
   calendarCard: {
@@ -898,7 +917,10 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     textTransform: 'capitalize',
   },
-  appointmentCount: { fontSize: tokens.typography.small.size, color: colors.textSecondary },
+  appointmentCount: {
+    fontSize: tokens.typography.small.size,
+    color: colors.textSecondary,
+  },
   listContent: { paddingHorizontal: spacing.xl, paddingBottom: 80 },
   emptyListContent: { paddingBottom: 80 },
   appointmentCard: {
@@ -908,7 +930,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
     flexDirection: 'row',
     alignItems: 'center',
-    borderLeftWidth: 4,
+    borderLeftWidth: 8,
     shadowColor: colors.black,
     shadowOffset: tokens.elevation.ios.level1.shadowOffset,
     shadowOpacity: tokens.elevation.ios.level1.shadowOpacity,
@@ -924,7 +946,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.textSecondary,
   },
-  patientName: { fontSize: tokens.typography.body.size, fontWeight: '600', color: colors.textPrimary },
+  patientName: {
+    fontSize: tokens.typography.body.size,
+    fontWeight: '600',
+    color: colors.textPrimary,
+  },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   emptyContainer: {
     alignItems: 'center',
@@ -938,7 +964,11 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
     marginBottom: spacing.xs,
   },
-  emptySubtext: { fontSize: tokens.typography.caption.size, color: colors.textLight, textAlign: 'center' },
+  emptySubtext: {
+    fontSize: tokens.typography.caption.size,
+    color: colors.textLight,
+    textAlign: 'center',
+  },
   fab: {
     position: 'absolute',
     right: spacing.xl,

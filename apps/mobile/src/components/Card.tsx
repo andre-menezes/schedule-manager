@@ -9,11 +9,7 @@ interface CardProps {
 }
 
 export function Card({ children, style, padding = 'medium' }: CardProps) {
-  return (
-    <View style={[styles.card, styles[padding], style]}>
-      {children}
-    </View>
-  );
+  return <View style={[styles.card, styles[padding], style]}>{children}</View>;
 }
 
 const styles = StyleSheet.create({
