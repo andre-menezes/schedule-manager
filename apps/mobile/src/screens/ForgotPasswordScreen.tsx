@@ -14,6 +14,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { requestPasswordReset } from '../services/auth';
 import { useToast } from '../contexts/ToastContext';
 import type { AuthStackParamList } from '../navigation/types';
+import { colors, spacing, borderRadius, tokens } from '../theme';
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'ForgotPassword'>;
 
@@ -68,7 +69,7 @@ export function ForgotPasswordScreen() {
           <TextInput
             style={styles.input}
             placeholder="E-mail"
-            placeholderTextColor="#999"
+            placeholderTextColor={colors.textLight}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -83,7 +84,7 @@ export function ForgotPasswordScreen() {
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={colors.white} />
             ) : (
               <Text style={styles.buttonText}>Enviar código</Text>
             )}
@@ -105,60 +106,60 @@ export function ForgotPasswordScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
   },
   content: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.xl,
   },
   title: {
-    fontSize: 32,
+    fontSize: tokens.typography.display.size,
     fontWeight: 'bold',
-    color: '#1a1a1a',
-    marginBottom: 8,
+    color: colors.textPrimary,
+    marginBottom: spacing.sm,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 32,
+    fontSize: tokens.typography.body.size,
+    color: colors.textSecondary,
+    marginBottom: spacing.xxl,
   },
   form: {
-    gap: 16,
+    gap: spacing.base,
   },
   input: {
     height: 56,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    backgroundColor: '#fafafa',
-    color: '#1a1a1a',
+    borderColor: colors.border,
+    borderRadius: borderRadius.lg,
+    paddingHorizontal: spacing.base,
+    fontSize: tokens.typography.body.size,
+    backgroundColor: colors.background,
+    color: colors.textPrimary,
   },
   button: {
     height: 56,
-    backgroundColor: '#007AFF',
-    borderRadius: 12,
+    backgroundColor: colors.primary,
+    borderRadius: borderRadius.lg,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: spacing.sm,
   },
   buttonDisabled: {
-    opacity: 0.7,
+    opacity: tokens.state.opacity.pressed,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
+    color: colors.white,
+    fontSize: tokens.typography.h2.size,
     fontWeight: '600',
   },
   backLink: {
-    marginTop: 24,
+    marginTop: spacing.xl,
     alignItems: 'center',
   },
   backLinkText: {
-    fontSize: 14,
-    color: '#007AFF',
+    fontSize: tokens.typography.caption.size,
+    color: colors.primary,
     fontWeight: '600',
   },
 });

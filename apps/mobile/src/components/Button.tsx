@@ -7,12 +7,12 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import { colors, borderRadius, spacing } from '../theme';
+import { colors, borderRadius, spacing, tokens } from '../theme';
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   size?: 'small' | 'medium' | 'large';
   disabled?: boolean;
   loading?: boolean;
@@ -94,6 +94,9 @@ const styles = StyleSheet.create({
   ghost: {
     backgroundColor: 'transparent',
   },
+  danger: {
+    backgroundColor: tokens.colors.state.error,
+  },
 
   // Sizes
   small: {
@@ -107,19 +110,19 @@ const styles = StyleSheet.create({
     minHeight: 48,
   },
   large: {
-    paddingVertical: spacing.md + 4,
+    paddingVertical: spacing.base,
     paddingHorizontal: spacing.xl,
     minHeight: 56,
   },
 
   // Disabled
   disabled: {
-    opacity: 0.5,
+    opacity: tokens.state.opacity.disabled,
   },
 
   // Text styles
   text: {
-    fontWeight: '600',
+    fontWeight: tokens.typography.button.weight,
   },
   primaryText: {
     color: colors.white,
@@ -133,19 +136,22 @@ const styles = StyleSheet.create({
   ghostText: {
     color: colors.primary,
   },
+  dangerText: {
+    color: colors.white,
+  },
 
   // Text sizes
   smallText: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
   },
   mediumText: {
-    fontSize: 16,
+    fontSize: tokens.typography.button.size,
   },
   largeText: {
-    fontSize: 18,
+    fontSize: tokens.typography.h2.size,
   },
 
   disabledText: {
-    opacity: 0.7,
+    opacity: tokens.state.opacity.pressed,
   },
 });

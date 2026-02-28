@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { colors } from '../theme/colors';
+import { colors, spacing, borderRadius, tokens } from '../theme';
 
 interface ConfirmDialogProps {
   visible: boolean;
@@ -85,62 +85,62 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    padding: spacing.xl,
   },
   dialog: {
     backgroundColor: colors.white,
-    borderRadius: 16,
-    padding: 24,
+    borderRadius: borderRadius.lg,
+    padding: spacing.xl,
     width: '100%',
     maxWidth: 400,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowOpacity: tokens.elevation.ios.level3.shadowOpacity,
+    shadowRadius: tokens.elevation.ios.level3.shadowRadius,
+    elevation: tokens.elevation.android.level2,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: tokens.typography.h2.size,
+    fontWeight: tokens.typography.h2.weight,
     color: colors.textPrimary,
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   message: {
-    fontSize: 14,
+    fontSize: tokens.typography.caption.size,
     color: colors.textSecondary,
     lineHeight: 22,
-    marginBottom: 24,
+    marginBottom: spacing.xl,
   },
   buttonContainer: {
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.md,
   },
   cancelButton: {
     flex: 1,
-    paddingVertical: 14,
-    borderRadius: 12,
+    paddingVertical: spacing.base,
+    borderRadius: borderRadius.md,
     backgroundColor: colors.background,
     alignItems: 'center',
   },
   cancelButtonText: {
-    fontSize: 16,
+    fontSize: tokens.typography.button.size,
     fontWeight: '500',
     color: colors.textSecondary,
   },
   confirmButton: {
     flex: 1,
-    paddingVertical: 14,
-    borderRadius: 12,
+    paddingVertical: spacing.base,
+    borderRadius: borderRadius.md,
     backgroundColor: colors.primary,
     alignItems: 'center',
   },
   confirmButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: tokens.typography.button.size,
+    fontWeight: tokens.typography.button.weight,
     color: colors.white,
   },
   destructiveButton: {
-    backgroundColor: colors.secondary,
+    backgroundColor: tokens.colors.state.error,
   },
   destructiveButtonText: {
     color: colors.white,

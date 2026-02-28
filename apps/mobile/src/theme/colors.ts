@@ -1,64 +1,45 @@
-const baseColors = {
-  white: '#FFFFFF',
-  black: '#000000',
-  background: '#F6F6F6',
-  border: '#E8E8E8',
-  primary: '#5B67CA',
-  primaryLight: '#7B85D6',
-  primaryDark: '#4A56B5',
-  secondary: '#F96060',
-  success: '#2ECC71',
-  labelPurple: '#9B59B6',
-  purpleLight: '#8B94E8',
-  error: '#E91E63',
-  warning: '#F9A826',
-  textPrimary: '#10275A',
-  textSecondary: '#8A8BB3',
-  textLight: '#B8B8D2',
-  overlay: 'rgba(91, 103, 202, 0.95)',
-};
+import { tokens } from './tokens';
 
 export const colors = {
-  // Primary colors
-  primary: baseColors.primary,
-  primaryLight: baseColors.primaryLight,
-  primaryDark: baseColors.primaryDark,
+  // Brand
+  primary: tokens.colors.brand.primary,
+  primaryLight: tokens.colors.brand.primaryLight,
+  primaryDark: tokens.colors.brand.primaryDark,
 
-  // Secondary colors
-  secondary: baseColors.secondary,
-  accent: baseColors.warning,
+  // Backgrounds
+  background: tokens.colors.background.default,
+  surface: tokens.colors.background.surface,
 
-  // Label colors
-  labelOrange: baseColors.warning,
-  labelRed: baseColors.secondary,
-  labelBlue: baseColors.primary,
-  labelGreen: baseColors.success,
-  labelPurple: baseColors.labelPurple,
-  labelPink: baseColors.error,
+  // Border
+  border: tokens.colors.border.default,
 
-  // Status colors
-  success: baseColors.success,
-  warning: baseColors.warning,
-  error: baseColors.secondary,
-  info: baseColors.primary,
+  // Text
+  textPrimary: tokens.colors.text.primary,
+  textSecondary: tokens.colors.text.secondary,
+  textLight: tokens.colors.text.muted,
+  textWhite: tokens.colors.text.inverse,
 
-  // Neutral colors
-  white: baseColors.white,
-  black: baseColors.black,
-  background: baseColors.background,
-  surface: baseColors.white,
-  border: baseColors.border,
-  // Text colors
-  textPrimary: baseColors.textPrimary,
-  textSecondary: baseColors.textSecondary,
-  textLight: baseColors.textLight,
-  textWhite: baseColors.white,
+  // State
+  success: tokens.colors.state.success,
+  error: tokens.colors.state.error,
+  warning: tokens.colors.state.warning,
 
-  // Overlay
-  overlay: baseColors.overlay,
+  // Label colors (for badges/tags)
+  labelOrange: tokens.colors.state.warning,
+  labelRed: '#F96060',
+  labelBlue: tokens.colors.brand.primary,
+  labelGreen: tokens.colors.state.success,
+  labelPurple: '#9B59B6',
+  labelPink: tokens.colors.state.error,
+
+  // Misc
+  white: tokens.colors.background.surface,
+  black: '#000000',
+  secondary: '#F96060',
+  overlay: tokens.colors.overlay,
 };
 
 export const gradients = {
-  primary: [baseColors.primary, baseColors.primaryLight],
-  purple: [baseColors.primary, baseColors.purpleLight],
+  primary: [tokens.colors.brand.primary, tokens.colors.brand.primaryLight],
+  purple: [tokens.colors.brand.primary, '#8B94E8'],
 };

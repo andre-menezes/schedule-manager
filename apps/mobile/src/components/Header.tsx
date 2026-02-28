@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
-import { colors, spacing } from '../theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors, spacing, borderRadius, tokens } from '../theme';
 
 interface HeaderProps {
   title: string;
@@ -23,10 +24,18 @@ export function Header({
   style,
   variant = 'default',
 }: HeaderProps) {
+  const insets = useSafeAreaInsets();
   const isTransparent = variant === 'transparent';
 
   return (
-    <View style={[styles.header, isTransparent && styles.transparent, style]}>
+    <View
+      style={[
+        styles.header,
+        { paddingTop: insets.top + spacing.sm },
+        isTransparent && styles.transparent,
+        style,
+      ]}
+    >
       <View style={styles.headerContent}>
         {leftIcon ? (
           <TouchableOpacity style={styles.iconButton} onPress={onLeftPress}>
@@ -62,11 +71,10 @@ export function Header({
 const styles = StyleSheet.create({
   header: {
     backgroundColor: colors.primary,
-    paddingTop: 50,
     paddingBottom: spacing.md,
     paddingHorizontal: spacing.md,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    borderBottomLeftRadius: borderRadius.xl,
+    borderBottomRightRadius: borderRadius.xl,
   },
   transparent: {
     backgroundColor: 'transparent',
@@ -81,12 +89,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: tokens.typography.h1.size,
+    fontWeight: tokens.typography.h1.weight,
     color: colors.white,
   },
   subtitle: {
-    fontSize: 12,
+    fontSize: tokens.typography.small.size,
     color: 'rgba(255, 255, 255, 0.7)',
     marginBottom: 2,
   },
@@ -94,14 +102,14 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: spacing.xxxl,
+    height: spacing.xxxl,
+    borderRadius: spacing.xxxl / 2,
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   iconPlaceholder: {
-    width: 40,
+    width: spacing.xxxl,
   },
 });

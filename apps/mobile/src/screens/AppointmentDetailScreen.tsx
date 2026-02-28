@@ -16,7 +16,7 @@ import type { RouteProp } from '@react-navigation/native';
 import { useAppointmentsStore } from '../stores/appointments-store';
 import { useToast } from '../contexts/ToastContext';
 import { Badge, ConfirmDialog } from '../components';
-import { colors } from '../theme/colors';
+import { colors, spacing, tokens } from '../theme';
 import type { AppStackParamList } from '../navigation/types';
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList, 'AppointmentDetail'>;
@@ -242,58 +242,58 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.md,
     backgroundColor: colors.white,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
   backButton: {
-    padding: 8,
+    padding: spacing.sm,
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: tokens.typography.h2.size,
+    fontWeight: tokens.typography.h2.weight,
     color: colors.textPrimary,
   },
   editButton: {
-    padding: 8,
+    padding: spacing.sm,
   },
   headerSpacer: {
-    width: 40,
+    width: spacing.xxxl,
   },
   content: {
     flex: 1,
-    padding: 24,
+    padding: spacing.xl,
   },
   card: {
     backgroundColor: colors.white,
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    borderRadius: tokens.radius.lg,
+    padding: spacing.lg,
+    shadowColor: colors.black,
+    shadowOffset: tokens.elevation.ios.level1.shadowOffset,
+    shadowOpacity: tokens.elevation.ios.level1.shadowOpacity,
+    shadowRadius: tokens.elevation.ios.level1.shadowRadius,
+    elevation: tokens.elevation.android.level1,
   },
   statusRow: {
-    marginBottom: 20,
+    marginBottom: spacing.lg,
   },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 12,
+    gap: spacing.md,
   },
   infoContent: {
     flex: 1,
   },
   infoLabel: {
-    fontSize: 12,
+    fontSize: tokens.typography.small.size,
     color: colors.textSecondary,
-    marginBottom: 2,
+    marginBottom: spacing.xs,
   },
   infoValue: {
-    fontSize: 15,
+    fontSize: tokens.typography.body.size,
     fontWeight: '500',
     color: colors.textPrimary,
     textTransform: 'capitalize',
@@ -301,24 +301,24 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: colors.border,
-    marginVertical: 14,
+    marginVertical: spacing.md,
   },
   actions: {
-    marginTop: 24,
-    gap: 12,
+    marginTop: spacing.xl,
+    gap: spacing.md,
   },
   completeButton: {
     backgroundColor: colors.success,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 12,
-    gap: 8,
+    paddingVertical: spacing.base,
+    borderRadius: tokens.radius.lg,
+    gap: spacing.sm,
   },
   completeButtonText: {
     color: colors.white,
-    fontSize: 16,
+    fontSize: tokens.typography.body.size,
     fontWeight: '600',
   },
   cancelButton: {
@@ -326,15 +326,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 12,
+    paddingVertical: spacing.base,
+    borderRadius: tokens.radius.lg,
     borderWidth: 1,
     borderColor: colors.secondary,
-    gap: 8,
+    gap: spacing.sm,
   },
   cancelButtonText: {
     color: colors.secondary,
-    fontSize: 16,
+    fontSize: tokens.typography.body.size,
     fontWeight: '600',
   },
 });

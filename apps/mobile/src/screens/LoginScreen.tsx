@@ -15,6 +15,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAuthStore } from '../stores/auth-store';
 
 import type { AuthStackParamList } from '../navigation/types';
+import { colors, tokens } from '../theme';
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
 
@@ -77,7 +78,7 @@ export function LoginScreen() {
             <TextInput
               style={[styles.input, errors.email && styles.inputError]}
               placeholder="E-mail"
-              placeholderTextColor="#999"
+              placeholderTextColor={colors.textLight}
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
@@ -93,7 +94,7 @@ export function LoginScreen() {
               <TextInput
                 style={styles.passwordInput}
                 placeholder="Senha"
-                placeholderTextColor="#999"
+                placeholderTextColor={colors.textLight}
                 secureTextEntry={!showPassword}
                 value={password}
                 onChangeText={(v) => { setPassword(v); clearFieldError('password'); }}
@@ -107,7 +108,7 @@ export function LoginScreen() {
                 <MaterialIcons
                   name={showPassword ? 'visibility-off' : 'visibility'}
                   size={22}
-                  color="#999"
+                  color={colors.textLight}
                 />
               </TouchableOpacity>
             </View>
@@ -120,7 +121,7 @@ export function LoginScreen() {
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={colors.white} />
             ) : (
               <Text style={styles.buttonText}>Entrar</Text>
             )}
@@ -153,7 +154,7 @@ export function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
   },
   content: {
     flex: 1,
@@ -161,14 +162,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   title: {
-    fontSize: 32,
+    fontSize: tokens.typography.display.size,
     fontWeight: 'bold',
-    color: '#1a1a1a',
+    color: colors.textPrimary,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: colors.textSecondary,
     marginBottom: 32,
   },
   errorContainer: {
@@ -178,8 +179,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   errorText: {
-    color: '#c62828',
-    fontSize: 14,
+    color: colors.error,
+    fontSize: tokens.typography.caption.size,
   },
   form: {
     gap: 16,
@@ -190,42 +191,42 @@ const styles = StyleSheet.create({
   input: {
     height: 56,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 16,
     fontSize: 16,
-    backgroundColor: '#fafafa',
-    color: '#1a1a1a',
+    backgroundColor: colors.background,
+    color: colors.textPrimary,
   },
   inputError: {
-    borderColor: '#c62828',
+    borderColor: colors.error,
   },
   passwordContainer: {
     height: 56,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     borderRadius: 12,
-    backgroundColor: '#fafafa',
+    backgroundColor: colors.background,
     paddingHorizontal: 16,
   },
   passwordInput: {
     flex: 1,
     fontSize: 16,
-    color: '#1a1a1a',
+    color: colors.textPrimary,
   },
   eyeButton: {
     padding: 4,
   },
   fieldError: {
-    fontSize: 12,
-    color: '#c62828',
+    fontSize: tokens.typography.small.size,
+    color: colors.error,
     marginLeft: 4,
   },
   button: {
     height: 56,
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
@@ -235,8 +236,8 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
+    color: colors.white,
+    fontSize: tokens.typography.h2.size,
     fontWeight: '600',
   },
   registerLink: {
@@ -244,11 +245,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   registerLinkText: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: tokens.typography.caption.size,
+    color: colors.textSecondary,
   },
   registerLinkHighlight: {
-    color: '#007AFF',
+    color: colors.primary,
     fontWeight: '600',
   },
   forgotPasswordLink: {
@@ -256,8 +257,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   forgotPasswordText: {
-    fontSize: 14,
-    color: '#007AFF',
+    fontSize: tokens.typography.caption.size,
+    color: colors.primary,
     fontWeight: '500',
   },
 });
