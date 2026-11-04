@@ -32,12 +32,13 @@ Voltar para o índice: [README.md](README.md)
 
 ## R0 — Fundação
 
-| Item                                       | Histórias / ADR    | Camadas                         |
-| ------------------------------------------ | ------------------ | ------------------------------- |
-| Contrato OpenAPI inicial e API simulada    | ADR-0049           | `mock/`, `shared/api`           |
-| Criar conta, entrar, sair, recuperar senha | US-001 a US-003    | `modules/auth`, guard no router |
-| Layout autenticado e rotas públicas        | ADR-0050, ADR-0055 | `app/`, `shared/ui/layouts`     |
-| Primeira publicação em homologação         | ADR-0041           | Docker, CI                      |
+| Item                                                         | Histórias / ADR    | Camadas                                    |
+| ------------------------------------------------------------ | ------------------ | ------------------------------------------ |
+| Contrato OpenAPI inicial e API simulada                      | ADR-0049           | `mock/`, `shared/api`                      |
+| Criar conta, entrar, sair, recuperar senha                   | US-001 a US-003    | `modules/auth`, guard no router            |
+| Layout autenticado e rotas públicas                          | ADR-0050, ADR-0055 | `app/`, `shared/ui/layouts`                |
+| Design system no código: tema, tipografia e componentes base | ADR-0057           | `app/providers`, `app/styles`, `shared/ui` |
+| Primeira publicação em homologação                           | ADR-0041           | Docker, CI                                 |
 
 ## R1 — MVP
 

@@ -1,6 +1,6 @@
 # ADR-0047: Retorno ao visual original do template
 
-- **Status:** Aceita
+- **Status:** Substituída por ADR-0057 (no Agenda)
 - **Data:** 2026-11-04
 - **Decisores:** Andre Menezes
 - **Relacionadas:** ADR-0029 (contraste AA), ADR-0044, ADR-0045 e ADR-0046
