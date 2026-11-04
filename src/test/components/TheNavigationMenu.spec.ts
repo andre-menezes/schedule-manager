@@ -14,7 +14,7 @@ function createTestRouter() {
       {
         path: '/decisoes',
         component: Empty,
-        // Chaves do locale base, que continuam existindo após o `template:clean`.
+        // Chaves do locale base do app.
         meta: { nav: { titleKey: 'notFound.title', icon: 'gavel', order: 60 } },
       },
       {

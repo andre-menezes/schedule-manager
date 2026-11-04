@@ -1,4 +1,4 @@
-# Pipeline de CI — vue3-template
+# Pipeline de CI — schedule-manager
 #
 # Jobs: lint, build (typecheck + build), test (unitários + cobertura), e2e
 # (Playwright) e docker (a imagem de produção sobe e responde — ADR-0041). A versão do Node segue a fixada em .nvmrc / .tool-versions, e a

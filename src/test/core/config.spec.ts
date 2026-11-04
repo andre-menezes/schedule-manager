@@ -9,13 +9,13 @@ describe('getEnvVar', () => {
   it('usa o valor definido no ambiente', () => {
     vi.stubEnv('VITE_APP_NAME', 'Meu Sistema');
 
-    expect(getEnvVar('VITE_APP_NAME', 'Vue Template')).toBe('Meu Sistema');
+    expect(getEnvVar('VITE_APP_NAME', 'Agenda')).toBe('Meu Sistema');
   });
 
   it('usa o valor padrão quando a variável está vazia', () => {
     vi.stubEnv('VITE_APP_NAME', '');
 
-    expect(getEnvVar('VITE_APP_NAME', 'Vue Template')).toBe('Vue Template');
+    expect(getEnvVar('VITE_APP_NAME', 'Agenda')).toBe('Agenda');
   });
 
   it('falha com a variável no erro quando não há valor nem padrão', () => {
@@ -88,7 +88,7 @@ describe('constantes de configuração', () => {
 
     expect([config.API_BASE_URL, config.APP_NAME, config.DEFAULT_LOCALE]).toEqual([
       '/api',
-      'Vue Template',
+      'Agenda',
       'pt-BR',
     ]);
   });

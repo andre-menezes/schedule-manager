@@ -20,7 +20,7 @@ export const getEnvVar = (key: keyof AppEnv, defaultValue?: string): string => {
 
 // Todas têm valor padrão: a aplicação roda sem nenhum arquivo `.env`.
 export const API_BASE_URL = getEnvVar('VITE_API_BASE_URL', '/api');
-export const APP_NAME = getEnvVar('VITE_APP_NAME', 'Vue Template');
+export const APP_NAME = getEnvVar('VITE_APP_NAME', 'Agenda');
 
 /**
  * Locales suportados. O primeiro (pt-BR) é o locale base: dele derivam o

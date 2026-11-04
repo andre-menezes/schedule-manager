@@ -11,7 +11,7 @@ const TITLE_SEPARATOR = ' · ';
  * aplicação quando a página não tem título.
  *
  * @example
- * formatDocumentTitle('Início', 'Vue Template') // 'Início · Vue Template'
+ * formatDocumentTitle('Início', 'Agenda') // 'Início · Agenda'
  */
 export function formatDocumentTitle(title: string | undefined, appName: string): string {
   return title ? `${title}${TITLE_SEPARATOR}${appName}` : appName;

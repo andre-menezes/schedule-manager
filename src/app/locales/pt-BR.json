@@ -20,8 +20,7 @@
   },
   "welcome": {
     "title": "Bem-vindo ao {appName}",
-    "description": "Projeto criado a partir do Vue Template. Comece criando um módulo em src/modules/.",
-    "docsLink": "Ver a documentação do template"
+    "description": "Organize compromissos pessoais e atendimentos a clientes num só lugar."
   },
   "pageTitle": {
     "home": "Início",

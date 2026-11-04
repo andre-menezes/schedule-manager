@@ -3,7 +3,7 @@ import { expectNoA11yViolations } from './support/a11y';
 
 /**
  * Troca de idioma pelo seletor do cabeçalho (ADR-0038). Usa só a página
- * inicial, que continua existindo após o `template:clean`.
+ * inicial.
  */
 async function switchToEnglish(page: Page): Promise<void> {
   await page.getByTestId('locale-menu-btn').click();

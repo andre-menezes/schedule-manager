@@ -3,7 +3,7 @@ import { expectNoA11yViolations } from './support/a11y';
 
 /**
  * Navegação acessível (ADR-0036): título da aba por rota e link "Pular para o
- * conteúdo". Usa só páginas que continuam existindo após o `template:clean`.
+ * conteúdo". Usa só as páginas base (início e 404).
  */
 test.describe('Navegação acessível', () => {
   test('o título da aba segue a rota', async ({ page }) => {

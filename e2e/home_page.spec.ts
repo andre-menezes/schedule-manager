@@ -2,8 +2,7 @@ import { expect, test } from '@playwright/test';
 import { expectNoA11yViolations } from './support/a11y';
 
 /**
- * Home (`/`) — página inicial do projeto. Continua existindo depois do
- * `pnpm template:clean`.
+ * Home (`/`) — página inicial do Agenda.
  */
 test.describe('Página inicial', () => {
   test('carrega a página inicial', async ({ page }) => {

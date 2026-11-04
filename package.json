@@ -1,7 +1,7 @@
 {
-  "name": "vue3-template",
+  "name": "schedule-manager",
   "private": true,
-  "version": "1.1.0",
+  "version": "0.1.0",
   "type": "module",
   "engines": {
     "node": ">=24.22.2 <25",
@@ -26,8 +26,7 @@
     "test:e2e:open": "playwright test --ui",
     "test:e2e:install": "playwright install chromium",
     "test:all": "pnpm test && pnpm test:e2e",
-    "prepare": "husky",
-    "template:clean": "node scripts/template-clean.mjs"
+    "prepare": "husky"
   },
   "dependencies": {
     "@fontsource-variable/inter": "5.3.0",

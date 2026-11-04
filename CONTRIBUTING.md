@@ -1,6 +1,6 @@
 # Guia de Contribuição
 
-Obrigado por contribuir com o **vue3-template**. Este guia reúne o fluxo de
+Obrigado por contribuir com o **schedule-manager** (Agenda). Este guia reúne o fluxo de
 trabalho, as convenções e os critérios de qualidade do projeto. Leia antes de
 abrir seu primeiro Pull Request (PR).
 

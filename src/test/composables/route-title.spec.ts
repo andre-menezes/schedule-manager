@@ -39,12 +39,12 @@ async function mountHost(path: string) {
 
 describe('formatDocumentTitle', () => {
   it('junta o título da página e o nome da aplicação', () => {
-    expect(formatDocumentTitle('Início', 'Vue Template')).toBe('Início · Vue Template');
+    expect(formatDocumentTitle('Início', 'Agenda')).toBe('Início · Agenda');
   });
 
   it('usa só o nome da aplicação quando não há título', () => {
-    expect(formatDocumentTitle(undefined, 'Vue Template')).toBe('Vue Template');
-    expect(formatDocumentTitle('', 'Vue Template')).toBe('Vue Template');
+    expect(formatDocumentTitle(undefined, 'Agenda')).toBe('Agenda');
+    expect(formatDocumentTitle('', 'Agenda')).toBe('Agenda');
   });
 });
 

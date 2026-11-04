@@ -45,8 +45,10 @@ pelo próprio Vite (`mock/`, ADR-0039); para usar um backend real, aponte o
 | `components/`                                  | Tabela, formulário, detalhe e diálogo, só com props e emits     |
 | `src/test/customers/`, `e2e/customers.spec.ts` | Testes do service às views, e o fluxo completo no navegador     |
 
-A spec da feature está em [docs/specs/FEAT-001-crud-de-clientes.md](specs/FEAT-001-crud-de-clientes.md).
-O `pnpm template:clean` remove o exemplo junto com a vitrine.
+O módulo `customers` e a spec dele (`docs/specs/FEAT-001-crud-de-clientes.md`)
+foram removidos na criação do Agenda; continuam no repositório
+[andre-menezes/vue-template](https://github.com/andre-menezes/vue-template)
+como exemplo completo a consultar.
 
 ---
 

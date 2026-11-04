@@ -18,7 +18,6 @@ Voltar para o guia geral: [../../docs/ARCHITECTURE-GUIDE.md](../../docs/ARCHITEC
 | Pasta           | Conteúdo                                                              |
 | --------------- | --------------------------------------------------------------------- |
 | `api/`          | Camada HTTP (instâncias)                                              |
-| `customers/`    | Módulo customers (removido junto com ele pelo `template:clean`)       |
 | `app/`          | `App.vue`, providers, rotas do app e dos módulos base                 |
 | `architecture/` | Regras de dependência entre camadas                                   |
 | `components/`   | Componentes e layouts de `shared/ui` (renderização, emits)            |
@@ -28,7 +27,6 @@ Voltar para o guia geral: [../../docs/ARCHITECTURE-GUIDE.md](../../docs/ARCHITEC
 | `i18n/`         | Mensagens, paridade entre locales e provider de i18n                  |
 | `modules/`      | Views e lógica de módulos (ex.: `HomeView`)                           |
 | `services/`     | Services de `shared/api/services`                                     |
-| `showcase/`     | Módulo showcase (removido junto com ele pelo `template:clean`)        |
 | `stores/`       | Estado global (Pinia)                                                 |
 | `utils/`        | `shared/utils` e os helpers `mountWithPlugins` e `loadRouteComponent` |
 | `setup.ts`      | Bootstrap do ambiente (mocks globais)                                 |

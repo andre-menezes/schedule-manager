@@ -3,15 +3,13 @@
 Camada de funcionalidades de domínio. Cada pasta representa um contexto
 funcional isolado.
 
-Módulos do template:
+Módulos atuais:
 
-- `home`: página inicial do projeto (`/`).
-- `showcase`: telas de documentação do template (hub em `/docs`). Removido por
-  `pnpm template:clean` ao iniciar um projeto novo (ADR-0026).
-- `customers`: CRUD de exemplo (`/customers`), o exemplo canônico do
-  Onboarding: listagem paginada, detalhe, cadastro, edição e exclusão, com a
-  API simulada de `mock/` no `pnpm dev`. Também removido pelo
-  `pnpm template:clean` (ADR-0039).
+- `home`: página inicial (`/`).
+
+Módulos planejados do Agenda (`auth`, `calendar`, `clients`, `services`,
+`availability`, `settings`...): ver a
+[ADR-0055](../../docs/decisions/ADR-0055-modulos-do-frontend.md).
 
 Voltar para o guia geral: [../../docs/ARCHITECTURE-GUIDE.md](../../docs/ARCHITECTURE-GUIDE.md)
 

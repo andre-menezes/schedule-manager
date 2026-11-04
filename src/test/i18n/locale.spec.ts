@@ -52,8 +52,8 @@ const folders = groupByFolder(rawFiles);
 const otherLocales = SUPPORTED_LOCALES.filter((locale) => locale !== 'pt-BR');
 
 describe('paridade dos arquivos de locale', () => {
-  // Os módulos com `locales/` entram no `describe.each` abaixo; um projeto
-  // sem nenhum (depois do `template:clean`) continua válido.
+  // Os módulos com `locales/` entram no `describe.each` abaixo; sem nenhum
+  // módulo com locales o teste continua válido.
   it('encontra os locales do app', () => {
     expect(Object.keys(folders).some((path) => path.endsWith('/app/locales'))).toBe(true);
   });
