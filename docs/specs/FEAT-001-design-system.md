@@ -92,4 +92,4 @@ Nenhum.
 - [x] `pnpm build` sem erros
 - [x] `pnpm test` passando
 - [x] Commits seguindo COMMIT-CONVENTIONS.md
-- [ ] PR aberto com descrição completa
+- [x] PR aberto com descrição completa (#2)
