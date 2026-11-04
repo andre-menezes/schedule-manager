@@ -1,26 +1,47 @@
 <template>
-  <v-navigation-drawer v-model="drawer" :rail="rail" class="navigation-menu" :temporary="!mdAndUp">
+  <v-navigation-drawer
+    v-model="drawer"
+    :rail="rail"
+    class="navigation-menu"
+    :temporary="!mdAndUp"
+    color="surface"
+    border="e"
+    width="248"
+  >
     <!-- O drawer já é um <nav>; os itens são links, não itens de lista. -->
-    <v-list class="pa-3" nav role="none">
-      <v-list-item
-        v-for="item in menuItems"
-        :key="item.route"
-        :to="item.route"
-        color="primary"
-        rounded="lg"
-        class="mb-1"
-      >
-        <template #prepend><v-icon :icon="item.icon" /></template>
-        <v-list-item-title class="font-weight-medium">
-          {{ $t(item.titleKey) }}
-        </v-list-item-title>
-      </v-list-item>
+    <v-list class="pa-2" nav density="compact" role="none">
+      <template v-for="group in menuGroups" :key="group.titleKey ?? 'root'">
+        <v-list-subheader
+          v-if="group.titleKey && !rail"
+          class="navigation-menu__group text-overline"
+          data-cy="nav-group"
+        >
+          {{ $t(group.titleKey) }}
+        </v-list-subheader>
+        <v-divider v-else-if="group.titleKey" class="my-2 mx-2" />
+        <v-list-item
+          v-for="item in group.items"
+          :key="item.route"
+          :to="item.route"
+          color="primary"
+          rounded="md"
+          class="mb-1"
+          :title="rail ? $t(item.titleKey) : undefined"
+        >
+          <template #prepend><v-icon :icon="item.icon" size="20" /></template>
+          <v-list-item-title class="text-body-2 font-weight-medium">
+            {{ $t(item.titleKey) }}
+          </v-list-item-title>
+        </v-list-item>
+      </template>
     </v-list>
     <template #append>
-      <div class="navigation-status ma-3 pa-3 d-flex justify-center align-center ga-2 rounded-lg">
-        <v-icon icon="info" color="accent" />
-        <span class="text-body-small">
-          <span class="font-weight-semibold">{{ $t('common.currentVersion') }}:</span>
+      <div
+        class="navigation-status d-flex align-center ga-2 px-4 py-3 text-caption text-medium-emphasis"
+      >
+        <v-icon icon="sell" size="16" />
+        <span>
+          <span class="font-weight-medium">{{ $t('common.currentVersion') }}:</span>
           {{ version }}
         </span>
       </div>
@@ -32,7 +53,7 @@
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useDisplay } from 'vuetify';
-import type { MenuItem } from '@typings/components';
+import type { MenuGroup, MenuItem } from '@typings/components';
 
 const { version } = __APP_META__;
 
@@ -56,4 +77,27 @@ const menuItems = computed<MenuItem[]>(() =>
     .flatMap(({ path, meta }) => (meta.nav ? [{ ...meta.nav, route: path }] : []))
     .sort((a, b) => a.order - b.order)
 );
+
+/**
+ * Agrupa os itens pelo `meta.nav.groupKey`: os sem grupo vêm primeiro, sem
+ * título; os grupos seguem a ordem do primeiro item de cada um.
+ */
+const menuGroups = computed<MenuGroup[]>(() => {
+  const groups = new Map<string | undefined, MenuItem[]>();
+  for (const item of menuItems.value) {
+    groups.set(item.groupKey, [...(groups.get(item.groupKey) ?? []), item]);
+  }
+  const ungrouped = groups.get(undefined);
+  groups.delete(undefined);
+  return [
+    ...(ungrouped ? [{ items: ungrouped }] : []),
+    ...[...groups].map(([titleKey, items]) => ({ titleKey, items })),
+  ];
+});
 </script>
+
+<style scoped>
+.navigation-status {
+  border-top: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+</style>

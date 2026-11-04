@@ -36,9 +36,8 @@ import type { NotificationType } from '@typings/store';
  * para a próxima quando ela expira ou é fechada. Fica no `App.vue`, fora dos
  * layouts, para aparecer em qualquer tela. O Vuetify já anuncia o conteúdo
  * ao leitor de tela (`role="status"`, `aria-live="polite"`). O tom aparece só
- * no ícone: o fundo `surface` (o `surface-variant` do tema é translúcido)
- * mantém o texto com contraste AA em todos os tons; o verde de `success`
- * com texto branco não passaria (ADR-0029).
+ * no ícone: o fundo `surface` mantém o texto com contraste AA em todos os
+ * tons, sem depender do par `<tom>`/`on-<tom>` de cada um (ADR-0029).
  */
 const store = useNotificationStore();
 const notification = computed(() => store.current);

@@ -16,7 +16,7 @@
     "eyebrow": "Erro 404",
     "title": "Página não encontrada",
     "description": "O endereço informado não aponta para uma página disponível.",
-    "illustrationCredit": "Web illustrations by Storyset"
+    "goBack": "Voltar"
   },
   "welcome": {
     "title": "Bem-vindo ao {appName}",
@@ -45,5 +45,8 @@
   "validation": {
     "required": "Campo obrigatório.",
     "email": "Informe um e-mail válido."
+  },
+  "dialog": {
+    "cancel": "Cancelar"
   }
 }

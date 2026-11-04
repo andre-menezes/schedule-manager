@@ -6,7 +6,10 @@
   <TheAppHeader @toggle-navigation="navigationOpen = !navigationOpen" />
   <TheNavigationMenu v-model="navigationOpen" />
   <v-main :id="MAIN_CONTENT_ID" tabindex="-1" class="main-content">
-    <v-container max-width="1440" class="pb-10"><slot></slot></v-container>
+    <!-- Largura de leitura confortável e margens que crescem com a tela. -->
+    <v-container max-width="1200" class="px-4 px-sm-6 px-md-10 pt-6 pt-md-8 pb-12">
+      <slot></slot>
+    </v-container>
   </v-main>
 </template>
 

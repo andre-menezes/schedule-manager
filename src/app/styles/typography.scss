@@ -1,0 +1,122 @@
+// Escala tipográfica do design system Agenda (ADR-0045).
+//
+// O Vuetify 4 só gera as classes do Material 3 (`text-body-medium`,
+// `text-title-large`...). O template e o design system usam os nomes do MUI
+// (`text-h4`, `text-body-2`, `text-overline`...), que o Vuetify 4 não define:
+// sem este arquivo, essas classes não tinham efeito. Os valores vêm do
+// Figma: Inter, tamanhos para app e botões sem caixa alta.
+@use 'sass:list';
+$scale: (
+  'h1': (
+    40px,
+    48px,
+    600,
+    -0.5px,
+  ),
+  'h2': (
+    32px,
+    40px,
+    600,
+    -0.25px,
+  ),
+  'h3': (
+    28px,
+    36px,
+    600,
+    normal,
+  ),
+  'h4': (
+    24px,
+    32px,
+    600,
+    normal,
+  ),
+  'h5': (
+    20px,
+    28px,
+    600,
+    normal,
+  ),
+  'h6': (
+    18px,
+    26px,
+    600,
+    normal,
+  ),
+  'subtitle-1': (
+    16px,
+    24px,
+    500,
+    normal,
+  ),
+  'subtitle-2': (
+    14px,
+    20px,
+    500,
+    normal,
+  ),
+  'body-1': (
+    16px,
+    24px,
+    400,
+    normal,
+  ),
+  'body-2': (
+    14px,
+    20px,
+    400,
+    normal,
+  ),
+  'button': (
+    14px,
+    20px,
+    500,
+    0.1px,
+  ),
+  'caption': (
+    12px,
+    16px,
+    400,
+    0.2px,
+  ),
+  'overline': (
+    11px,
+    16px,
+    600,
+    0.8px,
+  ),
+);
+
+@each $name, $values in $scale {
+  .text-#{$name} {
+    font-size: list.nth($values, 1) !important;
+    line-height: list.nth($values, 2);
+    font-weight: list.nth($values, 3);
+    letter-spacing: list.nth($values, 4);
+  }
+}
+
+.text-overline {
+  text-transform: uppercase;
+}
+
+// Variantes por breakpoint, como as do Vuetify (`text-md-h3` vale a partir
+// do md). Os limites são os `thresholds` do Vuetify 4.
+$breakpoints: (
+  'sm': 600px,
+  'md': 840px,
+  'lg': 1145px,
+);
+
+@each $bp, $min in $breakpoints {
+  @media (min-width: $min) {
+    @each $name, $values in $scale {
+      .text-#{$bp}-#{$name} {
+        font-size: list.nth($values, 1) !important;
+        line-height: list.nth($values, 2);
+        font-weight: list.nth($values, 3);
+        letter-spacing: list.nth($values, 4);
+      }
+    }
+  }
+}
