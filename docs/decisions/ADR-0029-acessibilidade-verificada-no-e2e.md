@@ -3,7 +3,15 @@
 - **Status:** Aceita
 - **Data:** 2026-10-30
 - **Decisores:** Andre Menezes
-- **Relacionadas:** ADR-0020 (Testes E2E com Playwright)
+- **Relacionadas:** ADR-0020 (Testes E2E com Playwright); ADR-0044 (emenda a
+  paleta e os tons de texto)
+
+> **Nota:** a paleta citada aqui (primary `#FF8066`) foi trocada pela do
+> design system Agenda na [ADR-0044](ADR-0044-paleta-do-design-system-agenda.md).
+> As cores base do tema claro passaram a ter contraste AA sobre a superfície,
+> e no tema escuro os tons `-text` deixaram de repetir a paleta: são tons
+> mais claros, com folga extra. O resto desta decisão (axe no E2E, sufixo
+> `-text` em texto colorido, opacidade de média ênfase 0,7) continua valendo.
 
 ## Contexto e problema
 

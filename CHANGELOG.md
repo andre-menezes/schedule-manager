@@ -28,6 +28,11 @@ e o projeto adota [Versionamento Semântico](https://semver.org/lang/pt-BR/).
   modelo de domínio e pendências.
 - Roadmap do produto (`docs/ROADMAP.md`) e ADRs 0048 a 0057; visual do
   produto pelo design system Schedule Manager do Figma (ADR-0057).
+- Design system Schedule Manager no código (FEAT-001, ADR-0057): tema
+  claro e escuro com as variáveis do Figma, cores de evento, escala
+  tipográfica, padrões dos componentes e os componentes base
+  `BaseEventBlock`, `BaseStatusChip`, `BaseAvatar`, `BaseConfirmDialog` e
+  `BasePageHeader`.
 
 ### Alterado
 

@@ -63,13 +63,13 @@ graph TD
   TEST --> TYPES
   E2E[e2e] -->|via HTTP| APP
 
-  style APP fill:#FF8066,color:#fff
-  style MODULES fill:#6D8CFF,color:#fff
-  style SHARED fill:#00B8A9,color:#fff
-  style CORE fill:#C1121F,color:#fff
-  style TYPES fill:#F4A261,color:#fff
-  style TEST fill:#168A63,color:#fff
-  style E2E fill:#73A9FF,color:#fff
+  style APP fill:#4162D9,color:#fff
+  style MODULES fill:#0A7F7A,color:#fff
+  style SHARED fill:#0676AE,color:#fff
+  style CORE fill:#C42D31,color:#fff
+  style TYPES fill:#996105,color:#fff
+  style TEST fill:#05844B,color:#fff
+  style E2E fill:#263C8D,color:#fff
 ```
 
 **Regras de dependência:**
