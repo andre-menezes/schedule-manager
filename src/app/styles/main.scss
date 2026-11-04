@@ -1,3 +1,5 @@
+@use './typography';
+
 html {
   overflow-y: auto;
 }
@@ -45,30 +47,4 @@ html {
     'wght' 400,
     'GRAD' 0,
     'opsz' 24;
-}
-
-.logo {
-  flex: 0 0 42px;
-  width: 42px;
-  height: 42px;
-}
-
-.gradient {
-  background: #110936;
-  background: linear-gradient(
-    180deg,
-    rgba(17, 9, 54, 1) 0%,
-    rgba(88, 109, 163, 1) 90%,
-    rgba(130, 145, 176, 1) 100%
-  );
-}
-
-.gradient-light {
-  background: #5075ab;
-  background: linear-gradient(0deg, rgba(80, 117, 171, 1) 10%, rgba(13, 26, 56, 1) 100%);
-}
-
-.gradient-dark {
-  background: #110936;
-  background: linear-gradient(180deg, rgba(17, 26, 49, 1) 0%, rgba(8, 13, 28, 1) 50%);
 }

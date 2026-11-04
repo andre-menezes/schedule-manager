@@ -14,6 +14,11 @@ export interface RouteNav {
   icon: string;
   /** Posição no menu, em ordem crescente. */
   order: number;
+  /**
+   * Chave i18n do grupo no menu (ex.: `nav.groups.docs`). Itens sem grupo
+   * aparecem primeiro, sem título; os grupos seguem a ordem do primeiro item.
+   */
+  groupKey?: string;
 }
 
 declare module 'vue-router' {

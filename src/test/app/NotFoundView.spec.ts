@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
 import { flushPromises } from '@vue/test-utils';
 import { createMemoryHistory, createRouter } from 'vue-router';
@@ -38,11 +38,13 @@ describe('NotFoundView', () => {
     expect(backLink.text()).toContain('Voltar para o início');
   });
 
-  it('dá crédito à ilustração em link externo seguro', async () => {
+  it('volta para a página anterior', async () => {
     const wrapper = await mountNotFound();
-    const credit = wrapper.find('a[href="https://storyset.com/web"]');
+    const router = wrapper.vm.$router;
+    const back = vi.spyOn(router, 'back').mockImplementation(() => undefined);
 
-    expect(credit.attributes('target')).toBe('_blank');
-    expect(credit.attributes('rel')).toContain('noopener');
+    await wrapper.get('[data-cy="not-found-back"]').trigger('click');
+
+    expect(back).toHaveBeenCalled();
   });
 });

@@ -30,6 +30,35 @@ A seleção de layout é dinâmica, baseada em `route.meta.layout`:
 
 Para usar `EmptyLayout`, defina `meta: { layout: 'empty' }` na rota.
 
+## Design system Agenda (ADR-0044, ADR-0045)
+
+O tema, os padrões dos componentes e a tipografia seguem o
+[Figma](https://www.figma.com/design/6FDGyIeX9bSEEn0mU3un7Z). Uma tela nova já
+sai no design system usando os componentes do Vuetify e os `Base*` abaixo.
+
+- **Tipografia:** classes do MUI (`text-h4`, `text-subtitle-1`, `text-body-2`,
+  `text-caption`, `text-overline`…), definidas em
+  `src/app/styles/typography.scss`, com variantes por breakpoint
+  (`text-md-h3`).
+- **Padrões:** botões sem elevação, cartões com borda e sem sombra, campos em
+  contorno, menus e diálogos com raio de 8px e sombra
+  (`componentDefaults` em `@app/providers/vuetify`). Não repita essas props
+  nas telas.
+- **Cores:** marca nas ações; texto colorido com `<cor>-text`; fundos de
+  status com `<tom>-container`; compromissos com `event-<matiz>`.
+
+| Componente          | Para quê                               | Principais props                                                                              |
+| ------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `BasePageHeader`    | `<h1>` da tela com ações               | `title`, `subtitle?`, `overline?`; slots `prepend`, `actions`                                 |
+| `BaseStatusChip`    | Situação de um item                    | `label`, `tone` (`success`…`neutral`), `icon?`                                                |
+| `BaseAvatar`        | Pessoa (iniciais e cor estável)        | `name`, `size?`, `hue?`, `decorative?`                                                        |
+| `BaseConfirmDialog` | Confirmar uma ação (destrutiva ou não) | `v-model`, `title`, `message`, `confirm-label`, `tone`, `loading`, `error-message`; `confirm` |
+| `BaseEventBlock`    | Compromisso numa agenda                | `title`, `time`, `hue`, `subtitle?`, `compact?`, `clickable?`; `select`                       |
+
+O módulo decide o significado e o componente só desenha: o
+`CustomerStatusChip` traduz "ativo" em `tone="success"`. Exemplos vivos na
+vitrine, em Componentes → Design system Agenda.
+
 ## Estados de carregamento, vazio e erro
 
 Toda área que lê dados do servidor tem os mesmos três estados, com os mesmos

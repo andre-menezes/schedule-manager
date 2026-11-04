@@ -6,13 +6,12 @@ Voltar para o índice: [docs/README.md](README.md)
 
 ---
 
-## Ilustrações
+No momento, o template não usa recursos de terceiros que exijam atribuição na
+interface. A ilustração da página 404 (Storyset) saiu com a nova identidade
+visual (ADR-0046).
 
-As ilustrações são fornecidas gratuitamente pelo [Storyset](https://storyset.com/)
-(por Freepik) e exigem atribuição conforme a licença.
+Ao adicionar uma ilustração, foto ou ícone com licença que peça atribuição,
+registre aqui o arquivo, onde ele aparece e o crédito exigido.
 
-| Recurso                                             | Uso                                 | Atribuição                                                |
-| --------------------------------------------------- | ----------------------------------- | --------------------------------------------------------- |
-| `src/shared/assets/illustrations/404_not_found.svg` | Tela de página não encontrada (404) | [Web illustrations by Storyset](https://storyset.com/web) |
-
-> A atribuição também é exibida na própria tela onde a ilustração aparece.
+| Recurso | Uso | Atribuição |
+| ------- | --- | ---------- |

@@ -1,19 +1,24 @@
 <template>
-  <v-app-bar theme="dark" class="app-header px-2 px-sm-4" elevation="2" height="64">
+  <!-- Superfície com borda inferior, sem sombra: só o que flutua tem sombra (ADR-0046). -->
+  <v-app-bar class="app-header px-2 px-sm-4" color="surface" flat border="b" height="64">
     <v-app-bar-nav-icon class="d-md-none" @click="emit('toggleNavigation')" />
-    <div class="d-none d-sm-flex align-center ga-3">
-      <BaseLogo class="logo" />
-      <v-app-bar-title class="text-title-medium font-weight-bold pa-0">
+    <router-link
+      to="/"
+      class="app-header__brand d-flex align-center ga-3 text-decoration-none"
+      data-cy="app-brand"
+    >
+      <BaseLogo class="app-header__logo" />
+      <span class="text-subtitle-1 font-weight-semibold text-high-emphasis d-none d-sm-inline">
         {{ APP_NAME }}
-      </v-app-bar-title>
-    </div>
+      </span>
+    </router-link>
 
     <v-spacer />
 
-    <v-row class="flex-grow-0 ga-4" no-gutters align="center">
+    <div class="d-flex align-center ga-1">
       <TheLocaleMenu :locale="locale" @change-locale="setLocale" />
       <TheHeaderActions :theme="theme" @switch-theme="toggleTheme" />
-    </v-row>
+    </div>
   </v-app-bar>
 </template>
 
@@ -31,3 +36,21 @@ const emit = defineEmits<{
   toggleNavigation: [];
 }>();
 </script>
+
+<style scoped>
+.app-header__brand {
+  color: inherit;
+  border-radius: 4px;
+}
+
+.app-header__brand:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 4px;
+}
+
+.app-header__logo {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+}
+</style>
