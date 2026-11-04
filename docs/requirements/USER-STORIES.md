@@ -11,6 +11,9 @@ de aceite em Dado/Quando/Então; regras de negócio (`RN-XX`) em
 `P` (até 2 dias), `M` (até 1 semana), `G` (mais que isso — quebrar antes de
 implementar).
 
+Telas e protótipo: Figma, página **Telas · MVP** (ADR-0057); a legenda
+de cada tela cita as histórias que ela cobre.
+
 Personas (ver [VISION.md](VISION.md#4-personas)): **profissional** (Ana,
 Carlos), **usuário pessoal** (Juliana), **cliente** (Marcos), **usuário**
 (qualquer conta).
@@ -158,9 +161,8 @@ por hora, **para** ter a visão de quanto estou ocupado.
   (RN-16) e as horas em passos de 30 min, rolando até o horário de trabalho ao
   abrir.
 - **CA2:** Cada evento aparece como bloco na cor do serviço ou da categoria
-  (componente de bloco de evento a criar — ADR-0052), com hora, título e
-  cliente; eventos
-  sobrepostos dividem a largura da coluna.
+  (`BaseEventBlock`, componente `Calendar event` do Figma — ADR-0057), com
+  hora, título e cliente; eventos sobrepostos dividem a largura da coluna.
 - **CA3:** Atendimentos cancelados ficam ocultos por padrão (filtro US-015);
   faltas aparecem riscadas.
 - **CA4:** No celular (< 600px), a visão semanal mostra 3 dias com rolagem
@@ -295,7 +297,7 @@ que não vai mais acontecer.
 
 **Critérios de aceite**
 
-- **CA1:** Pede confirmação num diálogo e oferece "Desfazer" por
+- **CA1:** Pede confirmação (`BaseConfirmDialog`) e oferece "Desfazer" por
   alguns segundos na notificação.
 - **CA2:** Atendimentos não têm "excluir", só "cancelar" (US-064).
 
@@ -321,8 +323,8 @@ cor (família, saúde, trabalho...), **para** distinguir de relance.
 
 **Critérios de aceite**
 
-- **CA1:** As cores vêm de uma paleta fixa de cores de evento, com fundo e
-  texto em contraste AA (paleta a definir — Q-13).
+- **CA1:** As cores são as oito cores de evento do design system (`event/*`,
+  ADR-0057), com fundo e texto em contraste AA.
 - **CA2:** Há categorias iniciais editáveis; excluir uma categoria deixa os
   eventos sem categoria.
 
@@ -594,8 +596,8 @@ num atendimento, **para** saber o que de fato aconteceu.
 
 **Critérios de aceite**
 
-- **CA1:** Só as transições permitidas pela RN-05 aparecem; o status aparece
-  num chip com a cor do status (sucesso, aviso, erro, neutro).
+- **CA1:** Só as transições permitidas pela RN-05 aparecem; o status usa o
+  `BaseStatusChip` (componente `Chip` do Figma) com a cor do status.
 - **CA2:** Cancelar pede motivo opcional, quem cancelou e se avisa o cliente;
   o lembrete é cancelado.
 - **CA3:** Marcar falta só aparece depois do início do atendimento.

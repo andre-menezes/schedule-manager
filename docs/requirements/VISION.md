@@ -122,8 +122,7 @@ pagamento online, app nativo. Detalhes e ordem no [ROADMAP](../ROADMAP.md).
   (ADR-0039).
 - **Idioma principal:** pt-BR; en-US já suportado pelo template (ADR-0038).
 - **Mercado inicial:** Brasil (LGPD, telefone com DDD, Pix na evolução).
-- **Design:** o visual original do template (ADR-0047, que descontinuou o
-  design system Agenda). Identidade visual própria do produto e cores de
-  evento `[PENDENTE]` (Q-13).
+- **Design:** design system **Schedule Manager** no Figma, com as telas e o
+  protótipo do MVP na página Telas · MVP (ADR-0057).
 - **Time:** pequeno, com apoio de agentes de IA (`agent/`, ADR-0006): as
   histórias precisam ser pequenas e testáveis.
