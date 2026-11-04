@@ -1,0 +1,11 @@
+// Variáveis SASS do Vuetify.
+//
+// Este arquivo é passado ao `vite-plugin-vuetify` (`styles.configFile` no
+// `vite.config.ts`) e compilado junto com o CSS de cada componente usado.
+// Não coloque regras CSS aqui: só `@use 'vuetify/settings' with (...)`.
+@use 'vuetify/settings' with (
+  $body-font-family: (
+    'Inter Variable',
+    sans-serif,
+  )
+);

@@ -1,0 +1,50 @@
+{
+  "common": {
+    "backToHome": "Back to home",
+    "currentVersion": "Current version"
+  },
+  "nav": {
+    "home": "Home"
+  },
+  "header": {
+    "activateLightTheme": "Switch to light theme",
+    "activateDarkTheme": "Switch to dark theme",
+    "changeLanguage": "Change language",
+    "languages": "Languages"
+  },
+  "notFound": {
+    "eyebrow": "Error 404",
+    "title": "Page not found",
+    "description": "The address you entered does not point to an available page.",
+    "illustrationCredit": "Web illustrations by Storyset"
+  },
+  "welcome": {
+    "title": "Welcome to {appName}",
+    "description": "Project created from the Vue Template. Start by creating a module in src/modules/.",
+    "docsLink": "See the template documentation"
+  },
+  "pageTitle": {
+    "home": "Home",
+    "notFound": "Page not found"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content"
+  },
+  "errors": {
+    "unexpected": "Unexpected error.",
+    "requestFailed": "Request failed"
+  },
+  "states": {
+    "loading": "Loading…",
+    "emptyTitle": "Nothing here",
+    "errorTitle": "Couldn't load",
+    "retry": "Try again"
+  },
+  "notifications": {
+    "close": "Close"
+  },
+  "validation": {
+    "required": "Required field.",
+    "email": "Enter a valid email."
+  }
+}

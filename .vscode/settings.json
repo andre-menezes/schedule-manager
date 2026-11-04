@@ -1,0 +1,50 @@
+{
+  // Quebra de linha padrao do projeto (alinhado ao Prettier e ao .editorconfig)
+  "files.eol": "\n",
+
+  // Formatacao automatica ao salvar usando o Prettier
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+
+  // Corrige e organiza com ESLint ao salvar
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // Habilita o flat config do ESLint e valida os tipos de arquivo do projeto
+  "eslint.useFlatConfig": true,
+  "eslint.validate": ["javascript", "typescript", "vue"],
+
+  // Auto-fechamento e edicao vinculada de tags (abrir <tag> fecha </tag>)
+  "editor.linkedEditing": true,
+  "html.autoClosingTags": true,
+  "javascript.autoClosingTags": true,
+  "typescript.autoClosingTags": true,
+
+  // Usa a versao de TypeScript do projeto (garante intellisense consistente)
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
+  // Vue (Volar): habilita o modo takeover para melhor intellisense em .vue
+  "vue.server.hybridMode": true,
+
+  // Formatadores por linguagem
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // i18n Ally: locales do app e de cada modulo, com o pt-BR como base (ADR-0038)
+  "i18n-ally.localesPaths": ["src/app/locales", "src/modules/*/locales"],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sourceLanguage": "pt-BR",
+  "i18n-ally.displayLanguage": "pt-BR"
+}

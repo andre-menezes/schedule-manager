@@ -1,0 +1,47 @@
+# Nginx da SPA (ADR-0041). O envsubst da imagem oficial troca ${CSP_CONNECT_SRC}
+# na partida do contêiner.
+
+server {
+  listen 8080;
+  server_name _;
+  root /usr/share/nginx/html;
+
+  # Compressão dos arquivos de texto (o build não gera .gz).
+  gzip on;
+  gzip_types text/css application/javascript application/json image/svg+xml;
+  gzip_min_length 1024;
+
+  # Cabeçalhos de segurança, repetidos em cada `location` que define
+  # `add_header` (o Nginx não herda os do nível acima nesse caso).
+  # - style-src 'unsafe-inline': o Vuetify aplica estilos inline (tema, cores).
+  # - img-src data: e font-src data:: ícones e fontes embutidos pelo build.
+  set $csp "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' ${CSP_CONNECT_SRC}; frame-ancestors 'none'; base-uri 'self'; form-action 'self'";
+
+  # Arquivos do build com hash no nome: cache longo.
+  location /assets/ {
+    add_header Cache-Control "public, max-age=31536000, immutable";
+    add_header Content-Security-Policy $csp always;
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+    try_files $uri =404;
+  }
+
+  # Verificação de saúde do contêiner (HEALTHCHECK e orquestradores).
+  location = /healthz {
+    access_log off;
+    default_type text/plain;
+    return 200 "ok\n";
+  }
+
+  # Rotas da SPA: qualquer caminho sem arquivo cai no index.html, que nunca é
+  # cacheado (cada deploy publica um novo).
+  location / {
+    add_header Cache-Control "no-cache";
+    add_header Content-Security-Policy $csp always;
+    add_header X-Content-Type-Options nosniff always;
+    add_header X-Frame-Options DENY always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    try_files $uri $uri/ /index.html;
+  }
+}

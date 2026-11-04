@@ -1,0 +1,16 @@
+# Só o necessário para o build da imagem (ver Dockerfile). O `e2e/` e o
+# `mock/` ficam: o typecheck do build (`vue-tsc -b`) inclui os tsconfigs deles.
+.git
+.github
+.husky
+.vfox
+.vscode
+.kiro
+node_modules
+dist
+coverage
+test-results
+playwright-report
+*.local
+.env*
+!.env.example

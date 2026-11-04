@@ -1,0 +1,92 @@
+# Pipeline de CI — vue3-template
+#
+# Jobs: lint, build (typecheck + build), test (unitários + cobertura), e2e
+# (Playwright) e docker (a imagem de produção sobe e responde — ADR-0041). A versão do Node segue a fixada em .nvmrc / .tool-versions, e a
+# do pnpm, o campo `packageManager` do package.json (ADR-0024).
+#
+# Cada job faz o checkout e chama a action local `.github/actions/setup`
+# (pnpm, Node e dependências). Actions de terceiros ficam fixadas pelo SHA do
+# commit, com a versão no comentário; o Dependabot propõe as atualizações
+# (ADR-0034, ADR-0035).
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+# Cancela execuções anteriores da mesma branch/PR ao receber um novo push.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - run: pnpm lint
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - run: pnpm build
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - run: pnpm test:coverage
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 7
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - run: pnpm exec playwright install --with-deps chromium
+      # O `webServer` do playwright.config.ts sobe o Vite no modo `test`.
+      - run: pnpm test:e2e
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: docker build -t app .
+      - name: Sobe a imagem e confere o health check e o fallback da SPA
+        run: |
+          docker run -d --name app -p 8080:8080 app
+          for attempt in $(seq 1 10); do curl -fs http://localhost:8080/healthz && break; sleep 1; done
+          curl -fs -o /dev/null http://localhost:8080/rota/da/spa
+          curl -fsI http://localhost:8080/ | grep -i content-security-policy

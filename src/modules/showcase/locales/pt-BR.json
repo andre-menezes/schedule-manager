@@ -1,0 +1,530 @@
+{
+  "common": {
+    "open": "Acessar",
+    "copyCode": "Copiar código",
+    "copied": "Copiado!"
+  },
+  "nav": {
+    "docs": "Documentação",
+    "architecture": "Arquitetura",
+    "onboarding": "Onboarding",
+    "components": "Componentes",
+    "conventions": "Convenções",
+    "decisions": "Decisões"
+  },
+  "docsHome": {
+    "eyebrow": "Documentação viva",
+    "title": "Vue 3 Template",
+    "description": "Um template de arquitetura frontend documentado. Explore a estrutura em camadas, o guia de onboarding, os componentes, as convenções e as decisões que guiam este projeto — pensado para desenvolvedores e agentes de IA.",
+    "navEyebrow": "Navegação",
+    "navTitle": "Explore a documentação",
+    "metrics": {
+      "totalDeps": {
+        "label": "Dependências totais",
+        "detail": "pacotes instalados"
+      },
+      "runtime": {
+        "label": "Runtime",
+        "detail": "dependências de produção"
+      },
+      "tooling": {
+        "label": "Ferramentas",
+        "detail": "dependências de desenvolvimento"
+      },
+      "quality": {
+        "label": "Qualidade",
+        "detail": "build e typecheck disponíveis"
+      }
+    },
+    "cards": {
+      "architecture": {
+        "title": "Arquitetura",
+        "description": "Camadas, regras de dependência e os fluxos que estruturam o projeto."
+      },
+      "onboarding": {
+        "title": "Onboarding",
+        "description": "Passo a passo para criar uma feature seguindo os padrões do template."
+      },
+      "components": {
+        "title": "Componentes & UI",
+        "description": "Showcase vivo dos componentes, tema e padrões de interface."
+      },
+      "conventions": {
+        "title": "Convenções",
+        "description": "Padrão de commits e checklist de code review adotados."
+      },
+      "decisions": {
+        "title": "Decisões (ADRs)",
+        "description": "Registro das decisões arquiteturais e seus contextos."
+      }
+    },
+    "workflow": {
+      "eyebrow": "Acesso rápido",
+      "title": "Fluxo de trabalho",
+      "cta": "Ver onboarding",
+      "install": "Instalação de dependências",
+      "dev": "Servidor local",
+      "lint": "Lint",
+      "unitTests": "Testes unitários",
+      "e2eTests": "Testes end-to-end",
+      "build": "Build de produção"
+    }
+  },
+  "architecture": {
+    "eyebrow": "Guia de arquitetura",
+    "title": "Arquitetura em camadas",
+    "description": "Como o código é organizado, as regras de dependência entre as camadas e os fluxos que estruturam a aplicação. Este é o ponto de partida para entender onde implementar cada tipo de funcionalidade.",
+    "sections": {
+      "layers": {
+        "title": "Visão em camadas",
+        "description": "Cada camada tem uma responsabilidade isolada. Camadas superiores importam das inferiores, nunca o contrário."
+      },
+      "dependencies": {
+        "title": "Regras de dependência",
+        "description": "Contrato que mantém as camadas desacopladas e previsíveis."
+      },
+      "structure": {
+        "title": "Estrutura de pastas",
+        "description": "Organização física do código-fonte."
+      },
+      "init": {
+        "title": "Fluxo de inicialização",
+        "description": "O que acontece do bootstrap até a aplicação montar."
+      },
+      "routes": {
+        "title": "Composição de rotas",
+        "description": "Rotas descobertas automaticamente por módulo, sem registro central.",
+        "intro": "O router carrega os arquivos routes.ts de app/ e modules/ via import.meta.glob. Basta criar um routes.ts no módulo — nenhum arquivo central precisa ser editado.",
+        "showcaseTitle": "Exemplo de routes.ts de um módulo",
+        "showcaseDescription": "Cada módulo exporta suas rotas com lazy loading e meta fields."
+      },
+      "http": {
+        "title": "Camada HTTP",
+        "description": "Factory createApiInstance + services semânticos.",
+        "intro": "Toda comunicação passa por uma factory sobre ofetch. Os services ficam no módulo que os usa (em shared/api/services só quando compartilhados) e as views os consomem por queries do TanStack Query — nunca chamam endpoints diretamente."
+      },
+      "state": {
+        "title": "Estado global",
+        "description": "Stores Pinia com responsabilidade única.",
+        "columnStore": "Store",
+        "columnResponsibility": "Responsabilidade"
+      },
+      "conventions": {
+        "title": "Convenções gerais",
+        "description": "Idioma, aliases e variáveis de ambiente.",
+        "aliasesTitle": "Aliases de importação",
+        "languageTitle": "Idioma"
+      }
+    },
+    "layers": {
+      "app": "Inicialização, providers, rotas base e telas globais.",
+      "modules": "Funcionalidades por domínio (features), independentes entre si.",
+      "shared": "Infraestrutura transversal reutilizável (api, stores, ui, utils).",
+      "core": "Base sem dependências de UI: configuração/env e constantes.",
+      "types": "Contratos TypeScript centralizados por contexto.",
+      "test": "Validação automatizada — unitários e integração (Vitest).",
+      "e2e": "Testes end-to-end (Playwright) contra a aplicação rodando."
+    },
+    "dependencyRules": {
+      "canImport": {
+        "sharedCoreTypes": "shared, core, types",
+        "coreTypes": "core, types",
+        "typesOnly": "types",
+        "none": "nenhuma (apenas declarações)",
+        "allSrc": "todas as camadas de src"
+      },
+      "cannotImport": {
+        "modules": "modules (exceto o glob de rotas)",
+        "appOtherModule": "app, outro módulo",
+        "appModules": "app, modules",
+        "appModulesShared": "app, modules, shared",
+        "any": "qualquer outra",
+        "dash": "—"
+      },
+      "columns": {
+        "layer": "Camada",
+        "canImport": "Pode importar de",
+        "cannotImport": "Não pode importar de"
+      }
+    },
+    "initFlow": {
+      "step1": {
+        "title": "main.ts cria a instância Vue",
+        "description": "A aplicação é criada com App.vue como raiz."
+      },
+      "step2": {
+        "title": "registerPlugins",
+        "description": "Registra Pinia → i18n → Router → Vuetify, nessa ordem."
+      },
+      "step3": {
+        "title": "Auto-discovery de rotas",
+        "description": "O Router carrega todos os routes.ts via import.meta.glob('{'@'}/{'{'}app,modules{'}'}/**/routes.ts')."
+      },
+      "step4": {
+        "title": "mount #app",
+        "description": "A aplicação é montada no elemento raiz."
+      }
+    },
+    "stores": {
+      "app": "Estado global de UX (tema persistido).",
+      "notification": "Fila de notificações do snackbar global (useNotify)."
+    },
+    "languageRules": {
+      "docs": {
+        "title": "Documentação",
+        "detail": "português (UTF-8)"
+      },
+      "code": {
+        "title": "Código",
+        "detail": "inglês (funções, variáveis, arquivos)"
+      },
+      "commits": {
+        "title": "Commits",
+        "detail": "português"
+      }
+    }
+  },
+  "onboarding": {
+    "eyebrow": "Guia de onboarding",
+    "title": "Primeiros passos e como criar uma feature",
+    "description": "Comece configurando o ambiente local e depois siga o passo a passo para implementar uma funcionalidade completa — do módulo ao teste, seguindo os padrões do template.",
+    "setup": {
+      "title": "Configuração inicial",
+      "description": "Clone o repositório, instale as dependências e confirme que o ambiente está funcional.",
+      "cloneFilename": "1. Clonar o repositório",
+      "installFilename": "2. Instalar dependências",
+      "devFilename": "3. Subir o servidor",
+      "testFilename": "4. Rodar os testes"
+    },
+    "canonical": {
+      "title": "Exemplo canônico",
+      "description": "O módulo customers implementa um CRUD completo nas camadas do template: listagem paginada com busca na URL, detalhe, cadastro, edição e exclusão. No pnpm dev, a API vem de uma simulação em memória (ADR-0039).",
+      "open": "Abrir o exemplo",
+      "filesLabel": "Onde está o código"
+    },
+    "stepper": {
+      "stepLabel": "Passo {current} de {total}"
+    },
+    "steps": {
+      "module": {
+        "title": "Criar o módulo",
+        "description": "Crie a pasta do módulo em src/modules/{'<'}nome{'>'}/ com routes.ts, views/ e components/. A rota é registrada automaticamente pelo router (auto-discovery via glob)."
+      },
+      "types": {
+        "title": "Criar os tipos",
+        "description": "Crie os contratos do domínio em src/modules/{'<'}nome{'>'}/types.ts. Só promova para src/types/ quando um segundo módulo precisar deles (ADR-0025)."
+      },
+      "service": {
+        "title": "Criar o service",
+        "description": "Crie as funções de comunicação com o backend em src/modules/{'<'}nome{'>'}/api/, aceitando um signal opcional para cancelar a requisição. Views nunca chamam endpoints diretamente."
+      },
+      "query": {
+        "title": "Criar a query",
+        "description": "Dados do servidor são lidos com TanStack Query (ADR-0027). Encapsule a query num composable do módulo; ele cuida de cache, loading, erro e cancelamento."
+      },
+      "view": {
+        "title": "Criar a view container",
+        "description": "A view consome a query e passa os dados, o loading e o erro para componentes apresentacionais."
+      },
+      "components": {
+        "title": "Criar componentes apresentacionais",
+        "description": "Componentes puros: recebem props, emitem eventos, sem fetch nem store."
+      },
+      "tests": {
+        "title": "Criar testes",
+        "description": "Cubra o service com teste unitário (Vitest) e o fluxo principal com teste E2E (Playwright)."
+      },
+      "validate": {
+        "title": "Validar",
+        "description": "Antes de commitar, garanta que lint, build e testes passam sem erros."
+      }
+    },
+    "checklistSection": {
+      "title": "Checklist de conclusão",
+      "description": "Antes de abrir o PR, confirme que cada item foi atendido."
+    },
+    "checklist": {
+      "module": "Módulo criado em src/modules/{'<'}nome{'>'}/",
+      "routes": "routes.ts com tipagem RouteRecordRaw[] e meta fields",
+      "types": "Tipos criados em src/modules/{'<'}nome{'>'}/types.ts",
+      "service": "Service criado em src/modules/{'<'}nome{'>'}/api/",
+      "query": "Query num composable do módulo (useQuery)",
+      "view": "View container usando a query",
+      "components": "Componentes apresentacionais com props tipadas",
+      "unitTest": "Teste unitário cobrindo o service",
+      "e2eTest": "Teste E2E cobrindo o fluxo principal",
+      "lint": "pnpm lint sem erros",
+      "build": "pnpm build sem erros",
+      "test": "pnpm test passando",
+      "commit": "Commit seguindo as convenções"
+    },
+    "faqSection": {
+      "title": "Dúvidas frequentes",
+      "description": "As perguntas mais comuns de quem está começando."
+    },
+    "faqs": {
+      "sharedLogic": {
+        "question": "Onde colocar lógica reutilizável entre módulos?",
+        "answer": "Em shared/ — se é pura vai em utils/, se interage com store/service vai em helpers/, se é reativa vai em composables/."
+      },
+      "store": {
+        "question": "Preciso criar uma store para minha feature?",
+        "answer": "Para dados do servidor, não: use TanStack Query (ADR-0027). Crie store só para estado de cliente transversal ou persistente. Estado local de tela fica em ref/reactive no componente."
+      },
+      "crossModule": {
+        "question": "Posso importar de outro módulo?",
+        "answer": "Não. Módulos são independentes. Se precisa compartilhar, mova para shared/."
+      },
+      "env": {
+        "question": "Onde ficam as variáveis de ambiente?",
+        "answer": "Sempre em src/core/config/index.ts (alias {'@'}core/config). Nunca use import.meta.env diretamente."
+      }
+    }
+  },
+  "components": {
+    "eyebrow": "Interface",
+    "title": "Componentes & UI",
+    "description": "Showcase vivo dos componentes Vuetify usados no template, com o código de uso ao lado. A regra é simples: prefira sempre um componente Vuetify a HTML cru com CSS próprio.",
+    "palette": {
+      "title": "Paleta de tema",
+      "description": "Cores semânticas definidas em app/providers/vuetify.ts. Use os nomes, nunca hexadecimais soltos."
+    },
+    "buttons": {
+      "title": "Botões",
+      "description": "v-btn cobre ações primárias, secundárias e de ícone. Varie por variant e color.",
+      "showcaseTitle": "Variantes de botão",
+      "showcaseDescription": "A hierarquia visual vem do variant (flat, tonal, outlined, text).",
+      "primary": "Primário",
+      "tonal": "Tonal",
+      "outlined": "Outline",
+      "text": "Texto",
+      "favoriteAria": "Favoritar"
+    },
+    "chips": {
+      "title": "Chips e selos",
+      "description": "v-chip para tags, status e metadados compactos.",
+      "showcaseTitle": "Chips por cor semântica",
+      "showcaseDescription": "Reforçam significado usando as cores do tema.",
+      "approved": "Aprovado",
+      "pending": "Pendente",
+      "blocked": "Bloqueado"
+    },
+    "alerts": {
+      "title": "Alertas",
+      "description": "v-alert comunica feedback e estados ao usuário.",
+      "showcaseTitle": "Tipos de alerta",
+      "showcaseDescription": "O type ajusta cor e ícone automaticamente.",
+      "success": "Feature publicada com sucesso.",
+      "warning": "Há mudanças não commitadas.",
+      "error": "Falha ao carregar os dados."
+    },
+    "apiError": {
+      "title": "Erro de API (RFC 9457)",
+      "description": "Padronize o feedback de erro de API a partir do corpo Problem Details (application/problem+json).",
+      "intro": "As APIs retornam erros no formato application/problem+json. O helper getErrorMessage extrai detail/title do corpo e monta a mensagem exibida no v-alert. Referência:",
+      "showcaseTitle": "Alerta a partir de um Problem Details",
+      "showcaseDescription": "A mensagem vem do detail do corpo de erro, com o status HTTP anexado."
+    },
+    "cards": {
+      "title": "Cartões",
+      "description": "v-card estrutura conteúdo com item, texto e ações.",
+      "showcaseTitle": "Estrutura de um card",
+      "showcaseDescription": "Combine v-card-item, v-card-text e v-card-actions.",
+      "previewTitle": "Módulo",
+      "previewText": "Feature isolada por domínio.",
+      "previewAction": "Abrir"
+    }
+  },
+  "conventions": {
+    "eyebrow": "Qualidade",
+    "title": "Convenções",
+    "description": "O padrão de commits e o checklist de code review adotados no projeto. Os hooks de Git validam as mensagens automaticamente — o checklist guia a revisão de cada Pull Request.",
+    "branches": {
+      "title": "Convenção de branches",
+      "description": "Toda branch nasce da develop e segue o padrão tipo/{'<'}código-opcional{'>'}-slug em kebab-case.",
+      "neverDirect": "Nunca trabalhe direto na",
+      "or": "ou",
+      "createFrom": "Crie a nova branch sempre a partir da",
+      "updated": "atualizada e depois abra o PR (pull request) para a",
+      "atEnd": "ao concluir.",
+      "flowFilename": "criar uma branch",
+      "prefixesTitle": "Prefixos por tipo",
+      "columnPrefix": "Prefixo",
+      "columnWhen": "Quando usar",
+      "columnGood": "Bons Exemplos",
+      "columnBad": "Maus Exemplos",
+      "types": {
+        "feat": "Nova funcionalidade",
+        "fix": "Correção de bug",
+        "refactor": "Refatoração sem mudar comportamento",
+        "docs": "Apenas documentação",
+        "chore": "Manutenção (deps, configs, CI)"
+      }
+    },
+    "commitFormat": {
+      "title": "Formato do commit",
+      "description": "Conventional Commits com descrição em português, no imperativo, até 72 caracteres e sem ponto final.",
+      "filename": "formato"
+    },
+    "commitTypes": {
+      "title": "Tipos de commit",
+      "description": "Definem a natureza da mudança. Escritos em inglês (convenção técnica).",
+      "columnType": "Tipo",
+      "columnWhen": "Quando usar",
+      "feat": "Nova funcionalidade visível ao usuário",
+      "fix": "Correção de bug",
+      "docs": "Apenas documentação (README, comentários, guias)",
+      "refactor": "Alteração de código sem mudar comportamento externo",
+      "test": "Adição ou correção de testes",
+      "chore": "Tarefas de manutenção (deps, configs, scripts, CI)",
+      "style": "Formatação, espaçamento, lint (sem alteração de lógica)",
+      "perf": "Melhoria de performance",
+      "ci": "Alteração de pipeline CI/CD",
+      "revert": "Reversão de commit anterior",
+      "build": "Sistema de build e dependências (Vite, scripts, tsconfig)",
+      "wip": "Progresso parcial em branch de trabalho; reescrever antes do PR"
+    },
+    "scopes": {
+      "title": "Escopos comuns",
+      "description": "Identificam a camada ou módulo afetado. Opcionais quando a mudança é transversal.",
+      "auth": "autenticação, sessão, guards de acesso",
+      "http": "instâncias HTTP, services",
+      "stores": "stores Pinia",
+      "ui": "componentes, layouts",
+      "config": "ambiente, constantes",
+      "router": "rotas, guards",
+      "types": "contratos TypeScript",
+      "test": "testes unitários e E2E",
+      "deps": "dependências"
+    },
+    "examples": {
+      "title": "Exemplos",
+      "description": "Boas mensagens seguem o padrão; más falham na validação do hook (Husky).",
+      "goodTitle": "Boas mensagens",
+      "badTitle": "Más mensagens",
+      "goodFilename": "bom",
+      "badFilename": "ruim"
+    },
+    "review": {
+      "title": "Checklist de code review",
+      "description": "Itens bloqueantes impedem a aprovação; sugestões são melhorias não bloqueantes.",
+      "blocking": "Bloqueante",
+      "suggestion": "Sugestão",
+      "categories": {
+        "architecture": {
+          "title": "Arquitetura",
+          "items": {
+            "layer": "Código está na camada correta (app/modules/shared/core/types)",
+            "noCrossModule": "Módulo não importa de outro módulo",
+            "sharedIsolation": "Shared não importa de modules nem de app",
+            "envConfig": "Nenhum acesso direto a import.meta.env fora de core/config",
+            "containers": "Views orquestram dados, componentes são apresentacionais"
+          }
+        },
+        "typing": {
+          "title": "Tipagem",
+          "items": {
+            "noAny": "Sem uso de any em contratos de domínio",
+            "typedProps": "Props e emits tipados com defineProps{'<'}T{'>'}() e defineEmits{'<'}T{'>'}()",
+            "centralized": "Tipos centralizados em src/types/ (não inline repetido)",
+            "noPrefix": "Interfaces sem prefixo I, em PascalCase"
+          }
+        },
+        "tests": {
+          "title": "Testes",
+          "items": {
+            "unit": "Toda regra de negócio nova tem teste unitário",
+            "assertions": "Testes possuem assertions (sem it vazio)",
+            "pass": "Testes passam (pnpm test)",
+            "e2e": "Fluxos críticos (auth, pagamento) têm teste E2E"
+          }
+        },
+        "security": {
+          "title": "Segurança",
+          "items": {
+            "tokens": "Tokens nunca expostos em logs, templates ou URLs",
+            "sensitive": "Dados sensíveis não persistidos sem necessidade",
+            "validation": "Validação de input antes de enviar ao backend",
+            "sanitize": "Sanitização de dados exibidos em v-html (se usado)"
+          }
+        },
+        "style": {
+          "title": "Estilo e formatação",
+          "items": {
+            "lint": "Lint passa sem erros (pnpm lint)",
+            "build": "Build passa sem erros (pnpm build)",
+            "blockOrder": "Ordem dos blocos: template → script → style",
+            "alias": "Imports usam o alias mais curto"
+          }
+        },
+        "commits": {
+          "title": "Commits e PR",
+          "items": {
+            "conventions": "Commits seguem COMMIT-CONVENTIONS.md",
+            "singleResponsibility": "PR não mistura responsabilidades distintas",
+            "conciseTitle": "Título do PR conciso (< 70 caracteres)",
+            "atomic": "Commits atômicos (uma unidade lógica cada)"
+          }
+        }
+      }
+    },
+    "principles": {
+      "title": "Princípios de referência",
+      "description": "Guiam as decisões de design ao longo do código.",
+      "srp": "Single Responsibility: cada unidade faz uma coisa só.",
+      "dry": "Don't Repeat Yourself: extrair duplicação para shared.",
+      "kiss": "Keep It Simple: preferir a solução mais simples que funciona.",
+      "soc": "A view (container) orquestra os dados; o componente apresentacional só recebe props e emite eventos, sem acessar service/store.",
+      "failFast": "Validar cedo, lançar erro cedo (config, types, guards)."
+    }
+  },
+  "decisions": {
+    "eyebrow": "Registro de decisões",
+    "title": "Decisões arquiteturais",
+    "description": "As decisões relevantes do projeto são registradas como ADRs (Architecture Decision Records) em {path}. Cada uma preserva o contexto, as alternativas e as consequências — o \"porquê\" por trás das escolhas.",
+    "madr": {
+      "title": "O formato MADR",
+      "description": "Cada ADR segue uma estrutura enxuta e legível.",
+      "context": {
+        "title": "Contexto",
+        "description": "O problema e as forças que motivam a decisão."
+      },
+      "options": {
+        "title": "Opções",
+        "description": "As alternativas consideradas."
+      },
+      "decision": {
+        "title": "Decisão",
+        "description": "A escolha feita e a justificativa."
+      },
+      "consequences": {
+        "title": "Consequências",
+        "description": "Efeitos positivos, negativos e neutros."
+      }
+    },
+    "status": {
+      "title": "Ciclo de status",
+      "description": "Uma ADR nunca é apagada — para reverter, cria-se uma nova que substitui a anterior.",
+      "accepted": "Aprovada e em vigor.",
+      "proposed": "Em discussão, ainda não vigente.",
+      "superseded": "Trocada por outra ADR.",
+      "deprecated": "Não se aplica mais, sem substituta."
+    },
+    "index": {
+      "title": "Índice de ADRs",
+      "description": "Decisões registradas até agora.",
+      "columnAdr": "ADR",
+      "columnTitle": "Título",
+      "columnStatus": "Status",
+      "footer": "Arquivos completos em {path}. Novas decisões seguem a numeração sequencial (ex.: {example})."
+    }
+  },
+  "pageTitle": {
+    "docs": "Documentação",
+    "architecture": "Arquitetura",
+    "onboarding": "Onboarding",
+    "components": "Componentes & UI",
+    "conventions": "Convenções",
+    "decisions": "Decisões arquiteturais"
+  }
+}

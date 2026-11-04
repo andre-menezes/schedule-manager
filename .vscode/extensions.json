@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "Vue.volar",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "EditorConfig.EditorConfig",
+    "anthropic.claude-code",
+    "vitest.explorer",
+    "ms-playwright.playwright",
+    "lokalise.i18n-ally",
+    "usernamehw.errorlens",
+    "eamodio.gitlens",
+    "ms-azuretools.vscode-containers"
+  ]
+}

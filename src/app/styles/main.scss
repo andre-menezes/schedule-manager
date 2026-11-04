@@ -1,0 +1,74 @@
+html {
+  overflow-y: auto;
+}
+
+// Material Symbols dentro do Vuetify.
+//
+// Este projeto usa `vite-plugin-vuetify` com auto-import (tree-shaking). Como
+// os ícones são renderizados por um icon set customizado (`h()` em
+// `@app/providers/icons.ts`), o plugin não detecta o uso do componente
+// `VIcon` e NÃO injeta o CSS base dele — inclusive as regras de tamanho
+// (`.v-icon--size-*`). Resultado: a prop `size` (small/large/x-large...) do
+// `<v-icon>` não tinha efeito, e o `font-size: 24px` fixo do pacote
+// `material-symbols` prevalecia.
+//
+// Correção: definimos aqui as regras de tamanho equivalentes às do Vuetify,
+// para que `size` volte a funcionar independentemente do tree-shaking.
+// O tamanho padrão (sem `size`) permanece 24px. Size numérico continua
+// funcionando via `style` inline (font-size), que tem prioridade máxima.
+.v-icon.material-symbols-outlined {
+  font-size: 24px; // tamanho padrão (equivalente a size="default")
+
+  &.v-icon--size-x-small {
+    font-size: 16px;
+  }
+
+  &.v-icon--size-small {
+    font-size: 20px;
+  }
+
+  &.v-icon--size-large {
+    font-size: 28px;
+  }
+
+  &.v-icon--size-x-large {
+    font-size: 32px;
+  }
+}
+
+// Variante preenchida (eixo FILL da variable font).
+// Use via sufixo no nome do ícone (`icon="favorite-fill"`) ou aplicando a
+// classe diretamente (`<v-icon class="ms-fill" icon="favorite" />`).
+.material-symbols-outlined.ms-fill {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.logo {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+}
+
+.gradient {
+  background: #110936;
+  background: linear-gradient(
+    180deg,
+    rgba(17, 9, 54, 1) 0%,
+    rgba(88, 109, 163, 1) 90%,
+    rgba(130, 145, 176, 1) 100%
+  );
+}
+
+.gradient-light {
+  background: #5075ab;
+  background: linear-gradient(0deg, rgba(80, 117, 171, 1) 10%, rgba(13, 26, 56, 1) 100%);
+}
+
+.gradient-dark {
+  background: #110936;
+  background: linear-gradient(180deg, rgba(17, 26, 49, 1) 0%, rgba(8, 13, 28, 1) 50%);
+}

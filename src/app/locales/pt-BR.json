@@ -1,0 +1,50 @@
+{
+  "common": {
+    "backToHome": "Voltar para o início",
+    "currentVersion": "Versão atual"
+  },
+  "nav": {
+    "home": "Início"
+  },
+  "header": {
+    "activateLightTheme": "Ativar tema claro",
+    "activateDarkTheme": "Ativar tema escuro",
+    "changeLanguage": "Alterar idioma",
+    "languages": "Idiomas"
+  },
+  "notFound": {
+    "eyebrow": "Erro 404",
+    "title": "Página não encontrada",
+    "description": "O endereço informado não aponta para uma página disponível.",
+    "illustrationCredit": "Web illustrations by Storyset"
+  },
+  "welcome": {
+    "title": "Bem-vindo ao {appName}",
+    "description": "Projeto criado a partir do Vue Template. Comece criando um módulo em src/modules/.",
+    "docsLink": "Ver a documentação do template"
+  },
+  "pageTitle": {
+    "home": "Início",
+    "notFound": "Página não encontrada"
+  },
+  "a11y": {
+    "skipToContent": "Pular para o conteúdo"
+  },
+  "errors": {
+    "unexpected": "Erro inesperado.",
+    "requestFailed": "Erro na requisição"
+  },
+  "states": {
+    "loading": "Carregando…",
+    "emptyTitle": "Nada por aqui",
+    "errorTitle": "Não foi possível carregar",
+    "retry": "Tentar novamente"
+  },
+  "notifications": {
+    "close": "Fechar"
+  },
+  "validation": {
+    "required": "Campo obrigatório.",
+    "email": "Informe um e-mail válido."
+  }
+}

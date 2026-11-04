@@ -1,0 +1,530 @@
+{
+  "common": {
+    "open": "Open",
+    "copyCode": "Copy code",
+    "copied": "Copied!"
+  },
+  "nav": {
+    "docs": "Documentation",
+    "architecture": "Architecture",
+    "onboarding": "Onboarding",
+    "components": "Components",
+    "conventions": "Conventions",
+    "decisions": "Decisions"
+  },
+  "docsHome": {
+    "eyebrow": "Living documentation",
+    "title": "Vue 3 Template",
+    "description": "A documented frontend architecture template. Explore the layered structure, the onboarding guide, the components, the conventions and the decisions that guide this project — built for developers and AI agents.",
+    "navEyebrow": "Navigation",
+    "navTitle": "Explore the documentation",
+    "metrics": {
+      "totalDeps": {
+        "label": "Total dependencies",
+        "detail": "installed packages"
+      },
+      "runtime": {
+        "label": "Runtime",
+        "detail": "production dependencies"
+      },
+      "tooling": {
+        "label": "Tooling",
+        "detail": "development dependencies"
+      },
+      "quality": {
+        "label": "Quality",
+        "detail": "build and typecheck available"
+      }
+    },
+    "cards": {
+      "architecture": {
+        "title": "Architecture",
+        "description": "Layers, dependency rules and the flows that shape the project."
+      },
+      "onboarding": {
+        "title": "Onboarding",
+        "description": "Step-by-step guide to building a feature that follows the template's patterns."
+      },
+      "components": {
+        "title": "Components & UI",
+        "description": "Live showcase of the components, theme and interface patterns."
+      },
+      "conventions": {
+        "title": "Conventions",
+        "description": "Commit conventions and the code review checklist in use."
+      },
+      "decisions": {
+        "title": "Decisions (ADRs)",
+        "description": "Record of the architectural decisions and their context."
+      }
+    },
+    "workflow": {
+      "eyebrow": "Quick access",
+      "title": "Workflow",
+      "cta": "See onboarding",
+      "install": "Install dependencies",
+      "dev": "Local server",
+      "lint": "Lint",
+      "unitTests": "Unit tests",
+      "e2eTests": "End-to-end tests",
+      "build": "Production build"
+    }
+  },
+  "architecture": {
+    "eyebrow": "Architecture guide",
+    "title": "Layered architecture",
+    "description": "How the code is organized, the dependency rules between layers and the flows that shape the application. This is the starting point for knowing where each kind of feature belongs.",
+    "sections": {
+      "layers": {
+        "title": "Layer overview",
+        "description": "Each layer has a single, isolated responsibility. Upper layers import from lower ones, never the other way around."
+      },
+      "dependencies": {
+        "title": "Dependency rules",
+        "description": "The contract that keeps the layers decoupled and predictable."
+      },
+      "structure": {
+        "title": "Folder structure",
+        "description": "Physical layout of the source code."
+      },
+      "init": {
+        "title": "Startup flow",
+        "description": "What happens from bootstrap until the application is mounted."
+      },
+      "routes": {
+        "title": "Route composition",
+        "description": "Routes discovered automatically per module, with no central registry.",
+        "intro": "The router loads the routes.ts files from app/ and modules/ through import.meta.glob. Just create a routes.ts in the module — no central file needs to be edited.",
+        "showcaseTitle": "Example of a module's routes.ts",
+        "showcaseDescription": "Each module exports its routes with lazy loading and meta fields."
+      },
+      "http": {
+        "title": "HTTP layer",
+        "description": "createApiInstance factory + semantic services.",
+        "intro": "All communication goes through a factory built on ofetch. Services live in the module that uses them (in shared/api/services only when shared), and views consume them through TanStack Query queries — they never call endpoints directly."
+      },
+      "state": {
+        "title": "Global state",
+        "description": "Pinia stores with a single responsibility.",
+        "columnStore": "Store",
+        "columnResponsibility": "Responsibility"
+      },
+      "conventions": {
+        "title": "General conventions",
+        "description": "Language, aliases and environment variables.",
+        "aliasesTitle": "Import aliases",
+        "languageTitle": "Language"
+      }
+    },
+    "layers": {
+      "app": "Startup, providers, base routes and global screens.",
+      "modules": "Features by domain, independent from each other.",
+      "shared": "Reusable cross-cutting infrastructure (api, stores, ui, utils).",
+      "core": "Foundation with no UI dependencies: configuration/env and constants.",
+      "types": "TypeScript contracts centralized by context.",
+      "test": "Automated validation — unit and integration tests (Vitest).",
+      "e2e": "End-to-end tests (Playwright) against the running application."
+    },
+    "dependencyRules": {
+      "canImport": {
+        "sharedCoreTypes": "shared, core, types",
+        "coreTypes": "core, types",
+        "typesOnly": "types",
+        "none": "none (declarations only)",
+        "allSrc": "every layer in src"
+      },
+      "cannotImport": {
+        "modules": "modules (except the routes glob)",
+        "appOtherModule": "app, another module",
+        "appModules": "app, modules",
+        "appModulesShared": "app, modules, shared",
+        "any": "any other",
+        "dash": "—"
+      },
+      "columns": {
+        "layer": "Layer",
+        "canImport": "Can import from",
+        "cannotImport": "Cannot import from"
+      }
+    },
+    "initFlow": {
+      "step1": {
+        "title": "main.ts creates the Vue instance",
+        "description": "The application is created with App.vue as its root."
+      },
+      "step2": {
+        "title": "registerPlugins",
+        "description": "Registers Pinia → i18n → Router → Vuetify, in that order."
+      },
+      "step3": {
+        "title": "Route auto-discovery",
+        "description": "The Router loads every routes.ts through import.meta.glob('{'@'}/{'{'}app,modules{'}'}/**/routes.ts')."
+      },
+      "step4": {
+        "title": "mount #app",
+        "description": "The application is mounted on the root element."
+      }
+    },
+    "stores": {
+      "app": "Global UX state (persisted theme).",
+      "notification": "Notification queue for the global snackbar (useNotify)."
+    },
+    "languageRules": {
+      "docs": {
+        "title": "Documentation",
+        "detail": "Portuguese (UTF-8)"
+      },
+      "code": {
+        "title": "Code",
+        "detail": "English (functions, variables, files)"
+      },
+      "commits": {
+        "title": "Commits",
+        "detail": "Portuguese"
+      }
+    }
+  },
+  "onboarding": {
+    "eyebrow": "Onboarding guide",
+    "title": "Getting started and building a feature",
+    "description": "Start by setting up your local environment, then follow the step-by-step guide to build a complete feature — from the module to the tests, following the template's patterns.",
+    "setup": {
+      "title": "Initial setup",
+      "description": "Clone the repository, install the dependencies and make sure the environment works.",
+      "cloneFilename": "1. Clone the repository",
+      "installFilename": "2. Install dependencies",
+      "devFilename": "3. Start the server",
+      "testFilename": "4. Run the tests"
+    },
+    "canonical": {
+      "title": "Canonical example",
+      "description": "The customers module implements a full CRUD across the template layers: a paginated list with search in the URL, detail, create, edit and delete. In pnpm dev, the API comes from an in-memory simulation (ADR-0039).",
+      "open": "Open the example",
+      "filesLabel": "Where the code lives"
+    },
+    "stepper": {
+      "stepLabel": "Step {current} of {total}"
+    },
+    "steps": {
+      "module": {
+        "title": "Create the module",
+        "description": "Create the module folder at src/modules/{'<'}name{'>'}/ with routes.ts, views/ and components/. The route is registered automatically by the router (auto-discovery through a glob)."
+      },
+      "types": {
+        "title": "Create the types",
+        "description": "Create the domain contracts in src/modules/{'<'}name{'>'}/types.ts. Only move them to src/types/ when a second module needs them (ADR-0025)."
+      },
+      "service": {
+        "title": "Create the service",
+        "description": "Create the functions that talk to the backend in src/modules/{'<'}name{'>'}/api/, accepting an optional signal to cancel the request. Views never call endpoints directly."
+      },
+      "query": {
+        "title": "Create the query",
+        "description": "Server data is read with TanStack Query (ADR-0027). Wrap the query in a module composable; it handles caching, loading, errors and cancellation."
+      },
+      "view": {
+        "title": "Create the container view",
+        "description": "The view consumes the query and passes the data, the loading state and the error to presentational components."
+      },
+      "components": {
+        "title": "Create presentational components",
+        "description": "Pure components: they receive props and emit events, with no fetching and no store."
+      },
+      "tests": {
+        "title": "Write tests",
+        "description": "Cover the service with a unit test (Vitest) and the main flow with an E2E test (Playwright)."
+      },
+      "validate": {
+        "title": "Validate",
+        "description": "Before committing, make sure lint, build and tests pass with no errors."
+      }
+    },
+    "checklistSection": {
+      "title": "Completion checklist",
+      "description": "Before opening the PR, confirm that every item is done."
+    },
+    "checklist": {
+      "module": "Module created in src/modules/{'<'}name{'>'}/",
+      "routes": "routes.ts typed as RouteRecordRaw[] with meta fields",
+      "types": "Types created in src/modules/{'<'}name{'>'}/types.ts",
+      "service": "Service created in src/modules/{'<'}name{'>'}/api/",
+      "query": "Query in a module composable (useQuery)",
+      "view": "Container view using the query",
+      "components": "Presentational components with typed props",
+      "unitTest": "Unit test covering the service",
+      "e2eTest": "E2E test covering the main flow",
+      "lint": "pnpm lint with no errors",
+      "build": "pnpm build with no errors",
+      "test": "pnpm test passing",
+      "commit": "Commit following the conventions"
+    },
+    "faqSection": {
+      "title": "Frequently asked questions",
+      "description": "The most common questions from people getting started."
+    },
+    "faqs": {
+      "sharedLogic": {
+        "question": "Where should logic shared between modules go?",
+        "answer": "In shared/ — pure logic goes in utils/, logic that talks to a store/service goes in helpers/, and reactive logic goes in composables/."
+      },
+      "store": {
+        "question": "Do I need a store for my feature?",
+        "answer": "Not for server data: use TanStack Query (ADR-0027). Create a store only for cross-cutting or persistent client state. Local screen state stays in a ref/reactive inside the component."
+      },
+      "crossModule": {
+        "question": "Can I import from another module?",
+        "answer": "No. Modules are independent. If something needs to be shared, move it to shared/."
+      },
+      "env": {
+        "question": "Where do environment variables live?",
+        "answer": "Always in src/core/config/index.ts (alias {'@'}core/config). Never use import.meta.env directly."
+      }
+    }
+  },
+  "components": {
+    "eyebrow": "Interface",
+    "title": "Components & UI",
+    "description": "Live showcase of the Vuetify components used in the template, with the usage code alongside. The rule is simple: always prefer a Vuetify component over raw HTML with custom CSS.",
+    "palette": {
+      "title": "Theme palette",
+      "description": "Semantic colors defined in app/providers/vuetify.ts. Use the names, never loose hex values."
+    },
+    "buttons": {
+      "title": "Buttons",
+      "description": "v-btn covers primary, secondary and icon actions. Vary them by variant and color.",
+      "showcaseTitle": "Button variants",
+      "showcaseDescription": "The visual hierarchy comes from the variant (flat, tonal, outlined, text).",
+      "primary": "Primary",
+      "tonal": "Tonal",
+      "outlined": "Outline",
+      "text": "Text",
+      "favoriteAria": "Add to favorites"
+    },
+    "chips": {
+      "title": "Chips and badges",
+      "description": "v-chip for tags, statuses and compact metadata.",
+      "showcaseTitle": "Chips by semantic color",
+      "showcaseDescription": "They reinforce meaning using the theme colors.",
+      "approved": "Approved",
+      "pending": "Pending",
+      "blocked": "Blocked"
+    },
+    "alerts": {
+      "title": "Alerts",
+      "description": "v-alert communicates feedback and states to the user.",
+      "showcaseTitle": "Alert types",
+      "showcaseDescription": "The type sets the color and icon automatically.",
+      "success": "Feature published successfully.",
+      "warning": "There are uncommitted changes.",
+      "error": "Failed to load the data."
+    },
+    "apiError": {
+      "title": "API error (RFC 9457)",
+      "description": "Standardize API error feedback from the Problem Details body (application/problem+json).",
+      "intro": "APIs return errors in the application/problem+json format. The getErrorMessage helper extracts detail/title from the body and builds the message shown in the v-alert. Reference:",
+      "showcaseTitle": "Alert from a Problem Details body",
+      "showcaseDescription": "The message comes from the detail field of the error body, with the HTTP status appended."
+    },
+    "cards": {
+      "title": "Cards",
+      "description": "v-card structures content with an item, text and actions.",
+      "showcaseTitle": "Anatomy of a card",
+      "showcaseDescription": "Combine v-card-item, v-card-text and v-card-actions.",
+      "previewTitle": "Module",
+      "previewText": "Feature isolated by domain.",
+      "previewAction": "Open"
+    }
+  },
+  "conventions": {
+    "eyebrow": "Quality",
+    "title": "Conventions",
+    "description": "The commit conventions and the code review checklist adopted in the project. Git hooks validate commit messages automatically — the checklist guides the review of every Pull Request.",
+    "branches": {
+      "title": "Branch naming",
+      "description": "Every branch starts from develop and follows the type/{'<'}optional-code{'>'}-slug pattern in kebab-case.",
+      "neverDirect": "Never work directly on",
+      "or": "or",
+      "createFrom": "Always create the new branch from the latest",
+      "updated": "and open the PR (pull request) against",
+      "atEnd": "when you are done.",
+      "flowFilename": "create a branch",
+      "prefixesTitle": "Prefixes by type",
+      "columnPrefix": "Prefix",
+      "columnWhen": "When to use",
+      "columnGood": "Good examples",
+      "columnBad": "Bad examples",
+      "types": {
+        "feat": "New feature",
+        "fix": "Bug fix",
+        "refactor": "Refactoring with no behavior change",
+        "docs": "Documentation only",
+        "chore": "Maintenance (deps, configs, CI)"
+      }
+    },
+    "commitFormat": {
+      "title": "Commit format",
+      "description": "Conventional Commits with the description in Portuguese, in the imperative mood, up to 72 characters and with no trailing period.",
+      "filename": "format"
+    },
+    "commitTypes": {
+      "title": "Commit types",
+      "description": "They define the nature of the change. Written in English (a technical convention).",
+      "columnType": "Type",
+      "columnWhen": "When to use",
+      "feat": "New user-facing feature",
+      "fix": "Bug fix",
+      "docs": "Documentation only (README, comments, guides)",
+      "refactor": "Code change with no change in external behavior",
+      "test": "Adding or fixing tests",
+      "chore": "Maintenance tasks (deps, configs, scripts, CI)",
+      "style": "Formatting, spacing, lint (no logic change)",
+      "perf": "Performance improvement",
+      "ci": "CI/CD pipeline change",
+      "revert": "Revert of a previous commit",
+      "build": "Build system and dependencies (Vite, scripts, tsconfig)",
+      "wip": "Partial progress on a work branch; rewrite before the PR"
+    },
+    "scopes": {
+      "title": "Common scopes",
+      "description": "They identify the affected layer or module. Optional when the change is cross-cutting.",
+      "auth": "authentication, session, access guards",
+      "http": "HTTP instances, services",
+      "stores": "Pinia stores",
+      "ui": "components, layouts",
+      "config": "environment, constants",
+      "router": "routes, guards",
+      "types": "TypeScript contracts",
+      "test": "unit and E2E tests",
+      "deps": "dependencies"
+    },
+    "examples": {
+      "title": "Examples",
+      "description": "Good messages follow the pattern; bad ones fail the hook validation (Husky).",
+      "goodTitle": "Good messages",
+      "badTitle": "Bad messages",
+      "goodFilename": "good",
+      "badFilename": "bad"
+    },
+    "review": {
+      "title": "Code review checklist",
+      "description": "Blocking items prevent approval; suggestions are non-blocking improvements.",
+      "blocking": "Blocking",
+      "suggestion": "Suggestion",
+      "categories": {
+        "architecture": {
+          "title": "Architecture",
+          "items": {
+            "layer": "Code is in the right layer (app/modules/shared/core/types)",
+            "noCrossModule": "A module does not import from another module",
+            "sharedIsolation": "Shared imports from neither modules nor app",
+            "envConfig": "No direct access to import.meta.env outside core/config",
+            "containers": "Views orchestrate data, components are presentational"
+          }
+        },
+        "typing": {
+          "title": "Typing",
+          "items": {
+            "noAny": "No any in domain contracts",
+            "typedProps": "Props and emits typed with defineProps{'<'}T{'>'}() and defineEmits{'<'}T{'>'}()",
+            "centralized": "Types centralized in src/types/ (not repeated inline)",
+            "noPrefix": "Interfaces in PascalCase, without an I prefix"
+          }
+        },
+        "tests": {
+          "title": "Tests",
+          "items": {
+            "unit": "Every new business rule has a unit test",
+            "assertions": "Tests have assertions (no empty it)",
+            "pass": "Tests pass (pnpm test)",
+            "e2e": "Critical flows (auth, payment) have E2E tests"
+          }
+        },
+        "security": {
+          "title": "Security",
+          "items": {
+            "tokens": "Tokens are never exposed in logs, templates or URLs",
+            "sensitive": "Sensitive data is not persisted without need",
+            "validation": "Input is validated before being sent to the backend",
+            "sanitize": "Data shown with v-html is sanitized (if used)"
+          }
+        },
+        "style": {
+          "title": "Style and formatting",
+          "items": {
+            "lint": "Lint passes with no errors (pnpm lint)",
+            "build": "Build passes with no errors (pnpm build)",
+            "blockOrder": "Block order: template → script → style",
+            "alias": "Imports use the shortest alias"
+          }
+        },
+        "commits": {
+          "title": "Commits and PR",
+          "items": {
+            "conventions": "Commits follow COMMIT-CONVENTIONS.md",
+            "singleResponsibility": "The PR does not mix unrelated responsibilities",
+            "conciseTitle": "Concise PR title (< 70 characters)",
+            "atomic": "Atomic commits (one logical unit each)"
+          }
+        }
+      }
+    },
+    "principles": {
+      "title": "Guiding principles",
+      "description": "They guide design decisions throughout the code.",
+      "srp": "Single Responsibility: each unit does one thing only.",
+      "dry": "Don't Repeat Yourself: extract duplication into shared.",
+      "kiss": "Keep It Simple: prefer the simplest solution that works.",
+      "soc": "The (container) view orchestrates the data; the presentational component only receives props and emits events, with no access to services or stores.",
+      "failFast": "Validate early, fail early (config, types, guards)."
+    }
+  },
+  "decisions": {
+    "eyebrow": "Decision log",
+    "title": "Architectural decisions",
+    "description": "The project's relevant decisions are recorded as ADRs (Architecture Decision Records) in {path}. Each one preserves the context, the alternatives and the consequences — the \"why\" behind the choices.",
+    "madr": {
+      "title": "The MADR format",
+      "description": "Every ADR follows a lean, readable structure.",
+      "context": {
+        "title": "Context",
+        "description": "The problem and the forces behind the decision."
+      },
+      "options": {
+        "title": "Options",
+        "description": "The alternatives considered."
+      },
+      "decision": {
+        "title": "Decision",
+        "description": "The choice made and its rationale."
+      },
+      "consequences": {
+        "title": "Consequences",
+        "description": "Positive, negative and neutral effects."
+      }
+    },
+    "status": {
+      "title": "Status lifecycle",
+      "description": "An ADR is never deleted — to reverse it, a new one is created that supersedes the previous one.",
+      "accepted": "Approved and in effect.",
+      "proposed": "Under discussion, not yet in effect.",
+      "superseded": "Replaced by another ADR.",
+      "deprecated": "No longer applies, with no replacement."
+    },
+    "index": {
+      "title": "ADR index",
+      "description": "Decisions recorded so far.",
+      "columnAdr": "ADR",
+      "columnTitle": "Title",
+      "columnStatus": "Status",
+      "footer": "Full files in {path}. New decisions follow the sequential numbering (e.g. {example})."
+    }
+  },
+  "pageTitle": {
+    "docs": "Documentation",
+    "architecture": "Architecture",
+    "onboarding": "Onboarding",
+    "components": "Components & UI",
+    "conventions": "Conventions",
+    "decisions": "Architectural decisions"
+  }
+}

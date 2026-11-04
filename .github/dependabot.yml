@@ -1,0 +1,53 @@
+# Atualização automática de dependências (ADR-0035).
+#
+# - npm: o ecossistema `npm` do Dependabot lê o pnpm-lock.yaml e atualiza com
+#   pnpm. Minor e patch chegam num único PR semanal; cada major vem em PR
+#   próprio, para revisão.
+# - github-actions: atualiza os SHAs fixados e o comentário de versão nos
+#   workflows e nas actions locais (`.github/actions/*`), que o Dependabot só
+#   lê quando listadas em `directories`.
+#
+# Mensagens seguem o hook commit-msg: `chore(deps): ...`,
+# `chore(deps-dev): ...` e `ci(deps): ...`.
+
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+    labels:
+      - 'tipo: chore'
+    commit-message:
+      prefix: chore
+      prefix-development: chore
+      include: scope
+    groups:
+      minor-and-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directories:
+      - /
+      - /.github/actions/*
+    target-branch: develop
+    schedule:
+      interval: weekly
+    labels:
+      - 'tipo: chore'
+    commit-message:
+      prefix: ci
+      include: scope
+    groups:
+      minor-and-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
