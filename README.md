@@ -1,23 +1,29 @@
-# Vue 3 Template - Arquitetura Frontend
+# Agenda
 
-Template frontend baseado em Vue 3 + TypeScript + Vite, com foco em:
+Sistema de agenda pessoal e de atendimentos para profissionais autônomos:
+compromissos pessoais e atendimentos a clientes na mesma agenda, com
+controle de disponibilidade, prevenção de conflitos e lembretes automáticos.
 
-- separação clara de responsabilidades por camada
-- modularização por contexto de domínio
-- rotas auto-descobertas por módulo
-- padronização de stores, services e tipagem
-- qualidade via lint, typecheck, testes unitários/integração e E2E
+Este repositório é o **frontend** (Vue 3 + TypeScript + Vite + Vuetify),
+criado a partir do [vue-template](https://github.com/andre-menezes/vue-template).
 
-## Leitura recomendada
+## Produto
 
-- Começar um projeto a partir do template: [docs/NEW-PROJECT.md](docs/NEW-PROJECT.md)
+- Visão, personas e escopo: [docs/requirements/VISION.md](docs/requirements/VISION.md)
+- Requisitos e regras de negócio: [docs/requirements/REQUIREMENTS.md](docs/requirements/REQUIREMENTS.md)
+- Histórias de usuário: [docs/requirements/USER-STORIES.md](docs/requirements/USER-STORIES.md)
+- Modelo de domínio: [docs/requirements/DOMAIN-MODEL.md](docs/requirements/DOMAIN-MODEL.md)
+- Pendências de decisão: [docs/requirements/OPEN-QUESTIONS.md](docs/requirements/OPEN-QUESTIONS.md)
+- Roadmap (MVP e evolução): [docs/ROADMAP.md](docs/ROADMAP.md)
+- Decisões arquiteturais: [docs/decisions/README.md](docs/decisions/README.md)
+
+## Leitura técnica
+
 - Publicar em produção (Docker + Nginx): [docs/DEPLOY.md](docs/DEPLOY.md)
 - Guia arquitetural completo: [docs/ARCHITECTURE-GUIDE.md](docs/ARCHITECTURE-GUIDE.md)
+- Criar uma feature passo a passo: [docs/ONBOARDING.md](docs/ONBOARDING.md)
 - Estrutura de código principal: [src/README.md](src/README.md)
-- Convenções da camada app: [src/app/README.md](src/app/README.md)
 - Convenções de módulos: [src/modules/README.md](src/modules/README.md)
-- Convenções compartilhadas: [src/shared/README.md](src/shared/README.md)
-- Tipagem e nomenclatura: [src/types/README.md](src/types/README.md)
 - Estratégia de testes: [src/test/README.md](src/test/README.md)
 
 ## Padrão de documentação
@@ -46,22 +52,9 @@ pnpm dev
 
 Nenhuma variável de ambiente é obrigatória: os valores padrão ficam em
 `src/core/config/index.ts` e podem ser sobrescritos copiando `.env.example` para
-`.env.development.local`. Todas as páginas são públicas: o template ainda não tem autenticação
-(ADR-0021). A integração contínua roda no GitHub Actions
+`.env.development.local`. Todas as páginas ainda são públicas: a autenticação entra no R0
+(ADR-0050). A integração contínua roda no GitHub Actions
 (`.github/workflows/ci.yml`).
-
-## Começando um projeto a partir do template
-
-As telas de documentação do template (hub em `/docs`, arquitetura, onboarding,
-componentes, convenções e decisões) ficam no módulo `src/modules/showcase`. Ao
-criar um projeto novo, remova-as com:
-
-```bash
-pnpm template:clean
-```
-
-O comando apaga o módulo e os testes dele e mantém a página inicial
-(`src/modules/home`), a infraestrutura e a pasta `docs/` (ADR-0026).
 
 ## Qualidade e validação
 

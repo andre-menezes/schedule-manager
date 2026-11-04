@@ -1,11 +1,14 @@
 # Claude Code — Instruções do Projeto
 
-Projeto frontend Vue 3 + TypeScript + Vite com arquitetura em camadas.
+Frontend do **Agenda** (agenda pessoal e de atendimentos para profissionais
+autônomos): Vue 3 + TypeScript + Vite com arquitetura em camadas.
 
 Este arquivo é apenas um ponteiro (adapter do Claude — ADR-0006). As regras e
 convenções **não** são repetidas aqui, para não divergirem da fonte de verdade.
 Leia antes de agir:
 
+- `docs/requirements/` — visão, requisitos, regras de negócio (RN), histórias (US) e domínio
+- `docs/ROADMAP.md` — releases (R0–R5) e ordem das histórias
 - `agent/core/CONTRACT.md` — princípios, política anti-achismo e critério de pronto
 - `agent/core/PROCEDURE.md` — fases do workflow (entrada → entrega)
 - `agent/skills/vue-vuetify-dev/SKILL.md` — padrões Vue 3 + Vuetify + TS
