@@ -3,6 +3,14 @@
 Pasta para specs de features e bugs. Cada spec é um markdown descrevendo o
 requisito completo que o agente de IA (ou desenvolvedor) vai implementar.
 
+## De onde vêm as specs
+
+Cada spec nasce de uma ou mais histórias de
+[`../requirements/USER-STORIES.md`](../requirements/USER-STORIES.md), na ordem
+do [`../ROADMAP.md`](../ROADMAP.md). A spec cita as histórias (`US-XXX`) e as
+regras de negócio (`RN-XX`) que implementa, e detalha endpoints, layout e
+estados que a história não cobre.
+
 ## Como criar uma nova spec
 
 1. Copie o template de `agent/templates/feature-spec.md`.
