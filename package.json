@@ -48,7 +48,7 @@
     "@intlify/eslint-plugin-vue-i18n": "4.5.1",
     "@intlify/unplugin-vue-i18n": "11.2.8",
     "@playwright/test": "1.64.1",
-    "@types/node": "24.13.3",
+    "@types/node": "26.6.6",
     "@vitejs/plugin-vue": "6.0.10",
     "@vitest/coverage-v8": "4.1.12",
     "@vue/server-renderer": "3.5.44",
